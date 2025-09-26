@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { Sparkles, ShoppingBag } from 'lucide-react';
 
 interface FAQ {
   question: string;
@@ -11,43 +12,35 @@ interface FAQ {
 const HomeFAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  // Static FAQ data for home page
+  // EDA Perfumes specific FAQ data
   const faqs: FAQ[] = [
     {
-      question: "What is Amraj and why should I choose it over other brands?",
-      answer: "Amraj is where ancient Ayurvedic wisdom meets modern nutraceutical science. We don't just sell supplements we deliver result driven wellness programs backed by premium ingredients, and measurable outcomes."
+      question: "What makes EDA Perfumes different from other fragrance brands?",
+      answer: "EDA Perfumes embodies the perfect blend of seduction and sophistication. Our fragrances are crafted for those who dare to make a statement and aren't afraid to embrace their desires."
     },
     {
-      question: "Are your products actually effective or just another wellness hype?",
-      answer: "Every formula is scientifically crafted with clinically backed extracts and in therapeutic dosages, so you don't just feel better, you see and track real progress within the first few weeks."
+      question: "How long do EDA Perfumes fragrances last?",
+      answer: "Our premium EDP concentration ensures your signature scent lingers beautifully from dusk till dawn. With proper application, you can expect 8-12 hours of captivating fragrance."
     },
     {
-      question: "What makes your products premium?",
-      answer: "We source highest-grade herbal extracts (standardized for active compounds), combine them with pure nutraceutical actives, and produce them in GMP-certified, ISO-approved facilities — ensuring unmatched potency, purity, and safety."
+      question: "Are EDA Perfumes suitable for both men and women?",
+      answer: "Absolutely! Our collection features expertly balanced unisex fragrances that captivate regardless of gender. True luxury knows no boundaries."
     },
     {
-      question: "Can I trust your safety standards?",
-      answer: "Yes all Amraj products are 100% vegetarian, free from steroids, banned substances, artificial hormones, and heavy metals, with lab-tested quality assurance."
+      question: "What fragrance notes can I expect in EDA Perfumes?",
+      answer: "Our signature collection features intoxicating blends of citrus, spicy, woody, and floral notes. Each fragrance is a carefully crafted symphony of desire."
     },
     {
-      question: "Will I see quick results or do I have to wait months?",
-      answer: "We design our formulas for noticeable results in 2–4 weeks, while recommending 90 day programs for complete transformation."
+      question: "How should I apply EDA Perfumes for best results?",
+      answer: "Apply to pulse points like wrists, neck, and behind ears for maximum impact. A little goes a long way with our premium concentration."
     },
     {
-      question: "Which problems do your products solve?",
-      answer: "Our range covers weight loss, liver detox, prostate care, gut health, and immunity boost all in non-hormonal, plant-based, science-backed formulas."
+      question: "Which EDA Perfume should I choose for different occasions?",
+      answer: "Bite Me - Perfect for romantic dates\nDark Knight - Ideal for sophisticated evenings\nMidnight Desire - Best for special occasions\nLusty Nights - Great for passionate moments"
     },
     {
-      question: "Are your supplements habit-forming?",
-      answer: "No. All our products are non-addictive, non-habit forming, and safe for long-term wellness routines when taken as recommended."
-    },
-    {
-      question: "Can I combine different Amraj products for better results?",
-      answer: "Yes — our formulas are synergistically designed to complement each other. For example, pairing our Advanced Liver Detox with Weight Management Pro+ can accelerate fat loss, improve digestion, and boost overall wellness."
-    },
-    {
-      question: "Do you ship Pan-India?",
-      answer: "Yes — we deliver across India with safe, hygienic and premium packaging, and most orders arrive within 3–5 working days."
+      question: "Do you ship across India?",
+      answer: "Yes! We deliver across India with premium packaging and secure shipping. Most orders arrive within 3-5 working days."
     }
   ];
 
@@ -56,77 +49,80 @@ const HomeFAQ: React.FC = () => {
   };
 
   return (
-    <div className="bg-white px-4 rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-6">
-        <h2 className="text-2xl lg:text-3xl font-bold text-white text-center">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-teal-100 text-center mt-2">
-          Everything you need to know about Amraj
-        </p>
-      </div>
-
-      {/* FAQ Items */}
-      <div className="divide-y divide-gray-200">
-        {faqs.map((faq, index) => (
-          <div key={index} className="group">
-            <button
-              className="w-full px-6 py-5 text-left hover:bg-gradient-to-r hover:from-teal-50 hover:to-orange-50 transition-all duration-300 focus:outline-none focus:bg-teal-50"
-              onClick={() => toggleFAQ(index)}
-            >
-              <div className="flex justify-between items-start">
-                <h3 className="font-semibold text-gray-800 text-sm lg:text-base pr-4 leading-relaxed">
-                  {faq.question}
-                </h3>
-                <div className="flex-shrink-0 ml-4">
-                  {openIndex === index ? (
-                    <ChevronUpIcon className="h-5 w-5 text-teal-600 transition-transform duration-300" />
-                  ) : (
-                    <ChevronDownIcon className="h-5 w-5 text-gray-400 group-hover:text-teal-600 transition-all duration-300" />
-                  )}
-                </div>
-              </div>
-            </button>
-            
-            {/* Answer */}
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              openIndex === index 
-                ? 'max-h-96 opacity-100' 
-                : 'max-h-0 opacity-0'
-            }`}>
-              <div className="px-6 pb-5">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 border-l-4 border-teal-500">
-                  <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
-                    {faq.answer}
-                  </p>
-                </div>
-              </div>
+    <section className="py-16 px-4 bg-gray-50">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Header */}
+          <div className="bg-rose-500 px-8 py-8 text-center">
+            <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full mb-4">
+              <Sparkles className="w-4 h-4 text-white" />
+              <span className="text-white text-sm font-medium">Your questions answered</span>
             </div>
+            <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-white/90">
+              Everything you need to know about EDA Perfumes
+            </p>
           </div>
-        ))}
-      </div>
 
-      {/* Footer CTA */}
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 text-center border-t border-gray-200">
-        <p className="text-gray-600 text-sm mb-3">
-          Ready to start your wellness journey?
-        </p>
-        <div className="flex justify-center">
-          <a
-            href="https://www.amazon.in/s?k=AMRAJ&ref=bl_dp_s_web_0"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold px-6 py-3 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
-          >
-            {/* Amazon icon (inline SVG) */}
-            <img className='h-8 w-8' src="/Amazon_icon.png" alt='amazon-img' height={100} width={100}/>
-            Buy now on Amazon
-          </a>
+          {/* FAQ Items */}
+          <div className="divide-y divide-gray-200">
+            {faqs.map((faq, index) => (
+              <div key={index} className="group">
+                <button
+                  className="w-full px-6 lg:px-8 py-5 text-left hover:bg-rose-50 transition-all duration-200 focus:outline-none focus:bg-rose-50"
+                  onClick={() => toggleFAQ(index)}
+                >
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold text-gray-800 text-sm lg:text-base pr-4 group-hover:text-rose-600 transition-colors">
+                      {faq.question}
+                    </h3>
+                    <div className="flex-shrink-0">
+                      {openIndex === index ? (
+                        <ChevronUpIcon className="h-5 w-5 text-rose-500" />
+                      ) : (
+                        <ChevronDownIcon className="h-5 w-5 text-gray-400 group-hover:text-rose-500 transition-colors" />
+                      )}
+                    </div>
+                  </div>
+                </button>
+                
+                {/* Answer */}
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  openIndex === index 
+                    ? 'max-h-96 opacity-100' 
+                    : 'max-h-0 opacity-0'
+                }`}>
+                  <div className="px-6 lg:px-8 pb-5">
+                    <div className="bg-rose-50 rounded-lg p-4 border-l-4 border-rose-500">
+                      <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Footer CTA */}
+          <div className="bg-gray-50 px-8 py-6 text-center border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              Ready to find your signature scent?
+            </h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Explore our collection of seductive fragrances
+            </p>
+            
+            <button className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200">
+              <ShoppingBag className="w-4 h-4" />
+              Explore Collection
+            </button>
+          </div>
         </div>
       </div>
-
-    </div>
+    </section>
   );
 };
 

@@ -9,13 +9,13 @@ import { useCart } from '../../../../lib/cart'
 import { toast } from '../../../../hooks/use-toast'
 import { useFacebookPixel } from '../../../../hooks/useFacebookPixel'
 import ImageGallery from '../../../../components/ImageGallery'
-import OfferTab, { SelectedOffer } from '../../../../components/OfferTab'
 import { Tab } from '@headlessui/react'
 import SmoothMarquee from '../../../../components/ProductSlide'
 import ProductFAQ from '../../../../components/ProductFaq'
 import RelatedProducts from '../../../../components/RelatedProducts'
 import CustomerMedia from '../../../../components/CustomerMedia'
 import ProductReviews from '../../../../components/ProductReviews'
+import { Heart, Star, Shield, Truck, Award, CreditCard, Plus, Minus, ShoppingBag } from 'lucide-react'
 
 export interface ImageData { src: string }
 export interface Attribute { option: string }
@@ -57,10 +57,10 @@ export default function ProductClient({
     initialProduct ??
     products?.find((p) => p.slug === slug || p.id.toString() === slug)
 
-  const [offer, setOffer] = useState<SelectedOffer>(undefined)
+  const [quantity, setQuantity] = useState(1)
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [isBuyingNow, setIsBuyingNow] = useState(false)
-  const [isCouponCopied, setIsCouponCopied] = useState(false)
+  const [isWishlisted, setIsWishlisted] = useState(false)
 
   useEffect(() => {
     if (product) {
@@ -72,22 +72,12 @@ export default function ProductClient({
     }
   }, [product, trackViewContent])
 
-  const handleCopyCoupon = () => {
-    navigator.clipboard.writeText('WELCOME100')
-    setIsCouponCopied(true)
-    toast({
-      title: '🎉 Coupon Copied!',
-      description: 'WELCOME100 has been copied to clipboard. Apply it at checkout!',
-    })
-    setTimeout(() => setIsCouponCopied(false), 3000)
-  }
-
   if (isLoading && !product) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-orange-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-rose-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-teal-500 border-t-transparent mx-auto mb-3"></div>
-          <p className="text-teal-700 text-sm font-medium">Loading product...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-rose-500 border-t-transparent mx-auto mb-3"></div>
+          <p className="text-rose-600 text-sm font-medium">Loading fragrance...</p>
         </div>
       </div>
     )
@@ -95,13 +85,13 @@ export default function ProductClient({
 
   if (error || (!products && !product)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-orange-50">
-        <div className="text-center bg-white rounded-2xl shadow-xl p-6 max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-rose-50">
+        <div className="text-center bg-white rounded-2xl shadow-xl p-6 max-w-md border border-gray-200">
           <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
             <span className="text-red-500 text-lg">⚠️</span>
           </div>
-          <h2 className="text-lg font-bold text-gray-800 mb-2">Product Not Found</h2>
-          <p className="text-sm text-gray-600">Sorry, we could not load this product. Please try again later.</p>
+          <h2 className="text-lg font-bold text-gray-800 mb-2">Fragrance Not Found</h2>
+          <p className="text-sm text-gray-600">Sorry, we could not load this fragrance. Please try again later.</p>
         </div>
       </div>
     )
@@ -109,13 +99,13 @@ export default function ProductClient({
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-orange-50">
-        <div className="text-center bg-white rounded-2xl shadow-xl p-6 max-w-md">
-          <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <span className="text-orange-500 text-lg">🔍</span>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-rose-50">
+        <div className="text-center bg-white rounded-2xl shadow-xl p-6 max-w-md border border-gray-200">
+          <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span className="text-rose-500 text-lg">🔍</span>
           </div>
-          <h2 className="text-lg font-bold text-gray-800 mb-2">Product Not Found</h2>
-          <p className="text-sm text-gray-600">The product you are looking for does not exist or has been removed.</p>
+          <h2 className="text-lg font-bold text-gray-800 mb-2">Fragrance Not Found</h2>
+          <p className="text-sm text-gray-600">The fragrance you are looking for does not exist or has been removed.</p>
         </div>
       </div>
     )
@@ -123,30 +113,30 @@ export default function ProductClient({
 
   const salePrice = parseFloat(product.price || '0')
   const regularPrice = parseFloat(product.regular_price || product.price || '0')
-  const hasSiteSale = salePrice < regularPrice
-  const qty = offer?.qty || 0
-  const finalUnitPrice = offer ? salePrice * (1 - offer.discountPercent / 100) : salePrice
-  const discountedPrice = offer ? finalUnitPrice * qty : salePrice * qty
-  const crossedPrice = regularPrice * (offer ? qty : 1)
-  const siteSaleSave = hasSiteSale ? (regularPrice - salePrice) * (offer ? qty : 1) : 0
-  const totalSave = crossedPrice - discountedPrice
+  const hasSale = salePrice < regularPrice
+  const totalPrice = salePrice * quantity
+  const totalRegularPrice = regularPrice * quantity
+  const totalSaving = hasSale ? totalRegularPrice - totalPrice : 0
+
+  const handleQuantityChange = (delta: number) => {
+    setQuantity(Math.max(1, quantity + delta))
+  }
 
   const handleAddToCart = async () => {
-    if (!offer) return
     setIsAddingToCart(true)
     try {
-      for (let i = 0; i < offer.qty; i++) {
+      for (let i = 0; i < quantity; i++) {
         addToCart({
           ...product,
-          name: product.name + (offer.qty > 1 ? ` (${i + 1} of ${offer.qty})` : ''),
-          price: finalUnitPrice.toString(),
+          name: product.name,
+          price: salePrice.toString(),
           images: product.images || [],
         })
       }
-      trackAddToCart({ id: product.id, name: product.name, price: finalUnitPrice }, offer.qty)
+      trackAddToCart({ id: product.id, name: product.name, price: salePrice }, quantity)
       toast({
-        title: 'Added to cart',
-        description: `${offer.qty} x ${product.name} added with ${offer.discountPercent}% off.`,
+        title: '🌹 Added to collection',
+        description: `${quantity} x ${product.name} added to your cart.`,
       })
     } catch (error) {
       console.error('Add to cart failed:', error)
@@ -157,24 +147,23 @@ export default function ProductClient({
   }
 
   const handleBuyNow = async () => {
-    if (!offer) return
     setIsBuyingNow(true)
     try {
-      for (let i = 0; i < offer.qty; i++) {
+      for (let i = 0; i < quantity; i++) {
         addToCart({
           ...product,
-          name: product.name + (offer.qty > 1 ? ` (${i + 1} of ${offer.qty})` : ''),
-          price: finalUnitPrice.toString(),
+          name: product.name,
+          price: salePrice.toString(),
           images: product.images || [],
         })
       }
-      trackAddToCart({ id: product.id, name: product.name, price: finalUnitPrice }, offer.qty)
-      const cartItems = [{ id: product.id, name: product.name, price: finalUnitPrice, quantity: offer.qty }]
-      const total = finalUnitPrice * offer.qty
+      trackAddToCart({ id: product.id, name: product.name, price: salePrice }, quantity)
+      const cartItems = [{ id: product.id, name: product.name, price: salePrice, quantity }]
+      const total = salePrice * quantity
       trackInitiateCheckout(cartItems, total)
       toast({
-        title: 'Checkout started!',
-        description: `${offer.qty} x ${product.name} added. Redirecting to checkout...`,
+        title: '🚀 Proceeding to checkout',
+        description: `${quantity} x ${product.name} added. Redirecting...`,
         duration: 1200,
       })
       setTimeout(() => {
@@ -189,166 +178,171 @@ export default function ProductClient({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-orange-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center space-x-2 text-xs text-gray-600">
-            <span>Products</span>
-            <span className="text-teal-500">›</span>
-            <span className="text-teal-600 font-medium">{product.name}</span>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-rose-50 pb-20 lg:pb-0">
+      {/* Breadcrumb */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <span>Fragrances</span>
+            <span className="text-rose-500">›</span>
+            <span className="text-rose-600 font-medium truncate">{product.name}</span>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-5 md:py-6 md:px-4 flex flex-col lg:flex-row">
+      <div className="max-w-7xl mx-auto mt-6 px-4 flex flex-col lg:flex-row gap-8">
         {/* Image Section */}
-        <div className="lg:w-1/2 hidden lg:block">
-          <div className="bg-white rounded-3xl mx-3 shadow-xl lg:p-2 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
+        <div className="lg:w-1/2">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 sticky top-4">
             <ImageGallery images={product.images || []} />
           </div>
         </div>
 
         {/* Details Section */}
         <div className="lg:w-1/2">
-          <div className="bg-white rounded-3xl shadow-xl p-2 md:p-6 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+            {/* Category Badge */}
             {product.attributes?.length ? (
-              <div className="mb-4 p-3 bg-gradient-to-r from-teal-50 to-teal-100 rounded-2xl border border-teal-200">
-                <span className="text-teal-700 font-semibold text-xs uppercase tracking-wide">Flavour:</span>
-                <span className="ml-2 text-teal-800 font-bold text-sm">{product.attributes[0]?.option || 'Default'}</span>
+              <div className="mb-4">
+                <span className="inline-flex items-center gap-2 bg-rose-50 text-rose-600 px-3 py-1 rounded-full text-sm font-medium border border-rose-200">
+                  <span className="w-2 h-2 bg-rose-500 rounded-full"></span>
+                  {product.attributes[0]?.option || 'Premium Collection'}
+                </span>
               </div>
-            ) : null}
+            ) : (
+              <div className="mb-4">
+                <span className="inline-flex items-center gap-2 bg-rose-50 text-rose-600 px-3 py-1 rounded-full text-sm font-medium border border-rose-200">
+                  <span className="w-2 h-2 bg-rose-500 rounded-full"></span>
+                  Premium Collection
+                </span>
+              </div>
+            )}
 
-            <h1 className="text-xl lg:text-2xl font-bold text-black mb-4 leading-tight">
+            {/* Product Name */}
+            <h1 className="text-2xl lg:text-3xl font-black text-gray-800 mb-3 leading-tight">
               {product.name}
             </h1>
 
+            {/* Rating */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+              <span className="text-sm text-gray-600">(4.8) • 247 reviews</span>
+              <button
+                onClick={() => setIsWishlisted(!isWishlisted)}
+                className="ml-auto p-2 rounded-full hover:bg-rose-50 transition-colors"
+              >
+                <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-500 text-rose-500' : 'text-gray-400'}`} />
+              </button>
+            </div>
+
             <SmoothMarquee />
 
+            {/* Short Description */}
             {product.short_description && (
               <div
-                className="prose prose-sm max-w-none text-gray-700 leading-relaxed"
+                className="prose prose-sm max-w-none text-gray-700 leading-relaxed mb-6"
                 dangerouslySetInnerHTML={{ __html: product.short_description }}
               />
             )}
 
-            <div className="bg-white block lg:hidden mt-3 rounded-3xl shadow-xl border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
-              <ImageGallery images={product.images || []} />
-            </div>
-
-            <div className="mb-4">
-              <OfferTab
-                salePrice={salePrice}
-                regularPrice={regularPrice}
-                onOfferChange={setOffer}
-              />
-            </div>
-
-            <div className="mb-4 bg-gradient-to-r from-orange-50 via-yellow-50 to-orange-50 border-2 border-dashed border-orange-300 rounded-2xl p-4 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-18 h-18 bg-orange-500 transform rotate-45 translate-x-8 -translate-y-8"></div>
-              <div className="absolute top-2 right-2 text-white text-xs font-bold">NEW</div>
+            {/* Price Section */}
+            <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl p-4 mb-6 border border-rose-200">
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg">🎁</span>
-                    <span className="text-orange-600 font-bold text-sm">SPECIAL OFFER</span>
-                  </div>
-                  <h3 className="font-bold text-gray-800 text-base lg:text-lg">Get ₹100 OFF on your first order!</h3>
-                  <p className="text-gray-600 text-xs lg:text-sm mt-1">Use coupon code at checkout</p>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <div className="bg-white border-2 border-orange-300 rounded-lg px-3 py-2 font-mono font-bold text-orange-600 text-lg tracking-wider">
-                    WELCOME100
-                  </div>
-                  <button
-                    onClick={handleCopyCoupon}
-                    className={`px-4 py-1 rounded-full text-xs font-semibold transition-all duration-300 ${
-                      isCouponCopied ? 'bg-green-500 text-white' : 'bg-orange-500 hover:bg-orange-600 text-white'
-                    }`}
-                  >
-                    {isCouponCopied ? '✓ Copied!' : 'Copy Code'}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-end gap-2">
-                  <span className="text-2xl lg:text-3xl font-bold text-teal-600">
-                    {offer
-                      ? `₹${discountedPrice.toFixed(2)}`
-                      : hasSiteSale
-                        ? `₹${salePrice.toFixed(2)}`
-                        : `₹${regularPrice.toFixed(2)}`
-                    }
+                <div className="flex items-baseline gap-3">
+                  <span className="text-3xl font-black text-rose-600">
+                    ₹{totalPrice.toLocaleString()}
                   </span>
-                  {(hasSiteSale || offer) && (
-                    <span className="line-through text-gray-500 font-semibold text-base lg:text-lg">
-                      ₹{crossedPrice.toFixed(2)}
+                  {hasSale && (
+                    <span className="line-through text-gray-500 font-semibold text-lg">
+                      ₹{totalRegularPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg">
-                  {offer
-                    ? `SAVE ₹${totalSave.toFixed(2)}`
-                    : (hasSiteSale
-                        ? `SAVE ₹${siteSaleSave.toFixed(2)}`
-                        : '—')}
-                </div>
+                {hasSale && (
+                  <div className="bg-rose-500 text-white px-3 py-1 rounded-full font-bold text-sm">
+                    Save ₹{totalSaving.toLocaleString()}
+                  </div>
+                )}
               </div>
-              {hasSiteSale && !offer && (
-                <div className="text-xs mt-1 text-orange-600 font-semibold">
-                  (MRP: ₹{regularPrice.toFixed(2)})
+              {quantity > 1 && (
+                <div className="text-sm text-gray-600 mt-2">
+                  ₹{salePrice.toLocaleString()} per bottle
                 </div>
               )}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            {/* Quantity Selector */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Quantity</label>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center border border-gray-300 rounded-lg">
+                  <button
+                    onClick={() => handleQuantityChange(-1)}
+                    className="p-3 hover:bg-gray-50 transition-colors rounded-l-lg"
+                    disabled={quantity <= 1}
+                  >
+                    <Minus className="w-4 h-4 text-gray-600" />
+                  </button>
+                  <span className="px-4 py-3 font-semibold text-gray-800 min-w-[3rem] text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => handleQuantityChange(1)}
+                    className="p-3 hover:bg-gray-50 transition-colors rounded-r-lg"
+                  >
+                    <Plus className="w-4 h-4 text-gray-600" />
+                  </button>
+                </div>
+                <span className="text-sm text-gray-600">
+                  {quantity > 1 && `${quantity} bottles selected`}
+                </span>
+              </div>
+            </div>
+
+            {/* Desktop Action Buttons */}
+            <div className="hidden lg:flex flex-col sm:flex-row gap-3 mb-6">
               <button
-                className={`flex-1 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-bold px-6 py-3 lg:py-4 rounded-2xl text-sm lg:text-base shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group ${isAddingToCart ? 'scale-95 shadow-inner' : ''}`}
+                className={`flex-1 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-6 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 ${isAddingToCart ? 'scale-95' : ''}`}
                 onClick={handleAddToCart}
-                disabled={isAddingToCart || !offer}
+                disabled={isAddingToCart}
               >
-                <span className={`relative z-10 flex items-center justify-center transition-all duration-300 ${isAddingToCart ? 'scale-90' : ''}`}>
-                  <span className={`mr-2 transition-all duration-300 ${isAddingToCart ? 'animate-bounce' : ''}`}>
+                <span className="flex items-center justify-center gap-2">
+                  <span className={isAddingToCart ? 'animate-pulse' : ''}>
                     {isAddingToCart ? '✓' : '🛒'}
                   </span>
-                  {isAddingToCart
-                    ? 'ADDED TO CART!'
-                    : offer ? `ADD TO CART — ₹${discountedPrice.toFixed(2)}` : 'SELECT AN OFFER FIRST'}
+                  {isAddingToCart ? 'Added to Collection!' : 'Add to Collection'}
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                {isAddingToCart && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 animate-pulse"></div>
-                )}
               </button>
               <button
-                className={`flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold px-6 py-3 lg:py-4 rounded-2xl text-sm lg:text-base shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group ${isBuyingNow ? 'scale-95 shadow-inner' : ''}`}
+                className={`flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold px-6 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 ${isBuyingNow ? 'scale-95' : ''}`}
                 onClick={handleBuyNow}
-                disabled={isBuyingNow || !offer}
+                disabled={isBuyingNow}
               >
-                <span className={`relative z-10 flex items-center justify-center transition-all duration-300 ${isBuyingNow ? 'scale-90' : ''}`}>
-                  <span className={`mr-2 transition-all duration-300 ${isBuyingNow ? 'animate-bounce' : ''}`}>🚀</span>
-                  {isBuyingNow ? 'REDIRECTING...' : (offer ? 'BUY NOW' : 'SELECT AN OFFER FIRST')}
+                <span className="flex items-center justify-center gap-2">
+                  <span className={isBuyingNow ? 'animate-pulse' : ''}>🚀</span>
+                  {isBuyingNow ? 'Redirecting...' : 'Buy Now'}
                 </span>
-                {isBuyingNow && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 animate-pulse"></div>
-                )}
               </button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {/* Trust Badges */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                ['🚚', 'Fast Delivery', 'Express shipping'],
-                ['🛡️', '100% Authentic', 'Guaranteed quality'],
-                ['🧬', 'Non GMO', 'Gluten Free'],
-                ['💸', 'COD Available', 'Pay on delivery'],
-              ].map(([icon, label, subtitle], idx) => (
-                <div key={idx} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-3 text-center hover:from-teal-50 hover:to-teal-100 transition-all duration-300 group border border-gray-200 hover:border-teal-200">
-                  <div className="text-xl mb-1 group-hover:scale-110 transition-transform duration-300">{icon}</div>
-                  <div className="font-bold text-teal-700 text-xs mb-1">{label}</div>
-                  <div className="text-xs text-gray-600">{subtitle}</div>
+                { icon: <Truck className="w-4 h-4" />, label: 'Free Shipping', subtitle: 'On orders above ₹999' },
+                { icon: <Shield className="w-4 h-4" />, label: '100% Authentic', subtitle: 'Guaranteed original' },
+                { icon: <Award className="w-4 h-4" />, label: 'Premium Quality', subtitle: 'Long-lasting EDP' },
+                { icon: <CreditCard className="w-4 h-4" />, label: 'Secure Payment', subtitle: 'Multiple options' },
+              ].map((item, idx) => (
+                <div key={idx} className="bg-gray-50 rounded-lg p-3 text-center hover:bg-rose-50 transition-colors group border border-gray-200">
+                  <div className="text-rose-500 mb-1 flex justify-center group-hover:scale-110 transition-transform">
+                    {item.icon}
+                  </div>
+                  <div className="font-semibold text-xs text-gray-700 mb-1">{item.label}</div>
+                  <div className="text-xs text-gray-600">{item.subtitle}</div>
                 </div>
               ))}
             </div>
@@ -356,43 +350,135 @@ export default function ProductClient({
         </div>
       </div>
 
+      {/* Mobile Fixed Bottom Buttons */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl z-50 p-4">
+        <div className="max-w-md mx-auto">
+          <div className="flex items-center gap-3">
+            {/* Price Display */}
+            <div className="flex-1">
+              <div className="text-xs text-gray-500 mb-1">Total Price</div>
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-black text-rose-600">
+                  ₹{totalPrice.toLocaleString()}
+                </span>
+                {hasSale && (
+                  <span className="line-through text-gray-500 text-sm">
+                    ₹{totalRegularPrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Quantity Selector - Compact */}
+            <div className="flex items-center border border-gray-300 rounded-lg bg-gray-50">
+              <button
+                onClick={() => handleQuantityChange(-1)}
+                className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg"
+                disabled={quantity <= 1}
+              >
+                <Minus className="w-3 h-3 text-gray-600" />
+              </button>
+              <span className="px-3 py-2 font-semibold text-gray-800 text-sm min-w-[2rem] text-center">
+                {quantity}
+              </span>
+              <button
+                onClick={() => handleQuantityChange(1)}
+                className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg"
+              >
+                <Plus className="w-3 h-3 text-gray-600" />
+              </button>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 mt-4">
+            <button
+              className={`flex-1 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-4 py-3 rounded-xl shadow-lg transform transition-all duration-200 ${isAddingToCart ? 'scale-95' : 'active:scale-95'}`}
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+            >
+              <span className="flex items-center justify-center gap-2 text-sm">
+                <ShoppingBag className="w-4 h-4" />
+                {isAddingToCart ? 'Added!' : 'Add to Cart'}
+              </span>
+            </button>
+            <button
+              className={`flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold px-4 py-3 rounded-xl shadow-lg transform transition-all duration-200 ${isBuyingNow ? 'scale-95' : 'active:scale-95'}`}
+              onClick={handleBuyNow}
+              disabled={isBuyingNow}
+            >
+              <span className="flex items-center justify-center gap-2 text-sm">
+                <span className={isBuyingNow ? 'animate-pulse' : ''}>🚀</span>
+                {isBuyingNow ? 'Redirecting...' : 'Buy Now'}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Description Tabs */}
-      <div className="max-w-7xl mx-auto mt-8 p-4 lg:p-6">
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+      <div className="max-w-7xl mx-auto mt-8 px-4">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
           <Tab.Group>
-            <Tab.List className="flex bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-              {['Description', 'Additional Info'].map((label, idx) => (
+            <Tab.List className="flex bg-gray-50 border-b border-gray-200">
+              {['Description', 'Fragrance Notes', 'How to Use'].map((label, idx) => (
                 <Tab key={idx} className={({ selected }) =>
-                  `flex-1 py-3 px-4 text-sm lg:text-base font-semibold outline-none transition-all duration-300 relative ${
+                  `flex-1 py-4 px-6 text-sm font-semibold outline-none transition-all duration-200 relative ${
                     selected 
-                      ? 'text-teal-600 bg-white border-b-4 border-teal-500' 
-                      : 'text-gray-600 hover:text-teal-500 hover:bg-gray-50'
+                      ? 'text-rose-600 bg-white border-b-2 border-rose-500' 
+                      : 'text-gray-600 hover:text-rose-500'
                   }`
                 }>
                   {label}
-                  {idx === 0 && (
-                    <span className="ml-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">NEW</span>
-                  )}
                 </Tab>
               ))}
             </Tab.List>
-            <Tab.Panels className="p-4 lg:p-6">
+            <Tab.Panels className="p-6">
               <Tab.Panel>
-                <div className="prose max-w-none text-gray-700 leading-relaxed text-sm" 
+                <div className="prose max-w-none text-gray-700 leading-relaxed" 
                      dangerouslySetInnerHTML={{ __html: product.description || '' }} />
               </Tab.Panel>
               <Tab.Panel>
-                <div className="prose max-w-none text-gray-700">
-                  <h3 className="font-bold text-lg lg:text-xl bg-gradient-to-r from-teal-600 to-teal-800 bg-clip-text text-transparent mb-3">
-                    Additional Information
-                  </h3>
-                  <div className="bg-gradient-to-r from-teal-50 to-orange-50 rounded-2xl p-4 border border-teal-200 space-y-3">
-                    <p className="text-gray-700 leading-relaxed text-sm">
-                      Your tracking ID and order details will be sent to your WhatsApp once the order is placed successfully.
-                    </p>
-                    <p className="text-gray-700 leading-relaxed text-sm">
-                      <strong>Shipping Details:</strong> Your order will be delivered within 2-3 business days after placing the order.
-                    </p>
+                <div className="space-y-4">
+                  <h3 className="font-bold text-xl text-gray-800 mb-4">Fragrance Profile</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-rose-50 rounded-lg p-4 border border-rose-200">
+                      <h4 className="font-semibold text-rose-600 mb-2">Top Notes</h4>
+                      <p className="text-sm text-gray-700">Bergamot, Pink Pepper, Fresh Mint</p>
+                    </div>
+                    <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                      <h4 className="font-semibold text-purple-600 mb-2">Heart Notes</h4>
+                      <p className="text-sm text-gray-700">Jasmine, Rose, Spicy Cardamom</p>
+                    </div>
+                    <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+                      <h4 className="font-semibold text-amber-600 mb-2">Base Notes</h4>
+                      <p className="text-sm text-gray-700">Sandalwood, Musk, Vanilla</p>
+                    </div>
+                  </div>
+                </div>
+              </Tab.Panel>
+              <Tab.Panel>
+                <div className="space-y-4">
+                  <h3 className="font-bold text-xl text-gray-800 mb-4">Application Tips</h3>
+                  <div className="bg-rose-50 rounded-lg p-4 border border-rose-200">
+                    <ul className="space-y-2 text-gray-700">
+                      <li className="flex items-start gap-2">
+                        <span className="text-rose-500 mt-1">•</span>
+                        Apply to pulse points: wrists, neck, and behind ears
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-rose-500 mt-1">•</span>
+                        For best longevity, apply to well-moisturized skin
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-rose-500 mt-1">•</span>
+                        Allow the fragrance to dry naturally - do not rub
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-rose-500 mt-1">•</span>
+                        For evening occasions, lightly spray on clothing or hair
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </Tab.Panel>
@@ -401,13 +487,13 @@ export default function ProductClient({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-8 p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto mt-8 px-4">
         <ProductFAQ productSlug={slug} productName={product.name} />
       </div>
-      <div className="max-w-7xl mx-auto mt-8 p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto mt-8 px-4">
         <ProductReviews productId={product.id} productName={product.name} />
       </div>
-      <div className="max-w-7xl mx-auto mt-8 p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto mt-8 px-4">
         <CustomerMedia productSlug={slug} />
       </div>
       <RelatedProducts currentProduct={product} allProducts={products || []} />

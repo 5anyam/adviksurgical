@@ -2,32 +2,35 @@
 
 const MarqueeBanner = () => {
   const bannerItems = [
-    { text: "Soy Free", icon: "🌱" },
-    { text: "Plant-Based", icon: "🍃" },
-    { text: "Gluten Free", icon: "🌾" },
-    { text: "Non-GMO", icon: "🧬" },
-    { text: "100% Natural", icon: "🌿" },
-    { text: "Lab Tested", icon: "🔬" },
-    { text: "Organic", icon: "🌱" },
-    { text: "Chemical Free", icon: "❌" }
+    { text: "Long Lasting", icon: "⏰" },
+    { text: "Premium Quality", icon: "💎" },
+    { text: "Alcohol Free", icon: "🚫" },
+    { text: "Skin Safe", icon: "✨" },
+    { text: "Luxury Blend", icon: "🌟" },
+    { text: "Cruelty Free", icon: "🐰" },
+    { text: "Intense Sillage", icon: "💨" },
+    { text: "Artisan Crafted", icon: "🎨" }
   ];
 
   return (
-    <div className="overflow-hidden bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 py-2 sm:py-4 text-green-700 font-bold whitespace-nowrap relative border-y-2 border-green-200">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+    <div className="overflow-hidden bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 py-3 sm:py-4 text-white font-medium whitespace-nowrap relative border-y border-gray-700/50">
+      {/* Subtle animated shimmer */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse opacity-60"></div>
       
-      <div className="animate-marquee inline-block min-w-full text-sm sm:text-lg tracking-wide relative z-10">
+      <div className="animate-marquee inline-block min-w-full text-xs sm:text-sm tracking-wider relative z-10">
         {/* First set of items */}
         {bannerItems.map((item, index) => (
           <span 
             key={`first-${index}`} 
-            className="inline-flex items-center gap-1 sm:gap-2 mx-3 sm:mx-8 bg-white/30 px-2 sm:px-4 py-1 rounded-full shadow-sm backdrop-blur-sm"
+            className="inline-flex items-center gap-2 sm:gap-3 mx-4 sm:mx-8 text-gray-100 hover:text-white transition-colors duration-300"
           >
-            <span className="text-base sm:text-xl" role="img" aria-label={`${item.text} icon`}>
+            <span className="text-sm sm:text-base opacity-70" role="img" aria-label={`${item.text} icon`}>
               {item.icon}
             </span>
-            <span className="font-semibold text-xs sm:text-base">{item.text}</span>
+            <span className="font-light text-xs sm:text-sm uppercase tracking-widest">
+              {item.text}
+            </span>
+            <span className="hidden sm:inline-block w-1 h-1 bg-gray-500 rounded-full mx-2"></span>
           </span>
         ))}
         
@@ -35,12 +38,15 @@ const MarqueeBanner = () => {
         {bannerItems.map((item, index) => (
           <span 
             key={`second-${index}`} 
-            className="inline-flex items-center gap-1 sm:gap-2 mx-3 sm:mx-8 bg-white/30 px-2 sm:px-4 py-1 rounded-full shadow-sm backdrop-blur-sm"
+            className="inline-flex items-center gap-2 sm:gap-3 mx-4 sm:mx-8 text-gray-100 hover:text-white transition-colors duration-300"
           >
-            <span className="text-base sm:text-xl" role="img" aria-label={`${item.text} icon`}>
+            <span className="text-sm sm:text-base opacity-70" role="img" aria-label={`${item.text} icon`}>
               {item.icon}
             </span>
-            <span className="font-semibold text-xs sm:text-base">{item.text}</span>
+            <span className="font-light text-xs sm:text-sm uppercase tracking-widest">
+              {item.text}
+            </span>
+            <span className="hidden sm:inline-block w-1 h-1 bg-gray-500 rounded-full mx-2"></span>
           </span>
         ))}
       </div>
@@ -52,17 +58,17 @@ const MarqueeBanner = () => {
         }
         
         .animate-marquee {
-          animation: marquee 25s linear infinite;
+          animation: marquee 30s linear infinite;
         }
         
-        /* Slower animation on mobile for better readability */
+        /* Slower, more elegant animation on mobile */
         @media (max-width: 640px) {
           .animate-marquee {
-            animation: marquee 35s linear infinite;
+            animation: marquee 40s linear infinite;
           }
         }
         
-        /* Pause on hover for desktop */
+        /* Subtle pause interaction */
         @media (min-width: 641px) {
           .animate-marquee:hover {
             animation-play-state: paused;

@@ -3,11 +3,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const IMAGES = [
   {
-    src: 'https://cms.amraj.in/wp-content/uploads/2025/08/amraj-cover-1-scaled.jpg',
+    src: '/edaperfumes-banner.jpg',
     alt: 'Healthy skin with bottle',
   },
   {
-    src: 'https://cms.amraj.in/wp-content/uploads/2025/06/Amraj-Bg-Photo_20250623_113828_0000-scaled.jpg',
+    src: '/edaperfumes-banner.jpg',
     alt: 'Model smiling with serum',
   }
 ];
@@ -103,7 +103,7 @@ export default function HeroCarousel() {
               className={`rounded-full cursor-pointer transition-all duration-300 
                 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal-500/50 
                 ${index === current
-                  ? 'bg-teal-500 w-6 sm:w-8 h-2 sm:h-2.5' 
+                  ? 'bg-red-500 w-6 sm:w-8 h-2 sm:h-2.5' 
                   : 'bg-gray-300 hover:bg-gray-400 w-2 sm:w-2.5 h-2 sm:h-2.5'
                 }`}
               onClick={() => goToSlide(index)}
