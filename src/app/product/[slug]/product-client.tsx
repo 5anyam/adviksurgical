@@ -13,7 +13,7 @@ import { Tab } from '@headlessui/react'
 import SmoothMarquee from '../../../../components/ProductSlide'
 import ProductFAQ from '../../../../components/ProductFaq'
 import RelatedProducts from '../../../../components/RelatedProducts'
-import CustomerMedia from '../../../../components/CustomerMedia'
+//import CustomerMedia from '../../../../components/CustomerMedia'
 import ProductReviews from '../../../../components/ProductReviews'
 import { Heart, Star, Shield, Truck, Award, CreditCard, Plus, Minus, ShoppingBag } from 'lucide-react'
 
@@ -493,9 +493,9 @@ export default function ProductClient({
       <div className="max-w-7xl mx-auto mt-8 px-4">
         <ProductReviews productId={product.id} productName={product.name} />
       </div>
-      <div className="max-w-7xl mx-auto mt-8 px-4">
+      {/* <div className="max-w-7xl mx-auto mt-8 px-4">
         <CustomerMedia productSlug={slug} />
-      </div>
+      </div> */}
       <RelatedProducts currentProduct={product} allProducts={products || []} />
     </div>
   )

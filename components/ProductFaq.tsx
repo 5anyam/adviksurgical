@@ -13,155 +13,88 @@ interface ProductFAQProps {
   productName: string;
 }
 
-// FAQ Data for different products
+// FAQ Data for different EDA Perfumes products
 const faqData: Record<string, FAQ[]> = {
-  'prostate-care': [
+  'oudh-shukran': [
     {
-      question: "What is Amraj Advanced Prostate Care?",
-      answer: "It's a premium Ayurvedic + nutraceutical formula crafted to support prostate health, improve urinary function, and promote male vitality. It blends clinically backed ingredients like Beta Sitosterol, Saw Palmetto, Stinging Nettle Root, Lycopene, and Pumpkin Seed Extract with time-tested herbs like Gokshura, Varuna, Chandraprabha Vati. And this formulation is powered by Shilajit to promote male vitality."
+      question: "What is ECLAT D'AMOUR Oudh Shukran?",
+      answer: "A sophisticated 100ml Eau de Parfum that embodies luxury and elegance. This premium unisex fragrance combines traditional Arabic attar-inspired notes with contemporary sophistication, featuring exquisite Oudh, Amber, Musk, and Rose accords."
     },
     {
-      question: "What makes it different from other prostate supplements?",
-      answer: "Most products use single action formulas. Amraj Advanced Prostate Care is a multi-target approach - it reduces prostate inflammation, supports healthy urine flow, improves bladder emptying, and boosts overall male wellness."
+      question: "How long does the fragrance last?",
+      answer: "As an Eau de Parfum concentration with premium quality ingredients, Oudh Shukran offers exceptional longevity of 8-12 hours on skin and even longer on clothing. The rich Oudh and Amber base notes ensure lasting presence throughout your day and night."
     },
     {
-      question: "How does it work?",
-      answer: "• Reduces inflammation: Beta Sitosterol, Stinging Nettle, and Curcumin\n• Supports prostate size & function: Saw Palmetto, Pumpkin Seed, Pygeum Bark\n• Improves urinary flow: Varuna, Punarnava, Neem\n• Boosts energy & vitality: Shilajit, Gokshura, Lycopene"
+      question: "Is this fragrance suitable for both men and women?",
+      answer: "Absolutely! Oudh Shukran is expertly crafted as a unisex fragrance. The sophisticated blend of Oudh, spices, and florals creates a perfect balance that complements any gender, making it ideal for those who appreciate boundary-breaking, sophisticated scents."
     },
     {
-      question: "Why combine modern science with Ayurvedic herbs?",
-      answer: "Modern nutraceuticals deliver precision and clinical results, while Ayurveda offers safe, holistic support. This combination gives both fast relief and long-term protection for prostate health."
+      question: "What occasions is this fragrance best suited for?",
+      answer: "This versatile luxury fragrance works beautifully for:\n• Formal events and evening occasions\n• Special romantic dates\n• Professional settings where you want to make an impression\n• Cultural celebrations and gatherings\n• Everyday luxury for fragrance connoisseurs"
     },
     {
-      question: "Who should take this product?",
-      answer: "Men over 40, or younger men experiencing:\n• Frequent night urination\n• Weak urine stream or incomplete bladder emptying\n• Prostate enlargement symptoms\n• Reduced vitality or energy levels"
+      question: "What are the main fragrance notes?",
+      answer: "Top Notes: Saffron, Bergamot, Rose\nHeart Notes: Indian Oudh, Amber, Patchouli\nBase Notes: Musk, Sandalwood, Vanilla, Leather\n\nThis carefully orchestrated composition creates a warm, mysterious, and sensual experience that evolves beautifully throughout the day."
     },
     {
-      question: "Is it safe for long-term use?",
-      answer: "Yes. All ingredients are plant-based, non-hormonal, and safe for daily use under recommended dosage. It's free from synthetic drugs and harmful additives."
+      question: "How should I apply this perfume for best results?",
+      answer: "For optimal performance:\n• Apply to pulse points (wrists, neck, behind ears)\n• Spray on freshly moisturized skin for better longevity\n• Don't rub wrists together - let it dry naturally\n• Layer with unscented lotion for extended wear\n• 2-3 sprays are sufficient for all-day presence"
     },
     {
-      question: "How should I take it?",
-      answer: "Take 1 capsule twice daily after meals, with water. For best results, use consistently for 3 months and maintain a healthy lifestyle."
+      question: "Is this an authentic Oudh fragrance?",
+      answer: "Yes! Oudh Shukran features high-quality Oudh essence blended with complementary notes. While it's inspired by traditional Arabic attar, it's created as a modern Eau de Parfum for easy application and sophisticated wear."
     },
     {
-      question: "Are there any side effects?",
-      answer: "It's generally well-tolerated. Our Product is made from high quality globally sourced ingredients and is free from harmful additives."
+      question: "Can I wear this fragrance daily?",
+      answer: "Absolutely! While rich and luxurious, the balanced composition makes it suitable for daily wear. Many customers make it their signature scent for both professional and personal occasions."
     },
     {
-      question: "How soon can I expect results?",
-      answer: "Most users notice improved urine flow and reduced night-time urination within 2–4 weeks. Full benefits for prostate health are typically seen over 8–12 weeks."
+      question: "How should I store my perfume?",
+      answer: "To maintain fragrance quality:\n• Store in a cool, dry place away from direct sunlight\n• Keep the cap tightly closed when not in use\n• Avoid bathroom storage (humidity affects longevity)\n• Keep away from heat sources\n• Original box provides ideal protection"
     },
     {
-      question: "Is it vegetarian and premium quality?",
-      answer: "Yes. It's 100% vegetarian, made with pharmaceutical-grade extracts, and produced in GMP-certified, ISO-approved facilities for maximum purity and effectiveness."
+      question: "Is this fragrance suitable for sensitive skin?",
+      answer: "Our fragrances are crafted with quality ingredients. However, we recommend performing a patch test if you have sensitive skin. Apply a small amount to your inner wrist and wait 24 hours to check for any reaction."
     }
   ],
-  'liver-detox': [
-  {
-    question: "What is Amraj Advanced Liver Detox?",
-    answer: "It's a premium Ayurvedic + nutraceutical formula designed to support healthy liver function, aid detoxification, and promote overall wellness."
-  },
-  {
-    question: "What makes Amraj Advanced Liver Detox different from other liver supplements?",
-    answer: "Unlike generic products, our formula is an innovative fusion of clinically backed nutraceuticals like TUDCA, NAC, and Glutathione with time-tested herbs like Milk Thistle, Triphala, and Turmeric, delivering both rapid and long-term liver health benefits."
-  },
-  {
-    question: "How does it work?",
-    answer: "Our formula supports the liver's natural detox pathways by:\n• Protecting liver cells from oxidative stress\n• Promoting bile flow and fat metabolism\n• Helping flush out toxins and metabolic waste\n• Supporting energy and digestion"
-  },
-  {
-    question: "Why combine modern science with Ayurveda?",
-    answer: "Modern science offers precision, standardised potency, and targeted action, while Ayurveda brings holistic healing and centuries of safe, proven herbal wisdom. Together, they offer complete liver protection, detox, and regeneration."
-  },
-  {
-    question: "Who should take this product?",
-    answer: "It's ideal for adults who:\n• Want to maintain liver health despite lifestyle, alcohol, or processed food consumption\n• Have fatty liver or sluggish digestion\n• Are undergoing detox or weight management programs\n• Want to protect their liver from daily environmental toxins"
-  },
-  {
-    question: "How does it support liver health?",
-    answer: "• Protects: Milk Thistle, NAC, and Glutathione shield liver cells from oxidative stress\n• Cleanses: Triphala, Turmeric, and Green Tea Extract help flush toxins\n• Regenerates: TUDCA and L-Ornithine support cell repair and bile flow\n• Energises: Ginseng, Ginkgo, and Astragalus boost energy & metabolism"
-  },
-  {
-    question: "How should I take it?",
-    answer: "Take 1 capsule twice daily with water, preferably after meals, or as directed by your healthcare provider. For best results, use consistently for 90 days for full body detox."
-  },
-  {
-    question: "Are there any side effects?",
-    answer: "Our product is made from high-quality, globally sourced ingredients and is free from harmful additives. It is generally well tolerated."
-  },
-  {
-    question: "How long before I notice results?",
-    answer: "Some users feel lighter, more energetic, and experience improved digestion within 7–10 days. However, noticeable liver health improvements usually occur over 4–12 weeks of consistent use."
-  },
-  {
-    question: "Is this product vegetarian and premium quality?",
-    answer: "Yes. It's 100% vegetarian, formulated with pharmaceutical-grade nutraceuticals, standardised herbal extracts, and manufactured in GMP-certified, ISO-approved facilities for maximum purity and effectiveness."
-  }
-],
-  'weight-management': [
-  {
-    question: "What is Amraj Weight Management Pro+?",
-    answer: "A scientifically formulated weight management capsule that combines clinically backed nutraceuticals like Garcinia Cambogia, Green Coffee Bean, L-Carnitine, and Apple Cider Vinegar with time-tested Ayurvedic herbs like Moringa, Guggal, Fenugreek, Shilajit, and Cinnamon for effective and natural weight support."
-  },
-  {
-    question: "How does it work for weight management?",
-    answer: "• Blocks excess fat formation (HCA from Garcinia Cambogia)\n• Boosts metabolism & energy (Green Coffee Bean, L-Carnitine, Shilajit)\n• Controls appetite & cravings (Fenugreek, Caralluma)\n• Improves digestion & detox (Moringa, Apple Cider Vinegar, Cinnamon)"
-  },
-  {
-    question: "What makes it different from other weight loss supplements?",
-    answer: "Most formulas focus only on fat burning. Amraj Weight Management Pro+ uses a 4-in-1 approach — burn fat, block fat, suppress appetite, and detox — ensuring sustainable results without crash diets or fatigue."
-  },
-  {
-    question: "Is it suitable for both men and women?",
-    answer: "Yes, it's safe and effective for both men and women over the age of 18."
-  },
-  {
-    question: "How should I take it for best results?",
-    answer: "Take 1 capsule twice daily, 30 minutes before meals, with water. Combine with balanced nutrition and regular activity for maximum results."
-  },
-  {
-    question: "How soon can I expect to see changes?",
-    answer: "Many users notice reduced bloating and improved energy in the first 2 weeks. Visible weight and inch loss usually occur within 4–6 weeks with consistent use."
-  },
-  {
-    question: "Is it safe for long-term use?",
-    answer: "Yes, all ingredients are plant based and naturally sourced. It contains no synthetic fat burners, no hormones, or no banned substances."
-  },
-  {
-    question: "Does it have any side effects?",
-    answer: "It's generally well tolerated. Our Product is made from high quality, globally sourced ingredients and is free from harmful additives."
-  },
-  {
-    question: "Can I take it on an empty stomach?",
-    answer: "Yes, it's best taken 30 minutes before meals for optimal absorption and appetite control."
-  },
-  {
-    question: "Is it vegetarian and premium quality?",
-    answer: "Yes, it's 100% vegetarian, made from pharmaceutical grade nutraceutical, and manufactured in GMP-certified, ISO-approved facilities for purity and effectiveness."
-  }
-]
+  'default': [
+    {
+      question: "What makes EDA Perfumes different from other brands?",
+      answer: "EDA Perfumes specializes in seductive, luxury fragrances that blend Arabic attar-inspired traditions with contemporary sophistication. Our Eau de Parfum concentrations ensure long-lasting wear and exceptional quality at accessible luxury pricing."
+    },
+    {
+      question: "How long do EDA Perfumes last?",
+      answer: "Our Eau de Parfum formulations typically last 8-12 hours on skin and even longer on clothing, depending on skin type, climate, and application method. The premium concentration ensures lasting presence throughout your day."
+    },
+    {
+      question: "Are EDA Perfumes suitable for all genders?",
+      answer: "Most of our collection features sophisticated unisex fragrances designed for anyone who appreciates luxury scents. We believe great fragrances transcend gender boundaries."
+    },
+    {
+      question: "What is your return policy?",
+      answer: "Due to the personal nature of fragrances and hygiene considerations, we cannot accept returns on opened products. Unopened products can be returned within 7 days of delivery if the packaging is undamaged. Please refer to our Returns & Refunds Policy for complete details."
+    },
+    {
+      question: "How should I choose the right fragrance?",
+      answer: "Consider:\n• The occasion (daily wear, evening events, formal settings)\n• Your personal style and preferences\n• Season (lighter for summer, richer for winter)\n• Our product descriptions provide detailed scent profiles\n• Read customer reviews for real experiences\n• Contact our customer care for personalized recommendations"
+    },
+    {
+      question: "Do you offer fragrance samples?",
+      answer: "Currently, we sell full-size 100ml Eau de Parfum bottles. Our detailed product descriptions, scent profiles, and customer reviews help you make informed decisions about your fragrance selection."
+    },
+    {
+      question: "How do I apply perfume correctly?",
+      answer: "For best results:\n• Apply to pulse points (wrists, neck, behind ears, inner elbows)\n• Spray on clean, moisturized skin\n• Don't rub - let it dry naturally\n• 2-4 sprays are typically sufficient\n• Layer with unscented products for extended wear"
+    },
+    {
+      question: "Are EDA Perfumes authentic and high quality?",
+      answer: "Yes! All EDA Perfumes are:\n• Crafted with premium quality ingredients\n• Manufactured to international standards\n• 100% authentic luxury fragrances\n• Properly packaged for protection and elegance\n• Backed by our quality commitment"
+    }
+  ]
 };
 
 // Default FAQs for products not specifically listed
-const defaultFAQs: FAQ[] = [
-  {
-    question: "How should I take this product?",
-    answer: "Follow the dosage instructions on the product label. Generally, take with water after meals for best absorption."
-  },
-  {
-    question: "Is this product safe?",
-    answer: "Yes, our products are made with high-quality, natural ingredients and are manufactured in GMP-certified facilities."
-  },
-  {
-    question: "How long before I see results?",
-    answer: "Results may vary, but most customers notice benefits within 2-4 weeks of consistent use. For best results, use for at least 8-12 weeks."
-  },
-  {
-    question: "Are there any side effects?",
-    answer: "Our products are generally well-tolerated. However, if you experience any adverse reactions, discontinue use and consult your healthcare provider."
-  }
-];
+const defaultFAQs: FAQ[] = faqData['default'];
 
 const ProductFAQ: React.FC<ProductFAQProps> = ({ productSlug, productName }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -193,15 +126,20 @@ const ProductFAQ: React.FC<ProductFAQProps> = ({ productSlug, productName }) => 
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+    <div className="bg-white rounded-3xl shadow-2xl border-2 border-gray-200 overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-6">
-        <h2 className="text-2xl lg:text-3xl font-bold text-white text-center">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-teal-100 text-center mt-2">
-          Everything you need to know about {productName}
-        </p>
+      <div className="bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 p-6 lg:p-8">
+        <div className="text-center">
+          <div className="inline-block mb-3">
+            <span className="text-4xl">❓</span>
+          </div>
+          <h2 className="text-2xl lg:text-3xl font-black text-white mb-2">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-white/90 text-sm lg:text-base">
+            Everything you need to know about {productName}
+          </p>
+        </div>
       </div>
 
       {/* FAQ Items */}
@@ -209,34 +147,45 @@ const ProductFAQ: React.FC<ProductFAQProps> = ({ productSlug, productName }) => 
         {faqs.map((faq, index) => (
           <div key={index} className="group">
             <button
-              className="w-full px-6 py-5 text-left hover:bg-gradient-to-r hover:from-teal-50 hover:to-orange-50 transition-all duration-300 focus:outline-none focus:bg-teal-50"
+              className="w-full px-6 py-5 lg:px-8 lg:py-6 text-left hover:bg-gradient-to-r hover:from-rose-50 hover:to-pink-50 transition-all duration-300 focus:outline-none focus:bg-rose-50"
               onClick={() => toggleFAQ(index)}
             >
-              <div className="flex justify-between items-start">
-                <h3 className="font-semibold text-gray-800 text-sm lg:text-base pr-4 leading-relaxed">
-                  {faq.question}
-                </h3>
-                <div className="flex-shrink-0 ml-4">
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex items-start gap-3 flex-1">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center mt-1">
+                    <span className="text-rose-600 font-bold text-sm">{index + 1}</span>
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-sm lg:text-base leading-relaxed flex-1">
+                    {faq.question}
+                  </h3>
+                </div>
+                <div className="flex-shrink-0">
                   {openIndex === index ? (
-                    <ChevronUpIcon className="h-5 w-5 text-teal-600 transition-transform duration-300" />
+                    <div className="w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center">
+                      <ChevronUpIcon className="h-5 w-5 text-white transition-transform duration-300" />
+                    </div>
                   ) : (
-                    <ChevronDownIcon className="h-5 w-5 text-gray-400 group-hover:text-teal-600 transition-all duration-300" />
+                    <div className="w-8 h-8 rounded-full bg-gray-200 group-hover:bg-rose-500 flex items-center justify-center transition-all duration-300">
+                      <ChevronDownIcon className="h-5 w-5 text-gray-600 group-hover:text-white transition-all duration-300" />
+                    </div>
                   )}
                 </div>
               </div>
             </button>
             
             {/* Answer */}
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
               openIndex === index 
-                ? 'max-h-96 opacity-100' 
+                ? 'max-h-[1000px] opacity-100' 
                 : 'max-h-0 opacity-0'
             }`}>
-              <div className="px-6 pb-5">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 border-l-4 border-teal-500">
-                  <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
-                    {faq.answer}
-                  </p>
+              <div className="px-6 pb-6 lg:px-8 lg:pb-8">
+                <div className="ml-11">
+                  <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-5 border-l-4 border-rose-500 shadow-sm">
+                    <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
+                      {faq.answer}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -244,20 +193,34 @@ const ProductFAQ: React.FC<ProductFAQProps> = ({ productSlug, productName }) => 
         ))}
       </div>
 
-      {/* Footer
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 text-center border-t border-gray-200">
-        <p className="text-gray-600 text-sm mb-3">
-          Still have questions? We are here to help!
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold px-6 py-2 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
-            📱 WhatsApp Support
-          </button>
-          <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-6 py-2 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
-            📧 Email Us
-          </button>
+      {/* Footer */}
+      <div className="bg-gradient-to-r from-gray-50 to-rose-50 p-6 lg:p-8 text-center border-t-2 border-gray-200">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-3xl mb-3">💬</div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Still have questions?</h3>
+          <p className="text-gray-600 text-sm mb-5">
+            Our luxury fragrance consultants are here to help you find your perfect scent
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a 
+              href="mailto:care@edaperfumes.com"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl"
+            >
+              <span>📧</span>
+              <span>Email Support</span>
+            </a>
+            <a 
+              href="https://wa.me/919876543210"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl"
+            >
+              <span>📱</span>
+              <span>WhatsApp Us</span>
+            </a>
+          </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

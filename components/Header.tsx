@@ -29,7 +29,7 @@ const navItems = [
       { name: "Guilty Midnight", to: "https://www.edaperfumes.com/product/eclat-damour-guilty-midnight-shades-premium-eau-de-parfum-bold-unisex-luxury-fragrance-long-lasting-citrus-spicy-woody-notes-100ml", price: "₹999", badge: "New" }
     ]
   },
-  { name: "Collections", to: "/collections" },
+  { name: "Shop", to: "/shop" },
   { name: "About Us", to: "/about" },
 ];
 

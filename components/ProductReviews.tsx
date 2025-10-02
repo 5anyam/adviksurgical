@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { StarIcon as StarOutlineIcon } from '@heroicons/react/24/outline';
+import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import { toast } from '../hooks/use-toast';
 
 interface Review {
@@ -72,9 +73,9 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
     rating: 0,
   });
 
-  const API_BASE = 'https://cms.amraj.in/wp-json/wc/v3';
-  const CONSUMER_KEY = 'ck_7610f309972822bfa8e87304ea6c47e9e93b8ff6';
-  const CONSUMER_SECRET = 'cs_0f117bc7ec4611ca378adde03010f619c0af59b2';
+  const API_BASE = 'https://cms.edaperfumes.com/wp-json/wc/v3';
+  const CONSUMER_KEY = 'ck_b1a13e4236dd41ec9b8e6a1720a69397ddd12da6';
+  const CONSUMER_SECRET = 'cs_d8439cfabc73ad5b9d82d1d3facea6711f24dfd1';
 
   useEffect(() => {
     if (productId) {
@@ -191,18 +192,18 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
     onChange?: (value: number) => void;
     interactive?: boolean;
   }) => (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
           type="button"
           onClick={() => interactive && onChange?.(star)}
-          className={`${interactive ? 'cursor-pointer active:scale-95' : 'cursor-default'} transition-transform`}
+          className={`${interactive ? 'cursor-pointer hover:scale-110 active:scale-95' : 'cursor-default'} transition-transform`}
           aria-label={`Rate ${star}`}
           disabled={!interactive}
         >
           {star <= rating ? (
-            <StarIcon className="h-5 w-5 text-yellow-400" />
+            <StarIcon className="h-5 w-5 text-amber-400" />
           ) : (
             <StarOutlineIcon className="h-5 w-5 text-gray-300" />
           )}
@@ -217,40 +218,44 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
       : 0;
 
   return (
-    <section className="bg-white rounded-2xl shadow border border-gray-100">
+    <section className="bg-white rounded-2xl shadow-lg border border-gray-200">
       {/* Header */}
-      <div className="p-4 sm:p-5 bg-gradient-to-r from-teal-500 to-orange-500">
+      <div className="p-5 sm:p-6 bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600">
         <div className="flex items-center justify-between">
-          <h2 className="text-white font-bold text-lg sm:text-xl">Customer Reviews</h2>
-          <span className="text-white/90 text-xs sm:text-sm">
+          <h2 className="text-white font-black text-xl sm:text-2xl flex items-center gap-2">
+            ⭐ Customer Reviews
+          </h2>
+          <span className="text-white/90 text-xs sm:text-sm font-semibold bg-white/20 px-3 py-1 rounded-full">
             {reviews.length} review{reviews.length !== 1 ? 's' : ''}
           </span>
         </div>
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-3">
           <StarRating rating={Math.round(averageRating)} />
-          <span className="text-white font-semibold text-sm sm:text-base">
+          <span className="text-white font-bold text-lg sm:text-xl">
             {averageRating > 0 ? averageRating.toFixed(1) : '0.0'}
           </span>
+          <span className="text-white/80 text-sm">out of 5</span>
         </div>
       </div>
 
-      <div className="p-4 sm:p-6">
+      <div className="p-5 sm:p-6">
         {/* Toggle */}
-        <div className="mb-4 sm:mb-6">
+        <div className="mb-6">
           <button
             onClick={() => setShowForm((s) => !s)}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-teal-500 to-orange-500 hover:from-teal-600 hover:to-orange-600 transition"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
-            {showForm ? 'Cancel' : '✍️ Write a Review'}
+            {showForm ? '✖ Cancel' : '✍️ Write Your Review'}
           </button>
         </div>
 
         {/* Form */}
         {showForm && (
-          <form onSubmit={submitReview} className="mb-6 space-y-3 sm:space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <form onSubmit={submitReview} className="mb-8 p-6 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Share Your Experience</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Name *</label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Name *</label>
                 <input
                   type="text"
                   required
@@ -258,26 +263,26 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFormData((s) => ({ ...s, reviewer: e.target.value }))
                   }
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 outline-none text-sm"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none text-sm transition-all"
                   placeholder="Your name"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Email (optional)</label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Email (optional)</label>
                 <input
                   type="email"
                   value={formData.reviewer_email}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFormData((s) => ({ ...s, reviewer_email: e.target.value }))
                   }
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 outline-none text-sm"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none text-sm transition-all"
                   placeholder="your.email@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Rating *</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Your Rating *</label>
               <StarRating
                 rating={formData.rating}
                 onChange={(v: number) => setFormData((s) => ({ ...s, rating: v }))}
@@ -286,7 +291,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Review *</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Your Review *</label>
               <textarea
                 required
                 value={formData.review}
@@ -294,67 +299,75 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, productName 
                   setFormData((s) => ({ ...s, review: e.target.value }))
                 }
                 rows={4}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 outline-none text-sm resize-none"
-                placeholder="Share your experience…"
+                className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none text-sm resize-none transition-all"
+                placeholder="Tell us about your experience with this fragrance..."
               />
             </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className={`w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-teal-500 to-orange-500 hover:from-teal-600 hover:to-orange-600 transition ${
+              className={`w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 transition-all shadow-lg ${
                 submitting ? 'opacity-60 cursor-not-allowed' : ''
               }`}
             >
-              {submitting ? 'Submitting…' : 'Submit Review'}
+              {submitting ? 'Submitting…' : '✨ Submit Review'}
             </button>
           </form>
         )}
 
         {/* Reviews */}
         {loading ? (
-          <div className="py-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-4 border-teal-500 border-t-transparent mx-auto"></div>
-            <p className="text-gray-600 text-sm mt-2">Loading reviews…</p>
+          <div className="py-12 text-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-rose-500 border-t-transparent mx-auto"></div>
+            <p className="text-gray-600 text-sm mt-3 font-medium">Loading reviews…</p>
           </div>
         ) : reviews.length === 0 ? (
-          <div className="py-8 text-center">
-            <div className="text-5xl mb-2">⭐</div>
+          <div className="py-12 text-center">
+            <div className="text-6xl mb-3">🌹</div>
+            <p className="text-gray-900 text-lg font-bold mb-1">No reviews yet</p>
             <p className="text-gray-600 text-sm">Be the first to review {productName}!</p>
           </div>
         ) : (
-          <ul className="space-y-4 sm:space-y-5">
+          <ul className="space-y-4">
             {reviews.map((r) => (
               <li
                 key={r.id}
-                className="p-4 sm:p-5 rounded-xl border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100"
+                className="p-5 sm:p-6 rounded-xl border-2 border-gray-200 bg-white hover:border-rose-200 hover:shadow-lg transition-all duration-300"
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                      {r.reviewer || 'Anonymous'}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <StarRating rating={r.rating || 0} />
-                      <span className="text-xs text-gray-500">
-                        {r.date_created ? new Date(r.date_created).toLocaleDateString() : '—'}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center border-2 border-rose-200">
+                      <span className="text-rose-600 font-bold text-lg">
+                        {(r.reviewer || 'A')[0].toUpperCase()}
                       </span>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-bold text-gray-900 text-sm sm:text-base">
+                          {r.reviewer || 'Anonymous'}
+                        </p>
+                        <CheckBadgeIcon className="h-5 w-5 text-rose-500" title="Verified Purchase" />
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <StarRating rating={r.rating || 0} />
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <p className="mt-3 text-gray-700 text-sm sm:text-base whitespace-pre-wrap">
+                <p className="mt-3 text-gray-700 text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
                   {stripHtml(r.review || '')}
                 </p>
 
                 {Array.isArray(r.images) && r.images.length > 0 && (
-                  <div className="mt-3 grid grid-cols-3 gap-2">
+                  <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-2">
                     {r.images.map((src, i) => (
                       <img
                         key={`${r.id}-${i}`}
                         src={src}
                         alt="Review photo"
-                        className="w-full h-24 sm:h-28 object-cover rounded-md border border-gray-200"
+                        className="w-full h-24 sm:h-28 object-cover rounded-lg border-2 border-gray-200 hover:border-rose-300 transition-all cursor-pointer hover:scale-105"
                         loading="lazy"
                       />
                     ))}

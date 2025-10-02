@@ -26,7 +26,7 @@ export default function CartIcon() {
   return (
     <Link href="/cart" className="relative group">
       <ShoppingCart 
-        className={`w-7 h-7 text-black group-hover:scale-110 transition-transform ${
+        className={`w-6 h-6 text-white group-hover:scale-110 transition-transform ${
           isAnimating 
             ? 'animate-bounce' 
             : ''
@@ -34,7 +34,7 @@ export default function CartIcon() {
       />
       {count > 0 && (
         <span 
-          className={`absolute -top-1 -right-1 bg-teal-600 text-white text-xs font-semibold rounded-full px-1.5 py-px shadow-lg border border-white transition-all duration-300 ${
+          className={`absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-px shadow-lg border border-white transition-all duration-300 ${
             isAnimating 
               ? 'animate-pulse scale-125' 
               : ''
@@ -46,7 +46,7 @@ export default function CartIcon() {
       
       {/* Optional: Add a subtle ring animation */}
       {isAnimating && (
-        <div className="absolute inset-0 rounded-full animate-ping bg-teal-600 opacity-20 scale-150"></div>
+        <div className="absolute inset-0 rounded-full animate-ping bg-red-400 opacity-20 scale-150"></div>
       )}
     </Link>
   );

@@ -7,7 +7,7 @@ const IMAGES = [
     alt: 'Healthy skin with bottle',
   },
   {
-    src: '/edaperfumes-banner.jpg',
+    src: 'https://cms.edaperfumes.com/wp-content/uploads/2025/10/eda-banner2-scaled.jpg',
     alt: 'Model smiling with serum',
   }
 ];
