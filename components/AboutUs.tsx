@@ -132,7 +132,7 @@ export default function AboutUsSection() {
             </h3>
             <div className="w-20 h-1 bg-[#F4A460] mx-auto mb-6 rounded-full"></div>
             <p className="text-base text-gray-700 max-w-2xl mx-auto font-light leading-relaxed">
-              We believe that quality nutrition should be accessible to everyone. That's why we bring 
+              We believe that quality nutrition should be accessible to everyone. That is why we bring 
               premium dry fruits and healthy snacks directly to your home, ensuring freshness and purity at every step.
             </p>
           </div>

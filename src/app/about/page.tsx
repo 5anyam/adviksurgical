@@ -150,7 +150,7 @@ export default function AboutPage() {
               return (
                 <div key={index} className="text-center p-6 bg-[#F4F4F0] rounded-lg border-2 border-[#6B8E23]/20 hover:border-[#6B8E23] hover:shadow-lg transition-all duration-300">
                   <Icon className="w-8 h-8 text-[#6B8E23] mx-auto mb-4" />
-                  <h3 className="font-semibold text-base mb-3 text-[#556B2F] tracking-wide uppercase text-sm">
+                  <h3 className="font-semibold mb-3 text-[#556B2F] tracking-wide uppercase text-sm">
                     {item.title}
                   </h3>
                   <p className="text-gray-700 text-sm font-light leading-relaxed">{item.desc}</p>
@@ -174,7 +174,7 @@ export default function AboutPage() {
                 Our Promise
               </h3>
               <p className="text-gray-700 text-sm font-light">
-                Fresh, pure, and nutritious dry fruits that support your healthy lifestyle. No shortcuts, no compromises – just natures best delivered to your doorstep.
+                Fresh, pure, and nutritious dry fruits that support your healthy lifestyle. No shortcuts, no compromises just natures best delivered to your doorstep.
               </p>
             </div>
           </div>
