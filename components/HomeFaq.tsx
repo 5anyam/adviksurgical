@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { Leaf, Truck, AlertCircle, RotateCcw, DollarSign, Zap, Sparkles } from 'lucide-react';
+import { Leaf, Truck, AlertCircle, RotateCcw, Zap, Sparkles } from 'lucide-react';
 
 interface FAQ {
   question: string;
@@ -39,11 +39,6 @@ const HomeFAQ: React.FC = () => {
       question: "Are these products suitable for dietary restrictions?",
       answer: "Our dry fruits are naturally vegan, gluten-free, and suitable for most dietary requirements. However, always check individual product labels for specific allergen information, especially for those with nut allergies.",
       icon: <AlertCircle className="w-5 h-5 text-[#D4A574]" />
-    },
-    {
-      question: "Do you offer bulk orders for corporate gifting?",
-      answer: "Absolutely! We specialize in premium corporate gifting hampers. We offer attractive bulk discounts and customization options. Contact us via WhatsApp or email to discuss your corporate gifting requirements.",
-      icon: <DollarSign className="w-5 h-5 text-[#D4A574]" />
     },
     {
       question: "How should I store dry fruits for maximum freshness?",

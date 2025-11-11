@@ -30,10 +30,6 @@ const faqData: Record<string, FAQ[]> = {
       answer: "For best results:\n• Store in a cool, dry place away from direct sunlight\n• Keep in airtight containers after opening\n• Avoid exposure to moisture\n• Refrigeration can extend shelf life\n• Most dry fruits last 6-12 months when stored properly"
     },
     {
-      question: "Do you offer bulk orders for corporate gifting?",
-      answer: "Absolutely! We specialize in premium corporate gifting hampers with:\n• Attractive bulk discounts\n• Custom packaging options\n• Flexible quantity orders\n• Fast nationwide delivery\n• Dedicated customer support\n\nContact us via WhatsApp or email for personalized quotes."
-    },
-    {
       question: "What is your return policy?",
       answer: "We offer a 30-day money-back guarantee on all products. If you're not satisfied for any reason, contact us with proof of purchase for a full refund or replacement. Due to hygiene standards, products must be unopened for returns."
     },
