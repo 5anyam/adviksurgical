@@ -31,8 +31,8 @@ const faqData: Record<string, FAQ[]> = {
     },
     {
       question: "What is your return policy?",
-      answer: "We offer a 30-day money-back guarantee on all products. If you're not satisfied for any reason, contact us with proof of purchase for a full refund or replacement. Due to hygiene standards, products must be unopened for returns."
-    },
+      answer: "We accept returns and exchanges only if the product packaging is damaged or the seal is broken upon delivery. Please contact us immediately with photos of the damaged product. Due to food safety and hygiene standards, we cannot accept returns on opened or used products. Exchanges will be processed within 3-5 business days."
+    },    
     {
       question: "How long does delivery take?",
       answer: "We deliver across India with:\n• 3-5 working days for most locations\n• Free shipping on orders above ₹999\n• Secure, hygienic packaging\n• Real-time tracking information\n• Special rates for bulk orders"
