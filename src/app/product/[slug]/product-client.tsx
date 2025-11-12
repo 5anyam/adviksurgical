@@ -12,7 +12,7 @@ import { Tab } from '@headlessui/react'
 import ProductFAQ from '../../../../components/ProductFaq'
 import RelatedProducts from '../../../../components/RelatedProducts'
 import ProductReviews from '../../../../components/ProductReviews'
-import { Heart, Star, Shield, Truck, Award, CreditCard, Plus, Minus, ShoppingCart, Sparkles, Leaf, CheckCircle } from 'lucide-react'
+import { Heart, Star, Shield, Truck, Award, CreditCard, Plus, Minus, ShoppingCart, Sparkles, Leaf, CheckCircle, Utensils } from 'lucide-react'
 
 export interface ImageData { src: string }
 export interface Attribute { option: string }
@@ -57,6 +57,9 @@ export default function ProductClient({
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [isBuyingNow, setIsBuyingNow] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
+
+  // Check if product is fruit box
+  const isFruitBox = product?.slug === 'fruit-box' || product?.slug.includes('fruit-box')
 
   useEffect(() => {
     if (product) {
@@ -158,6 +161,12 @@ export default function ProductClient({
     }
   }
 
+  const handleEnquire = () => {
+    const message = `Hi, I want to enquire about ${product.name}`;
+    const whatsappUrl = `https://wa.me/917428408825?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-[#FFF8DC] to-white pb-20 lg:pb-8">
       {/* Breadcrumb */}
@@ -183,7 +192,7 @@ export default function ProductClient({
             <div className="mt-6 grid grid-cols-3 gap-4">
               {[
                 { icon: <Leaf className="w-5 h-5" />, text: '100% Natural' },
-                { icon: <Shield className="w-5 h-5" />, text: 'Lab Tested' },
+                { icon: <Utensils className="w-5 h-5" />, text: 'Ready to Eat' },
                 { icon: <Award className="w-5 h-5" />, text: 'Premium Quality' },
               ].map((item, idx) => (
                 <div key={idx} className="flex flex-col items-center text-center p-4 bg-white border-2 border-[#D4A574]/20 rounded-lg">
@@ -198,13 +207,19 @@ export default function ProductClient({
         {/* Details Section */}
         <div className="lg:w-1/2">
           <div className="space-y-6">
-            {/* Sale Badge */}
-            {hasSale && (
+            {/* Sale Badge - Only for non-fruit box */}
+            {!isFruitBox && hasSale && (
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white px-4 py-2 rounded-full shadow-lg">
                 <Sparkles className="w-4 h-4" />
                 <span className="text-sm font-bold">SAVE {discountPercent}%</span>
               </div>
             )}
+
+            {/* Ready to Eat Badge */}
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#25D366] to-[#20BA5A] text-white px-4 py-2 rounded-full shadow-lg ml-2">
+              <Utensils className="w-4 h-4" />
+              <span className="text-sm font-bold">READY TO EAT</span>
+            </div>
 
             {/* Product Name */}
             <h1 className="text-3xl lg:text-5xl font-bold text-[#5D4E37] tracking-wide leading-tight">
@@ -227,6 +242,17 @@ export default function ProductClient({
               </button>
             </div>
 
+            {/* Ready to Eat Highlight */}
+            <div className="bg-gradient-to-r from-[#25D366]/10 to-[#20BA5A]/10 border-2 border-[#25D366]/30 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                <Utensils className="w-8 h-8 text-[#25D366]" />
+                <div>
+                  <p className="font-bold text-[#5D4E37] text-base">Ready to Eat!</p>
+                  <p className="text-sm text-gray-600">Just open the pack and enjoy. No preparation needed.</p>
+                </div>
+              </div>
+            </div>
+
             {/* Short Description */}
             {product.short_description && (
               <div
@@ -235,97 +261,122 @@ export default function ProductClient({
               />
             )}
 
-            {/* Price Section */}
-            <div className="py-6 border-y-2 border-[#D4A574]/20 bg-gradient-to-br from-[#FFF8DC] to-white rounded-xl p-6">
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="text-4xl font-bold text-[#5D4E37]">
-                  ₹{totalPrice.toLocaleString()}
-                </span>
+            {/* Price Section - Hide for Fruit Box */}
+            {!isFruitBox && (
+              <div className="py-6 border-y-2 border-[#D4A574]/20 bg-gradient-to-br from-[#FFF8DC] to-white rounded-xl p-6">
+                <div className="flex items-baseline gap-3 mb-2">
+                  <span className="text-4xl font-bold text-[#5D4E37]">
+                    ₹{totalPrice.toLocaleString()}
+                  </span>
+                  {hasSale && (
+                    <>
+                      <span className="line-through text-gray-400 font-medium text-xl">
+                        ₹{totalRegularPrice.toLocaleString()}
+                      </span>
+                    </>
+                  )}
+                </div>
                 {hasSale && (
-                  <>
-                    <span className="line-through text-gray-400 font-medium text-xl">
-                      ₹{totalRegularPrice.toLocaleString()}
+                  <div className="flex items-center gap-2 text-[#D4A574]">
+                    <Sparkles className="w-4 h-4" />
+                    <span className="text-sm font-bold">
+                      You Save ₹{totalSaving.toLocaleString()} ({discountPercent}% OFF)
                     </span>
-                  </>
+                  </div>
+                )}
+                {quantity > 1 && (
+                  <div className="text-sm text-gray-600 mt-3 font-medium">
+                    ₹{salePrice.toLocaleString()} per unit
+                  </div>
                 )}
               </div>
-              {hasSale && (
-                <div className="flex items-center gap-2 text-[#D4A574]">
-                  <Sparkles className="w-4 h-4" />
-                  <span className="text-sm font-bold">
-                    You Save ₹{totalSaving.toLocaleString()} ({discountPercent}% OFF)
-                  </span>
-                </div>
-              )}
-              {quantity > 1 && (
-                <div className="text-sm text-gray-600 mt-3 font-medium">
-                  ₹{salePrice.toLocaleString()} per unit
-                </div>
-              )}
-            </div>
+            )}
 
-            {/* Quantity Selector */}
-            <div>
-              <label className="block text-sm font-bold text-[#5D4E37] mb-3 uppercase tracking-wide">
-                Quantity
-              </label>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border-2 border-[#D4A574] rounded-lg overflow-hidden">
-                  <button
-                    onClick={() => handleQuantityChange(-1)}
-                    className="p-4 hover:bg-[#FFF8DC] transition-colors"
-                    disabled={quantity <= 1}
-                  >
-                    <Minus className="w-5 h-5 text-[#5D4E37]" />
-                  </button>
-                  <span className="px-8 py-4 font-bold text-[#5D4E37] text-lg border-x-2 border-[#D4A574]">
-                    {quantity}
+            {/* Quantity Selector - Hide for Fruit Box */}
+            {!isFruitBox && (
+              <div>
+                <label className="block text-sm font-bold text-[#5D4E37] mb-3 uppercase tracking-wide">
+                  Quantity
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center border-2 border-[#D4A574] rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => handleQuantityChange(-1)}
+                      className="p-4 hover:bg-[#FFF8DC] transition-colors"
+                      disabled={quantity <= 1}
+                    >
+                      <Minus className="w-5 h-5 text-[#5D4E37]" />
+                    </button>
+                    <span className="px-8 py-4 font-bold text-[#5D4E37] text-lg border-x-2 border-[#D4A574]">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => handleQuantityChange(1)}
+                      className="p-4 hover:bg-[#FFF8DC] transition-colors"
+                    >
+                      <Plus className="w-5 h-5 text-[#5D4E37]" />
+                    </button>
+                  </div>
+                  <span className="text-sm text-gray-600 font-medium">
+                    {quantity > 1 ? `${quantity} items` : '1 item'} in cart
                   </span>
-                  <button
-                    onClick={() => handleQuantityChange(1)}
-                    className="p-4 hover:bg-[#FFF8DC] transition-colors"
-                  >
-                    <Plus className="w-5 h-5 text-[#5D4E37]" />
-                  </button>
                 </div>
-                <span className="text-sm text-gray-600 font-medium">
-                  {quantity > 1 ? `${quantity} items` : '1 item'} in cart
-                </span>
               </div>
-            </div>
+            )}
 
             {/* Action Buttons */}
             <div className="hidden lg:flex flex-col gap-4 pt-6">
-              <button
-                className={`w-full bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-8 py-4 text-base rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 ${isAddingToCart ? 'opacity-50' : ''}`}
-                onClick={handleAddToCart}
-                disabled={isAddingToCart}
-              >
-                {isAddingToCart ? (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    <span>Added to Cart</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5" />
-                    <span>Add to Cart</span>
-                  </>
-                )}
-              </button>
-              <button
-                className={`w-full border-2 border-[#D4A574] text-[#5D4E37] font-bold px-8 py-4 text-base rounded-xl hover:bg-[#FFF8DC] transition-all shadow-md hover:shadow-lg ${isBuyingNow ? 'opacity-50' : ''}`}
-                onClick={handleBuyNow}
-                disabled={isBuyingNow}
-              >
-                {isBuyingNow ? 'Processing...' : 'Buy Now'}
-              </button>
+              {isFruitBox ? (
+                // Only Enquire Now button for Fruit Box
+                <button
+                  className="w-full border-2 border-[#25D366] bg-[#25D366] text-white font-bold px-8 py-4 text-lg rounded-xl hover:bg-[#20BA5A] hover:border-[#20BA5A] transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2"
+                  onClick={handleEnquire}
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                  </svg>
+                  <span>Enquire Now on WhatsApp</span>
+                </button>
+              ) : (
+                // Add to Cart and Buy Now for regular products
+                <>
+                  <button
+                    className={`w-full bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-8 py-4 text-base rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 ${isAddingToCart ? 'opacity-50' : ''}`}
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart}
+                  >
+                    {isAddingToCart ? (
+                      <>
+                        <CheckCircle className="w-5 h-5" />
+                        <span>Added to Cart</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-5 h-5" />
+                        <span>Add to Cart</span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    className={`w-full border-2 border-[#D4A574] text-[#5D4E37] font-bold px-8 py-4 text-base rounded-xl hover:bg-[#FFF8DC] transition-all shadow-md hover:shadow-lg ${isBuyingNow ? 'opacity-50' : ''}`}
+                    onClick={handleBuyNow}
+                    disabled={isBuyingNow}
+                  >
+                    {isBuyingNow ? 'Processing...' : 'Buy Now'}
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Trust Badges */}
+            {/* Trust Badges - Conditional for Fruit Box */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t-2 border-[#D4A574]/20">
               {[
-                { icon: <Truck className="w-5 h-5" />, label: 'Free Shipping', subtitle: 'Orders above ₹999' },
+                // Conditionally show Free Shipping - skip for fruit box
+                ...(!isFruitBox ? [{
+                  icon: <Truck className="w-5 h-5" />, 
+                  label: 'Free Shipping', 
+                  subtitle: 'Orders above ₹999' 
+                }] : []),
                 { icon: <Shield className="w-5 h-5" />, label: 'Quality Assured', subtitle: 'Lab tested' },
                 { icon: <Award className="w-5 h-5" />, label: 'Premium Quality', subtitle: '100% natural' },
                 { icon: <CreditCard className="w-5 h-5" />, label: 'Secure Payment', subtitle: 'Protected checkout' },
@@ -346,72 +397,88 @@ export default function ProductClient({
       {/* Mobile Fixed Bottom */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#D4A574]/30 z-50 p-4 shadow-2xl">
         <div className="max-w-md mx-auto">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex-1">
-              <div className="text-xs text-gray-600 mb-1 font-medium">Total Price</div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-[#5D4E37]">
-                  ₹{totalPrice.toLocaleString()}
-                </span>
-                {hasSale && (
-                  <span className="line-through text-gray-400 text-sm">
-                    ₹{totalRegularPrice.toLocaleString()}
-                  </span>
-                )}
+          {isFruitBox ? (
+            // Only Enquire Now button for Fruit Box on mobile
+            <button
+              className="w-full border-2 border-[#25D366] bg-[#25D366] text-white font-bold px-6 py-4 text-base rounded-xl hover:bg-[#20BA5A] transition-all shadow-lg flex items-center justify-center gap-2"
+              onClick={handleEnquire}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+              <span>Enquire Now</span>
+            </button>
+          ) : (
+            // Regular products - show price, quantity and buttons
+            <>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex-1">
+                  <div className="text-xs text-gray-600 mb-1 font-medium">Total Price</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl font-bold text-[#5D4E37]">
+                      ₹{totalPrice.toLocaleString()}
+                    </span>
+                    {hasSale && (
+                      <span className="line-through text-gray-400 text-sm">
+                        ₹{totalRegularPrice.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center border-2 border-[#D4A574] rounded-lg">
+                  <button
+                    onClick={() => handleQuantityChange(-1)}
+                    className="p-2 hover:bg-[#FFF8DC]"
+                    disabled={quantity <= 1}
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="px-4 py-2 text-base font-bold">{quantity}</span>
+                  <button
+                    onClick={() => handleQuantityChange(1)}
+                    className="p-2 hover:bg-[#FFF8DC]"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center border-2 border-[#D4A574] rounded-lg">
-              <button
-                onClick={() => handleQuantityChange(-1)}
-                className="p-2 hover:bg-[#FFF8DC]"
-                disabled={quantity <= 1}
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="px-4 py-2 text-base font-bold">{quantity}</span>
-              <button
-                onClick={() => handleQuantityChange(1)}
-                className="p-2 hover:bg-[#FFF8DC]"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              className="flex-1 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-4 py-3.5 text-sm rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg flex items-center justify-center gap-2"
-              onClick={handleAddToCart}
-              disabled={isAddingToCart}
-            >
-              {isAddingToCart ? (
-                <>
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Added</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Add to Cart</span>
-                </>
-              )}
-            </button>
-            <button
-              className="flex-1 border-2 border-[#D4A574] text-[#5D4E37] font-bold px-4 py-3.5 text-sm rounded-xl hover:bg-[#FFF8DC] transition-all"
-              onClick={handleBuyNow}
-              disabled={isBuyingNow}
-            >
-              {isBuyingNow ? 'Processing' : 'Buy Now'}
-            </button>
-          </div>
+              <div className="flex gap-3">
+                <button
+                  className="flex-1 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-4 py-3.5 text-sm rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg flex items-center justify-center gap-2"
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart}
+                >
+                  {isAddingToCart ? (
+                    <>
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Added</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>Add to Cart</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  className="flex-1 border-2 border-[#D4A574] text-[#5D4E37] font-bold px-4 py-3.5 text-sm rounded-xl hover:bg-[#FFF8DC] transition-all"
+                  onClick={handleBuyNow}
+                  disabled={isBuyingNow}
+                >
+                  {isBuyingNow ? 'Processing' : 'Buy Now'}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Tabs Section */}
+      {/* Tabs Section - Conditional Content for Fruit Box */}
       <div className="max-w-7xl mx-auto mt-16 px-4">
         <div className="border-t-2 border-[#D4A574]/30">
           <Tab.Group>
             <Tab.List className="flex border-b-2 border-[#D4A574]/30 bg-white">
-              {['Description', 'Benefits', 'How to Use'].map((label, idx) => (
+              {['Description', 'Benefits'].map((label, idx) => (
                 <Tab key={idx} className={({ selected }) =>
                   `flex-1 py-4 px-6 text-sm font-bold outline-none transition-all uppercase tracking-wide ${
                     selected 
@@ -430,48 +497,94 @@ export default function ProductClient({
               </Tab.Panel>
               <Tab.Panel>
                 <div className="space-y-6 p-6">
-                  <h3 className="text-2xl font-bold text-[#5D4E37] tracking-wide">Health Benefits</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {[
-                      { title: 'Rich in Nutrients', desc: 'Packed with essential vitamins and minerals for daily health' },
-                      { title: 'Energy Boost', desc: 'Natural source of energy for active lifestyle' },
-                      { title: 'Heart Healthy', desc: 'Supports cardiovascular health with good fats' },
-                      { title: 'Immunity Support', desc: 'Strengthens immune system naturally' },
-                    ].map((item, idx) => (
-                      <div key={idx} className="border-2 border-[#D4A574]/30 p-6 rounded-xl hover:border-[#D4A574] hover:bg-[#FFF8DC] transition-all">
-                        <h4 className="font-bold text-base text-[#5D4E37] mb-3 flex items-center gap-2">
+                  <h3 className="text-2xl font-bold text-[#5D4E37] tracking-wide">
+                    {isFruitBox ? 'Freshness & Consumption' : 'Health Benefits'}
+                  </h3>
+                  
+                  {isFruitBox ? (
+                    // Fruit Box specific benefits
+                    <div className="grid grid-cols-1 gap-6">
+                      <div className="border-2 border-[#D4A574]/30 p-6 rounded-xl bg-gradient-to-br from-[#FFF8DC] to-white">
+                        <h4 className="font-bold text-lg text-[#5D4E37] mb-4 flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-[#D4A574]" />
-                          {item.title}
+                          Freshness Guidelines
                         </h4>
-                        <p className="text-sm text-gray-700">{item.desc}</p>
+                        <ul className="space-y-3 text-[#5D4E37] text-base">
+                          <li className="flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
+                            <span>Fresh fruits cut daily and delivered same day</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
+                            <span><strong>Best consumed within 2 days of delivery</strong></span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
+                            <span>Store in refrigerator immediately after delivery</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
+                            <span>Keep PET jar sealed until consumption</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
+                            <span>No preservatives - 100% fresh and natural</span>
+                          </li>
+                        </ul>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </Tab.Panel>
-              <Tab.Panel>
-                <div className="space-y-6 p-6">
-                  <h3 className="text-2xl font-bold text-[#5D4E37] tracking-wide">Storage & Usage</h3>
-                  <div className="border-2 border-[#D4A574]/30 p-6 rounded-xl bg-gradient-to-br from-[#FFF8DC] to-white">
-                    <ul className="space-y-4 text-[#5D4E37] text-base">
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                        <span>Store in a cool, dry place away from direct sunlight</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                        <span>Keep in airtight container after opening</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                        <span>Best consumed within 6-12 months for optimal freshness</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                        <span>Can be eaten as a snack or added to recipes</span>
-                      </li>
-                    </ul>
-                  </div>
+                      
+                      <div className="border-2 border-[#25D366]/30 p-6 rounded-xl bg-gradient-to-br from-[#25D366]/5 to-white">
+                        <h4 className="font-bold text-lg text-[#5D4E37] mb-4 flex items-center gap-2">
+                          <Leaf className="w-5 h-5 text-[#25D366]" />
+                          Why Choose Our Fruit Boxes?
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs">✓</span>
+                            </div>
+                            <p className="text-[#5D4E37] text-sm">Freshly cut every morning</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs">✓</span>
+                            </div>
+                            <p className="text-[#5D4E37] text-sm">Hygienic PET jar packaging</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs">✓</span>
+                            </div>
+                            <p className="text-[#5D4E37] text-sm">Ready to eat immediately</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs">✓</span>
+                            </div>
+                            <p className="text-[#5D4E37] text-sm">Perfect for office snacking</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    // Regular products - Health Benefits
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {[
+                        { title: 'Rich in Nutrients', desc: 'Packed with essential vitamins and minerals for daily health' },
+                        { title: 'Energy Boost', desc: 'Natural source of energy for active lifestyle' },
+                        { title: 'Heart Healthy', desc: 'Supports cardiovascular health with good fats' },
+                        { title: 'Immunity Support', desc: 'Strengthens immune system naturally' },
+                      ].map((item, idx) => (
+                        <div key={idx} className="border-2 border-[#D4A574]/30 p-6 rounded-xl hover:border-[#D4A574] hover:bg-[#FFF8DC] transition-all">
+                          <h4 className="font-bold text-base text-[#5D4E37] mb-3 flex items-center gap-2">
+                            <CheckCircle className="w-5 h-5 text-[#D4A574]" />
+                            {item.title}
+                          </h4>
+                          <p className="text-sm text-gray-700">{item.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </Tab.Panel>
             </Tab.Panels>

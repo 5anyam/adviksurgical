@@ -218,13 +218,10 @@ export default function Homepage() {
                   <img 
                     src="/founder.jpg" 
                     alt="Keshav Sharma - Founder of Vyadhihar Foods" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
-                <div className="absolute -bottom-6 -right-6 bg-white/20 backdrop-blur-md border-2 border-white/40 rounded-2xl p-6 shadow-2xl">
-                  <p className="text-white font-bold text-xl">Keshav Sharma</p>
-                  <p className="text-white/90 text-sm">Founder & CEO</p>
-                </div>
+                
               </div>
             </div>
 
