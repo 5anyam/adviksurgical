@@ -10,9 +10,9 @@ import { Sparkles } from "lucide-react";
 
 const navItems = [
   { name: "Home", to: "/" },
-  { name: "Superfood Fusion", to: "/product/superfood-fusion" },
-  { name: "Roasted Makhana", to: "/product/foxnut-makhana" },
-  { name: "Fresh Fruit Boxes", to: "/product/fruit-box" },
+  { name: "Superfood Fusion", to: "https://www.vyadhiharfoods.com/product/vyadhihar-foods-superfood-fusion-himalayan-salt-pepper-gluten-free-roasted-mix" },
+  { name: "Roasted Makhana", to: "https://www.vyadhiharfoods.com/product/vyadhihar-foods-foxnut-wholesome-crunch-naturally-yours-roasted-gluten-free-snack-75g" },
+  { name: "Fresh Fruit Boxes", to: "https://www.vyadhiharfoods.com/product/the-fruit-box-for-corporate" },
   { name: "Our Story", to: "/founder-story" },
   { name: "Contact", to: "/contact" }
 ];

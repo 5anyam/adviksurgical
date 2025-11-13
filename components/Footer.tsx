@@ -75,23 +75,23 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/product/superfood-fusion" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
+                <Link href="https://www.vyadhiharfoods.com/product/vyadhihar-foods-superfood-fusion-himalayan-salt-pepper-gluten-free-roasted-mix" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
                   <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Superfood Fusion Mix
                 </Link>
               </li>
               <li>
-                <Link href="/product/foxnut-makhana" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
+                <Link href="https://www.vyadhiharfoods.com/product/vyadhihar-foods-foxnut-wholesome-crunch-naturally-yours-roasted-gluten-free-snack-75g" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
                   <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Roasted Makhana
                 </Link>
               </li>
               <li>
-                <Link href="/product/fruit-box" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
+                <Link href="https://www.vyadhiharfoods.com/product/the-fruit-box-for-corporate" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
                   <span className="text-[#25D366] group-hover:translate-x-1 transition-transform">›</span> Fresh Fruit Boxes
                 </Link>
               </li>
               <li>
                 <Link href="/founder-story" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Our Story
+                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Founder Story
                 </Link>
               </li>
               <li>
