@@ -433,7 +433,7 @@ export default function ImageGallery({ images }: { images: Image[] }) {
       {isFullscreen && (
         <div
           ref={fullscreenRef}
-          className="fixed inset-0 bg-white z-[99999] flex flex-col items-center justify-center p-4"
+          className="fixed inset-0 bg-white z-10 flex flex-col items-center justify-center p-4"
           style={{ 
             width: "100vw", 
             height: "100vh",
