@@ -71,9 +71,10 @@ export default function ImageGallery({ images }: { images: Image[] }) {
 
   // --- Image Loading State ---
   useEffect(() => {
+    if (!displayImages[active]?.src) return;
     const img = new window.Image();
     img.onload = () => setIsLoading(false);
-    img.src = displayImages[active]?.src;
+    img.src = displayImages[active].src;
     setIsLoading(true);
   }, [active, displayImages]);
 
@@ -117,18 +118,24 @@ export default function ImageGallery({ images }: { images: Image[] }) {
   };
 
   // -- Touch/Drag handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (isZoomed) return;
-    const touch = e.touches[0];
+    const touches = e.touches;
+    if (touches.length === 0) return;
+    const touch = touches.item(0);
+    if (!touch) return;
     setStartX(touch.clientX);
     setCurrentX(touch.clientX);
     setIsDragging(true);
     setDragOffset(0);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!isDragging || isZoomed) return;
-    const touch = e.touches[0];
+    const touches = e.touches;
+    if (touches.length === 0) return;
+    const touch = touches.item(0);
+    if (!touch) return;
     const deltaX = touch.clientX - startX;
     const absDeltaX = Math.abs(deltaX);
     if (absDeltaX > 10) e.preventDefault();
@@ -156,7 +163,7 @@ export default function ImageGallery({ images }: { images: Image[] }) {
   };
 
   // -- Desktop Mouse drag
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isZoomed) return;
     setStartX(e.clientX);
     setCurrentX(e.clientX);
@@ -164,7 +171,7 @@ export default function ImageGallery({ images }: { images: Image[] }) {
     setDragOffset(0);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging || isZoomed) return;
     const deltaX = e.clientX - startX;
     let adjustedDelta = deltaX;
@@ -190,21 +197,32 @@ export default function ImageGallery({ images }: { images: Image[] }) {
   };
 
   // --- Keyboard Navigation ---
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!isFullscreen) return;
-    if (e.key === 'ArrowLeft') handlePrevious();
-    if (e.key === 'ArrowRight') handleNext();
-    if (e.key === 'Escape') {
-      setIsFullscreen(false);
-      setIsZoomed(false);
-    }
-  };
-
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isFullscreen) return;
+      if (e.key === 'ArrowLeft') {
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setActive((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
+        setTimeout(() => setIsTransitioning(false), 300);
+        setIsZoomed(false);
+      }
+      if (e.key === 'ArrowRight') {
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setActive((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
+        setTimeout(() => setIsTransitioning(false), 300);
+        setIsZoomed(false);
+      }
+      if (e.key === 'Escape') {
+        setIsFullscreen(false);
+        setIsZoomed(false);
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-    // eslint-disable-next-line
-  }, [isFullscreen, active]);
+  }, [isFullscreen, isTransitioning, displayImages.length]);
 
   // --- Fullscreen logic ---
   const enterFullscreen = () => {
@@ -245,6 +263,21 @@ export default function ImageGallery({ images }: { images: Image[] }) {
       document.removeEventListener('msfullscreenchange', handleFullscreenChange);
     };
   }, []);
+
+  // Handle image click - only open fullscreen if not dragging
+  const handleImageClick = (index: number) => {
+    // Ignore clicks during drag
+    if (Math.abs(dragOffset) > 5) return;
+    
+    // If clicking the same image, just open fullscreen
+    if (index === active) {
+      enterFullscreen();
+    } else {
+      // If clicking different image, just set it active
+      setActive(index);
+      setIsZoomed(false);
+    }
+  };
 
   if (!displayImages || displayImages.length === 0) return null;
 
@@ -312,11 +345,7 @@ export default function ImageGallery({ images }: { images: Image[] }) {
                       ? "scale-200 cursor-zoom-out"
                       : "cursor-pointer hover:scale-105"
                   }`}
-                  onClick={() => {
-                    setActive(i);
-                    setIsZoomed(false);
-                    enterFullscreen();
-                  }}
+                  onClick={() => handleImageClick(i)}
                   onLoad={() => i === active && setIsLoading(false)}
                   onDragStart={(e) => e.preventDefault()}
                   style={{
@@ -433,13 +462,14 @@ export default function ImageGallery({ images }: { images: Image[] }) {
       {isFullscreen && (
         <div
           ref={fullscreenRef}
-          className="fixed inset-0 bg-white z-9 flex flex-col items-center justify-center p-4"
+          className="fixed inset-0 bg-white flex flex-col items-center justify-center p-4"
           style={{ 
             width: "100vw", 
             height: "100vh",
             position: "fixed",
             top: 0,
-            left: 0
+            left: 0,
+            zIndex: 999999
           }}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -448,14 +478,15 @@ export default function ImageGallery({ images }: { images: Image[] }) {
           {/* Close Button */}
           <button
             onClick={exitFullscreen}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 p-3 z-[100000] rounded-full bg-black/70 hover:bg-black/80 transition-all duration-200 border border-white/20 focus:outline-none"
+            className="absolute top-4 right-4 text-white hover:text-gray-300 p-3 rounded-full bg-black/70 hover:bg-black/80 transition-all duration-200 border border-white/20 focus:outline-none"
+            style={{ zIndex: 1000000 }}
             aria-label="Close fullscreen"
           >
             <X className="w-7 h-7" />
           </button>
 
           {/* Fullscreen Image */}
-          <div className="relative w-full flex-1 z-9 flex items-center justify-center">
+          <div className="relative w-full flex-1 flex items-center justify-center" style={{ zIndex: 999990 }}>
             <img
               src={displayImages[active].src}
               alt={displayImages[active].alt || `Product image ${active + 1}`}
@@ -464,16 +495,12 @@ export default function ImageGallery({ images }: { images: Image[] }) {
               }`}
               onClick={() => setIsZoomed(!isZoomed)}
               onDragStart={(e) => e.preventDefault()}
-              style={{
-                width: isZoomed ? "auto" : "auto",
-                height: isZoomed ? "auto" : "auto"
-              }}
             />
           </div>
 
           {/* Fullscreen Slider and Thumbs */}
           {displayImages.length > 1 && (
-            <div className="w-full max-w-4xl px-1 sm:px-8 pb-8">
+            <div className="w-full max-w-4xl px-1 sm:px-8 pb-8" style={{ zIndex: 999991 }}>
               <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-5 border border-white/10 shadow-2xl">
                 {/* Counter */}
                 <div className="text-center text-white/90 mb-5 text-lg font-semibold tracking-wide">
