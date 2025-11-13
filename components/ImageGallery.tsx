@@ -459,81 +459,89 @@ export default function ImageGallery({ images }: { images: Image[] }) {
       )}
       
       {/* ----- FULLSCREEN MODAL ----- */}
-      {isFullscreen && (
-        <div
-          ref={fullscreenRef}
-          className="fixed inset-0 bg-white flex flex-col items-center justify-center p-4"
-          style={{ 
-            width: "100vw", 
-            height: "100vh",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            zIndex: 999999
-          }}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Close Button */}
-          <button
-            onClick={exitFullscreen}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 p-3 rounded-full bg-black/70 hover:bg-black/80 transition-all duration-200 border border-white/20 focus:outline-none"
-            style={{ zIndex: 1000000 }}
-            aria-label="Close fullscreen"
-          >
-            <X className="w-7 h-7" />
-          </button>
+      {/* ----- FULLSCREEN MODAL ----- */}
+{isFullscreen && (
+  <div
+    ref={fullscreenRef}
+    className="fixed inset-0 bg-white flex flex-col items-center justify-center p-4"
+    style={{ 
+      width: "100vw", 
+      height: "100vh",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 9999999,
+      margin: 0,
+      padding: 0
+    }}
+    onTouchStart={handleTouchStart}
+    onTouchMove={handleTouchMove}
+    onTouchEnd={handleTouchEnd}
+  >
+    {/* Black Backdrop */}
+    <div className="absolute inset-0 bg-black/95 z-0"></div>
+    
+    {/* Close Button */}
+    <button
+      onClick={exitFullscreen}
+      className="absolute top-4 right-4 text-white hover:text-gray-300 p-3 rounded-full bg-black/70 hover:bg-black/80 transition-all duration-200 border border-white/20 focus:outline-none"
+      style={{ zIndex: 10000000 }}
+      aria-label="Close fullscreen"
+    >
+      <X className="w-7 h-7" />
+    </button>
 
-          {/* Fullscreen Image */}
-          <div className="relative w-full flex-1 flex items-center justify-center" style={{ zIndex: 999990 }}>
-            <img
-              src={displayImages[active].src}
-              alt={displayImages[active].alt || `Product image ${active + 1}`}
-              className={`max-w-[98vw] max-h-[75vh] sm:max-h-[80vh] object-contain transition-transform duration-300 mx-auto rounded-2xl shadow-2xl ${
-                isZoomed ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
-              }`}
-              onClick={() => setIsZoomed(!isZoomed)}
-              onDragStart={(e) => e.preventDefault()}
-            />
+    {/* Fullscreen Image */}
+    <div className="relative w-full flex-1 flex items-center justify-center z-10 px-4" style={{ zIndex: 9999990 }}>
+      <img
+        src={displayImages[active].src}
+        alt={displayImages[active].alt || `Product image ${active + 1}`}
+        className={`max-w-[98vw] max-h-[75vh] sm:max-h-[80vh] object-contain transition-transform duration-300 mx-auto rounded-2xl shadow-2xl ${
+          isZoomed ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
+        }`}
+        onClick={() => setIsZoomed(!isZoomed)}
+        onDragStart={(e) => e.preventDefault()}
+      />
+    </div>
+
+    {/* Fullscreen Slider and Thumbs */}
+    {displayImages.length > 1 && (
+      <div className="w-full max-w-4xl px-1 sm:px-8 pb-8 z-20" style={{ zIndex: 9999991 }}>
+        <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-5 border border-white/10 shadow-2xl">
+          {/* Counter */}
+          <div className="text-center text-white/90 mb-5 text-lg font-semibold tracking-wide">
+            {active + 1} / {displayImages.length}
           </div>
-
-          {/* Fullscreen Slider and Thumbs */}
-          {displayImages.length > 1 && (
-            <div className="w-full max-w-4xl px-1 sm:px-8 pb-8" style={{ zIndex: 999991 }}>
-              <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-5 border border-white/10 shadow-2xl">
-                {/* Counter */}
-                <div className="text-center text-white/90 mb-5 text-lg font-semibold tracking-wide">
-                  {active + 1} / {displayImages.length}
+          
+          {/* Thumbnails Row */}
+          <div className="flex justify-center gap-3 mt-2 overflow-x-auto pb-1">
+            {displayImages.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                className={`flex-shrink-0 transition-all duration-300 focus:outline-none ${
+                  i === active
+                    ? "ring-2 ring-blue-400 ring-offset-2 ring-offset-transparent scale-110"
+                    : "opacity-60 hover:opacity-100 hover:scale-105"
+                }`}
+              >
+                <div className="w-12 h-12 rounded-lg overflow-hidden shadow border border-white/10">
+                  <img
+                    src={img.src}
+                    alt={img.alt || `Thumbnail ${i + 1}`}
+                    className="object-cover w-full h-full"
+                  />
                 </div>
-                
-                {/* Thumbnails Row */}
-                <div className="flex justify-center gap-3 mt-2 overflow-x-auto pb-1">
-                  {displayImages.map((img, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setActive(i)}
-                      className={`flex-shrink-0 transition-all duration-300 focus:outline-none ${
-                        i === active
-                          ? "ring-2 ring-blue-400 ring-offset-2 ring-offset-transparent scale-110"
-                          : "opacity-60 hover:opacity-100 hover:scale-105"
-                      }`}
-                    >
-                      <div className="w-12 h-12 rounded-lg overflow-hidden shadow border border-white/10">
-                        <img
-                          src={img.src}
-                          alt={img.alt || `Thumbnail ${i + 1}`}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+              </button>
+            ))}
+          </div>
         </div>
-      )}
+      </div>
+    )}
+  </div>
+)}
     </>
   );
 }
