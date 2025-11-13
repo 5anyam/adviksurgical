@@ -121,7 +121,7 @@ export default function Homepage() {
             </div>
             <div className="w-24 h-1.5 bg-gradient-to-r from-[#D4A574] via-[#C19A6B] to-[#D4A574] mx-auto mb-4 rounded-full shadow-sm"></div>
             <p className="text-gray-700 text-base max-w-2xl mx-auto font-light">
-              Premium quality dry fruits, makhana snacks, and healthy products. 100% natural and lab-tested.
+              Premium quality dry fruits, makhana snacks and healthy products.100% natural & lab tested.
             </p>
           </div>
 
