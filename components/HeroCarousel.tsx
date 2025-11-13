@@ -4,11 +4,11 @@ import { useRouter } from 'next/navigation';
 
 const IMAGES = [
   {
-    src: 'http://cms.vyadhiharfoods.com/wp-content/uploads/2025/11/Vyadhihar-banner-1-scaled.jpg',
+    src: 'http://cms.vyadhiharfoods.com/wp-content/uploads/2025/11/fruit-banner-scaled.jpg',
     alt: 'Premium Dry Fruits Collection',
   },
   {
-    src: 'http://cms.vyadhiharfoods.com/wp-content/uploads/2025/11/Vyadhihar-banner-scaled.jpg',
+    src: 'http://cms.vyadhiharfoods.com/wp-content/uploads/2025/11/superfood-scaled.jpg',
     alt: 'Makhana Snacks',
   }
 ];

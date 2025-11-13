@@ -1,6 +1,7 @@
 // app/founder-story/page.tsx
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Heart, Target, TrendingUp, Lightbulb, Users, Award, ArrowLeft, Sparkles } from 'lucide-react';
 
 export default function FounderStoryPage() {
@@ -34,199 +35,266 @@ export default function FounderStoryPage() {
         </div>
       </section>
 
-      {/* Timeline Story */}
+      {/* Timeline Story with Sticky Image */}
       <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          
-          {/* The Beginning */}
-          <div className="mb-16 relative">
-            <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-12 gap-8">
             
-            <div className="md:pl-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
-                  <Lightbulb className="w-6 h-6 text-white" />
+            {/* Sticky Founder Image - Left Side */}
+            <div className="lg:col-span-4">
+              <div className="lg:sticky lg:top-24">
+                <div className="bg-gradient-to-br from-[#D4A574] via-[#C19A6B] to-[#8B7355] p-2 rounded-3xl shadow-2xl">
+                  <div className="bg-white rounded-2xl overflow-hidden">
+                    <div className="relative aspect-[3/4]">
+                      <Image
+                        src="/founder.jpg"
+                        alt="Keshav Sharma - Founder of Vyadhihar Foods"
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    </div>
+                    <div className="p-6 bg-gradient-to-br from-[#FFF8DC] to-white">
+                      <h3 className="text-2xl font-bold text-[#5D4E37] mb-2">Keshav Sharma</h3>
+                      <p className="text-[#8B7355] font-semibold mb-4">Founder & CEO</p>
+                      <div className="flex items-center gap-2 text-sm text-[#5D4E37]">
+                        <Sparkles className="w-4 h-4 text-[#D4A574]" />
+                        <span>Building India Healthiest Snack Brand</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h2 className="text-3xl font-bold text-[#5D4E37]">The Beginning</h2>
-              </div>
-              
-              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-                <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
-                  I come from a business family, but I never wanted to just continue the legacy. 
-                  I wanted to build something of my own—something that would help people live healthier lives. 
-                  That is where my journey as an entrepreneur truly began.
-                </p>
-                <p className="text-lg text-[#5D4E37] leading-relaxed">
-                  The idea for fruit boxes came from Korea. I saw how people there bought fresh fruits 
-                  in clean, attractive PET jars. I thought, why can not we bring that to India? 
-                  Especially for corporate employees—people working long hours in MNCs who still care 
-                  about what they eat.
-                </p>
-              </div>
-            </div>
-          </div>
 
-          {/* The Hustle */}
-          <div className="mb-16 relative">
-            <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
-            
-            <div className="md:pl-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#C19A6B] to-[#8B7355] rounded-full flex items-center justify-center shadow-lg">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-[#5D4E37]">The Hustle</h2>
-              </div>
-              
-              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-                <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
-                  In the beginning, I worked alone—packing, visiting offices, pitching the idea door to door. 
-                  My first meeting was with Medanta Hospital in Gurgaon. The deal did not go through, but I did not stop. 
-                  Every day I went to Cyber City, Gurgaon, moving from one office to another, introducing myself and saying,
-                </p>
-                <blockquote className="border-l-4 border-[#D4A574] pl-6 py-4 my-6 italic text-lg text-[#5D4E37] bg-[#FFF8DC]/50 rounded-r-xl">
-                  Sir, this is my product—would you like to introduce it in your company?
-                </blockquote>
-                <p className="text-lg text-[#5D4E37] leading-relaxed">
-                  For months, I kept doing the same thing. Rejections were constant, but I kept learning.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* The Big Opportunity (and Loss) */}
-          <div className="mb-16 relative">
-            <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
-            
-            <div className="md:pl-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
-                  <Target className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-[#5D4E37]">The Big Opportunity (and Loss)</h2>
-              </div>
-              
-              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-                <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
-                  Then came a breakthrough opportunity—Dell showed interest in my fruit boxes. 
-                  They were ready to order 500 boxes per day, but wanted to check samples first.
-                </p>
-                <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
-                  The truth was—I did not even have real boxes yet. I had no packaging company, no samples, 
-                  just a few images and a mock box made out of scrap material. Still, I showed them my vision confidently. 
-                  Dell liked the concept and asked for the final product.
-                </p>
-                <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
-                  That is when I found a box manufacturer and placed the order. But the manufacturer took 22 days to deliver, 
-                  while Dell kept asking, <strong>Where is the box? </strong> Eventually, the delay cost me the deal—a deal worth crores—lost 
-                  because of poor timing and dependency.
-                </p>
-                <div className="bg-gradient-to-br from-[#FFF8DC] to-[#F5DEB3]/30 p-6 rounded-xl border-l-4 border-[#D4A574] mt-6">
-                  <p className="text-lg text-[#5D4E37] leading-relaxed font-semibold">
-                    It hit hard. Months of effort, endless follow-ups, and a massive opportunity gone because of 
-                    someone elses delay. But I did not quit. I shifted focus, learned from it, and started again.
-                  </p>
+                {/* Quick Stats */}
+                <div className="mt-6 bg-white border-2 border-[#D4A574]/30 rounded-2xl p-6 shadow-lg">
+                  <h4 className="text-lg font-bold text-[#5D4E37] mb-4">Quick Facts</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-[#D4A574]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Target className="w-5 h-5 text-[#D4A574]" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#5D4E37]">Vision</p>
+                        <p className="text-xs text-gray-600">India #1 Healthy Snack Brand</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-[#C19A6B]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Users className="w-5 h-5 text-[#C19A6B]" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#5D4E37]">Impact</p>
+                        <p className="text-xs text-gray-600">Serving Healthy Lives Daily</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-[#8B7355]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Award className="w-5 h-5 text-[#8B7355]" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#5D4E37]">Approach</p>
+                        <p className="text-xs text-gray-600">100% Natural Ingredients</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* The Pivot */}
-          <div className="mb-16 relative">
-            <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
-            
-            <div className="md:pl-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#C19A6B] to-[#8B7355] rounded-full flex items-center justify-center shadow-lg">
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-[#5D4E37]">The Pivot</h2>
-              </div>
+            {/* Timeline Content - Right Side */}
+            <div className="lg:col-span-8">
               
-              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-                <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
-                  After 7–8 months of pushing with fruit boxes, I came across a superfood mixture idea on Instagram—a 
-                  blend of nuts, seeds, and dry fruits that was both healthy and tasty. It clicked immediately. 
-                  The very next day, I went to Khari Baoli, bought ingredients, and started experimenting.
-                </p>
-                <p className="text-lg text-[#5D4E37] leading-relaxed">
-                  That is how Vyadhihar Foods evolved—from fruit boxes to superfood mixtures and makhana, 
-                  built on quality, hygiene, and presentation.
-                </p>
+              {/* The Beginning */}
+              <div className="mb-16 relative">
+                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
+                
+                <div className="md:pl-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
+                      <Lightbulb className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#5D4E37]">The Beginning</h2>
+                  </div>
+                  
+                  <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                    <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
+                      I come from a business family, but I never wanted to just continue the legacy. 
+                      I wanted to build something of my own—something that would help people live healthier lives. 
+                      That is where my journey as an entrepreneur truly began.
+                    </p>
+                    <p className="text-lg text-[#5D4E37] leading-relaxed">
+                      The idea for fruit boxes came from Korea. I saw how people there bought fresh fruits 
+                      in clean, attractive PET jars. I thought, why can not we bring that to India? 
+                      Especially for corporate employees—people working long hours in MNCs who still care 
+                      about what they eat.
+                    </p>
+                  </div>
+                </div>
               </div>
+
+              {/* The Hustle */}
+              <div className="mb-16 relative">
+                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
+                
+                <div className="md:pl-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#C19A6B] to-[#8B7355] rounded-full flex items-center justify-center shadow-lg">
+                      <TrendingUp className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#5D4E37]">The Hustle</h2>
+                  </div>
+                  
+                  <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                    <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
+                      In the beginning, I worked alone—packing, visiting offices, pitching the idea door to door. 
+                      My first meeting was with Medanta Hospital in Gurgaon. The deal did not go through, but I did not stop. 
+                      Every day I went to Cyber City, Gurgaon, moving from one office to another, introducing myself and saying,
+                    </p>
+                    <blockquote className="border-l-4 border-[#D4A574] pl-6 py-4 my-6 italic text-lg text-[#5D4E37] bg-[#FFF8DC]/50 rounded-r-xl">
+                      Sir, this is my product—would you like to introduce it in your company?
+                    </blockquote>
+                    <p className="text-lg text-[#5D4E37] leading-relaxed">
+                      For months, I kept doing the same thing. Rejections were constant, but I kept learning.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* The Big Opportunity (and Loss) */}
+              <div className="mb-16 relative">
+                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
+                
+                <div className="md:pl-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
+                      <Target className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#5D4E37]">The Big Opportunity (and Loss)</h2>
+                  </div>
+                  
+                  <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                    <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
+                      Then came a breakthrough opportunity—Dell showed interest in my fruit boxes. 
+                      They were ready to order 500 boxes per day, but wanted to check samples first.
+                    </p>
+                    <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
+                      The truth was—I did not even have real boxes yet. I had no packaging company, no samples, 
+                      just a few images and a mock box made out of scrap material. Still, I showed them my vision confidently. 
+                      Dell liked the concept and asked for the final product.
+                    </p>
+                    <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
+                      That is when I found a box manufacturer and placed the order. But the manufacturer took 22 days to deliver, 
+                      while Dell kept asking, <strong>Where is the box? </strong> Eventually, the delay cost me the deal—a deal worth crores—lost 
+                      because of poor timing and dependency.
+                    </p>
+                    <div className="bg-gradient-to-br from-[#FFF8DC] to-[#F5DEB3]/30 p-6 rounded-xl border-l-4 border-[#D4A574] mt-6">
+                      <p className="text-lg text-[#5D4E37] leading-relaxed font-semibold">
+                        It hit hard. Months of effort, endless follow-ups, and a massive opportunity gone because of 
+                        someone else delay. But I did not quit. I shifted focus, learned from it, and started again.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* The Pivot */}
+              <div className="mb-16 relative">
+                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
+                
+                <div className="md:pl-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#C19A6B] to-[#8B7355] rounded-full flex items-center justify-center shadow-lg">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#5D4E37]">The Pivot</h2>
+                  </div>
+                  
+                  <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                    <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
+                      After 7–8 months of pushing with fruit boxes, I came across a superfood mixture idea on Instagram—a 
+                      blend of nuts, seeds, and dry fruits that was both healthy and tasty. It clicked immediately. 
+                      The very next day, I went to Khari Baoli, bought ingredients, and started experimenting.
+                    </p>
+                    <p className="text-lg text-[#5D4E37] leading-relaxed">
+                      That is how Vyadhihar Foods evolved—from fruit boxes to superfood mixtures and makhana, 
+                      built on quality, hygiene, and presentation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Support System */}
+              <div className="mb-16 relative">
+                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
+                
+                <div className="md:pl-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#5D4E37]">The Support System</h2>
+                  </div>
+                  
+                  <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                    <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
+                      Throughout this journey, my girlfriend, who works in an MNC, has been my biggest support. 
+                      In the early days, she helped me connect with HRs, wellness managers, and corporate teams for 
+                      fruit box pitches. Even now, she handles meetings and coordination for the fruit box business 
+                      while I focus fully on scaling our superfood mixtures and makhana line.
+                    </p>
+                    <p className="text-lg text-[#5D4E37] leading-relaxed">
+                      Yes, there is family pressure, and yes, it is not easy. But I am focused on my goal—to build 
+                      Vyadhihar into India most trusted healthy snack brand.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* The Learning */}
+              <div className="mb-16 relative">
+                <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
+                
+                <div className="md:pl-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#C19A6B] to-[#8B7355] rounded-full flex items-center justify-center shadow-lg">
+                      <Award className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#5D4E37]">The Learning Journey</h2>
+                  </div>
+                  
+                  <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                    <p className="text-lg text-[#5D4E37] leading-relaxed">
+                      I have learned everything—from pricing, design, and manufacturing—to marketing and packaging—through 
+                      AI tools like ChatGPT and constant trial and error.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* The Vision */}
+              <div className="relative">
+                <div className="md:pl-12">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
+                      <Target className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#5D4E37]">The Vision</h2>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-[#5D4E37] to-[#8B7355] border-2 border-[#D4A574] rounded-2xl p-8 shadow-2xl text-white">
+                    <p className="text-xl leading-relaxed mb-6 italic">
+                      My journey is not a success story yet—it is a real story of persistence. Of someone who started 
+                      with nothing but an idea, failed more than once, but kept building brick by brick.
+                    </p>
+                    <p className="text-xl leading-relaxed font-semibold">
+                      Because in business, products can fail, but vision does not.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
-
-          {/* Support System */}
-          <div className="mb-16 relative">
-            <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
-            
-            <div className="md:pl-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-[#5D4E37]">The Support System</h2>
-              </div>
-              
-              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-                <p className="text-lg text-[#5D4E37] leading-relaxed mb-4">
-                  Throughout this journey, my girlfriend, who works in an MNC, has been my biggest support. 
-                  In the early days, she helped me connect with HRs, wellness managers, and corporate teams for 
-                  fruit box pitches. Even now, she handles meetings and coordination for the fruit box business 
-                  while I focus fully on scaling our superfood mixtures and makhana line.
-                </p>
-                <p className="text-lg text-[#5D4E37] leading-relaxed">
-                  Yes, there is family pressure, and yes, it is not easy. But I am focused on my goal—to build 
-                  Vyadhihar into India most trusted healthy snack brand.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* The Learning */}
-          <div className="mb-16 relative">
-            <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full hidden md:block"></div>
-            
-            <div className="md:pl-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#C19A6B] to-[#8B7355] rounded-full flex items-center justify-center shadow-lg">
-                  <Award className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-[#5D4E37]">The Learning Journey</h2>
-              </div>
-              
-              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-                <p className="text-lg text-[#5D4E37] leading-relaxed">
-                  I have learned everything—from pricing, design, and manufacturing—to marketing and packaging—through 
-                  AI tools like ChatGPT and constant trial and error.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* The Vision */}
-          <div className="relative">
-            <div className="md:pl-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center shadow-lg">
-                  <Target className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-[#5D4E37]">The Vision</h2>
-              </div>
-              
-              <div className="bg-gradient-to-br from-[#5D4E37] to-[#8B7355] border-2 border-[#D4A574] rounded-2xl p-8 shadow-2xl text-white">
-                <p className="text-xl leading-relaxed mb-6 italic">
-                  My journey is not a success story yet it is a real story of persistence. Of someone who started 
-                  with nothing but an idea, failed more than once, but kept building brick by brick.
-                </p>
-                <p className="text-xl leading-relaxed font-semibold">
-                  Because in business, products can fail, but vision does not.
-                </p>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
 
@@ -252,7 +320,7 @@ export default function FounderStoryPage() {
               <span>Shop Now</span>
             </Link>
             <a
-              href="https://wa.me/919876543210?text=Hi,%20I%20want%20to%20connect%20with%20Keshav"
+              href="https://wa.me/917428408825?text=Hi,%20I%20want%20to%20connect%20with%20Keshav"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-10 py-4 text-base font-bold text-white bg-[#25D366] hover:bg-[#20BA5A] transition-all duration-300 rounded-full shadow-2xl hover:shadow-green-500/50 hover:scale-105"
