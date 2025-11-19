@@ -7,8 +7,8 @@ import { toast } from "../../../hooks/use-toast";
 import { useFacebookPixel } from "../../../hooks/useFacebookPixel";
 import type { CartItem } from "../../../lib/facebook-pixel";
 import Script from "next/script";
+import { Truck, CreditCard, Banknote, Shield, CheckCircle2 } from "lucide-react";
 
-// [Keep all the same interfaces and config - no changes to functionality]
 const WOOCOMMERCE_CONFIG = {
   BASE_URL: 'https://cms.vyadhiharfoods.com',
   CONSUMER_KEY: 'ck_88a2cfa5c504df33b4c4448fae557a339f26d3d4',
@@ -18,7 +18,7 @@ const WOOCOMMERCE_CONFIG = {
 const RAZORPAY_CONFIG = {
   KEY_ID: "rzp_live_RdcFqJgcF1fVQf",
   COMPANY_NAME: "Vyadhihar Foods",
-  THEME_COLOR: "#000000"  // Changed to black for minimal design
+  THEME_COLOR: "#D4A574"
 };
 
 interface FormData {
@@ -88,7 +88,6 @@ declare global {
   }
 }
 
-// [Keep all the API functions same - createWooCommerceOrder, updateWooCommerceOrderStatus]
 const createWooCommerceOrder = async (orderData: Record<string, unknown>): Promise<WooCommerceOrder> => {
   const apiUrl = `${WOOCOMMERCE_CONFIG.BASE_URL}/wp-json/wc/v3/orders`;
   const auth = btoa(`${WOOCOMMERCE_CONFIG.CONSUMER_KEY}:${WOOCOMMERCE_CONFIG.CONSUMER_SECRET}`);
@@ -174,6 +173,7 @@ export default function Checkout(): React.ReactElement {
   const [couponDiscount, setCouponDiscount] = useState<number>(0);
   const [couponError, setCouponError] = useState<string>("");
   const [isApplyingCoupon, setIsApplyingCoupon] = useState<boolean>(false);
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "cod">("online");
 
   const subtotalAfterCoupon = total - couponDiscount;
   const finalTotal = subtotalAfterCoupon + deliveryCharges;
@@ -187,7 +187,6 @@ export default function Checkout(): React.ReactElement {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [razorpayLoaded, setRazorpayLoaded] = useState<boolean>(false);
 
-  // [Keep all useEffect, validation, coupon logic, payment handlers same]
   useEffect(() => {
     if (items.length > 0) {
       const cartItems: CartItem[] = items.map(item => ({
@@ -391,19 +390,11 @@ export default function Checkout(): React.ReactElement {
 
   async function handleCheckout(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-
+  
     let wooOrder: WooCommerceOrder | null = null;
-
+  
     try {
-      if (!razorpayLoaded || typeof window === 'undefined' || !window.Razorpay) {
-        toast({
-          title: "Payment System Loading",
-          description: "Please wait for payment system to load",
-          variant: "destructive",
-        });
-        return;
-      }
-
+      // Validate form first
       if (!validateForm()) {
         toast({
           title: "Please fix the errors",
@@ -412,16 +403,28 @@ export default function Checkout(): React.ReactElement {
         });
         return;
       }
-
+  
+      // For online payment, check if Razorpay is loaded
+      if (paymentMethod === "online") {
+        if (typeof window === 'undefined' || !window.Razorpay) {
+          toast({
+            title: "Payment System Loading",
+            description: "Please wait for payment system to load",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+  
       setLoading(true);
       setStep("processing");
-
+  
       const fullAddress = `${form.address}, ${form.city}, ${form.state} - ${form.pincode}`;
-
+  
       const orderData = {
-        payment_method: 'razorpay',
-        payment_method_title: 'Razorpay (Credit Card/Debit Card/NetBanking/UPI)',
-        status: 'pending',
+        payment_method: paymentMethod === "cod" ? 'cod' : 'razorpay',
+        payment_method_title: paymentMethod === "cod" ? 'Cash on Delivery' : 'Online Payment (Razorpay)',
+        status: paymentMethod === "cod" ? 'processing' : 'pending',
         billing: {
           first_name: form.name,
           last_name: '',
@@ -450,7 +453,7 @@ export default function Checkout(): React.ReactElement {
         })),
         shipping_lines: deliveryCharges > 0 ? [{
           method_id: 'flat_rate',
-          method_title: 'Premium Delivery',
+          method_title: 'Standard Delivery (4-6 Days)',
           total: deliveryCharges.toString(),
         }] : [],
         coupon_lines: appliedCoupon ? [{
@@ -459,7 +462,8 @@ export default function Checkout(): React.ReactElement {
         }] : [],
         customer_note: form.notes + (form.notes ? '\n\n' : '') + 
           `WhatsApp: ${form.whatsapp}\n` +
-          `Full Address: ${fullAddress}` +
+          `Full Address: ${fullAddress}\n` +
+          `Payment Method: ${paymentMethod === "cod" ? "Cash on Delivery" : "Online Payment"}` +
           (appliedCoupon ? `\nCoupon Applied: ${appliedCoupon} (₹${couponDiscount} discount)` : ''),
         meta_data: [
           { key: 'whatsapp_number', value: form.whatsapp },
@@ -467,52 +471,81 @@ export default function Checkout(): React.ReactElement {
           { key: 'original_subtotal', value: total.toString() },
           { key: 'delivery_charges', value: deliveryCharges.toString() },
           { key: 'final_total', value: finalTotal.toString() },
+          { key: 'payment_type', value: paymentMethod },
           ...(appliedCoupon ? [
             { key: 'coupon_code', value: appliedCoupon },
             { key: 'coupon_discount', value: couponDiscount.toString() }
           ] : []),
         ],
       };
-
+  
       wooOrder = await createWooCommerceOrder(orderData);
-
-      const razorpayOptions: RazorpayOptions = {
-        key: RAZORPAY_CONFIG.KEY_ID,
-        amount: Math.round(finalTotal * 100),
-        currency: "INR",
-        name: RAZORPAY_CONFIG.COMPANY_NAME,
-        description: `Order #${wooOrder.id}`,
-        handler: (response: RazorpayHandlerResponse) => {
-          handlePaymentSuccess(wooOrder!, response);
-        },
-        modal: {
-          ondismiss: () => {
-            handlePaymentDismiss(wooOrder);
+  
+      // COD Order - Direct Success
+      if (paymentMethod === "cod") {
+        const orderItems: CartItem[] = items.map(item => ({
+          id: item.id, 
+          name: item.name, 
+          price: parseFloat(item.price), 
+          quantity: item.quantity
+        }));
+        trackPurchase(orderItems, finalTotal, `COD-${wooOrder.id}`);
+  
+        clear();
+  
+        toast({
+          title: "Order Placed Successfully",
+          description: `Order #${wooOrder.id} confirmed. Pay on delivery. You'll receive updates via WhatsApp.`,
+        });
+  
+        router.push(`/order-confirmation?orderId=COD-${wooOrder.id}&wcOrderId=${wooOrder.id}&method=cod`);
+        setLoading(false);
+        setStep("form");
+        return;
+      }
+  
+      // Online Payment - Razorpay
+      if (typeof window !== 'undefined' && window.Razorpay) {
+        const razorpayOptions: RazorpayOptions = {
+          key: RAZORPAY_CONFIG.KEY_ID,
+          amount: Math.round(finalTotal * 100),
+          currency: "INR",
+          name: RAZORPAY_CONFIG.COMPANY_NAME,
+          description: `Order #${wooOrder.id}`,
+          handler: (response: RazorpayHandlerResponse) => {
+            handlePaymentSuccess(wooOrder!, response);
           },
-        },
-        prefill: { 
-          name: form.name, 
-          email: form.email, 
-          contact: form.phone 
-        },
-        theme: { 
-          color: RAZORPAY_CONFIG.THEME_COLOR 
-        },
-        retry: {
-          enabled: true,
-          max_count: 3
-        }
-      };
-
-      const rzp = new window.Razorpay(razorpayOptions);
-
-      rzp.on('payment.failed', (response: RazorpayFailureResponse) => {
-        handlePaymentFailure(wooOrder, response);
-      });
-
-      rzp.open();
-      setLoading(false);
-
+          modal: {
+            ondismiss: () => {
+              handlePaymentDismiss(wooOrder);
+            },
+          },
+          prefill: { 
+            name: form.name, 
+            email: form.email, 
+            contact: form.phone 
+          },
+          theme: { 
+            color: RAZORPAY_CONFIG.THEME_COLOR 
+          },
+          retry: {
+            enabled: true,
+            max_count: 3
+          }
+        };
+  
+        const rzp = new window.Razorpay(razorpayOptions);
+  
+        rzp.on('payment.failed', (response: RazorpayFailureResponse) => {
+          handlePaymentFailure(wooOrder, response);
+        });
+  
+        rzp.open();
+        setLoading(false);
+      } else {
+        throw new Error("Payment system not loaded");
+      }
+  
     } catch (err) {
       if (wooOrder?.id) {
         try {
@@ -521,7 +554,7 @@ export default function Checkout(): React.ReactElement {
           // Silently handle cancellation error
         }
       }
-
+  
       toast({
         title: "Checkout Failed",
         description: err instanceof Error ? err.message : "Please try again",
@@ -531,18 +564,20 @@ export default function Checkout(): React.ReactElement {
       setStep("form");
     }
   }
-
-  // Empty cart check
+  
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-b from-[#FFF8DC] to-white">
         <div className="max-w-lg mx-auto text-center py-24 px-4">
-          <div className="border border-gray-200 p-12">
-            <h2 className="text-2xl font-light text-gray-900 mb-3 tracking-wide">Your Cart is Empty</h2>
-            <p className="text-gray-600 text-sm mb-8 font-light">Add items to get started</p>
+          <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-12 shadow-xl">
+            <div className="w-20 h-20 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full flex items-center justify-center mx-auto mb-6">
+              <Banknote className="w-10 h-10 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-[#5D4E37] mb-3">Your Cart is Empty</h2>
+            <p className="text-gray-600 text-sm mb-8">Add some healthy items to get started</p>
             <button
               onClick={() => router.push("/")}
-              className="inline-block px-8 py-3 text-xs text-white bg-black hover:bg-gray-800 transition-colors tracking-widest uppercase font-light"
+              className="inline-block px-8 py-3 text-sm text-white bg-gradient-to-r from-[#D4A574] to-[#C19A6B] hover:from-[#C19A6B] hover:to-[#8B7355] transition-all rounded-full font-semibold shadow-lg"
             >
               Start Shopping
             </button>
@@ -566,353 +601,449 @@ export default function Checkout(): React.ReactElement {
         }}
       />
 
-      <div className="min-h-screen bg-white pb-10">
-        <div className="max-w-2xl mx-auto py-12 px-4">
+      <div className="min-h-screen bg-gradient-to-b from-[#FFF8DC] via-white to-[#F5DEB3]/20 pb-10">
+        <div className="max-w-4xl mx-auto py-12 px-4">
 
           {/* Header */}
-          <div className="text-center mb-12 pb-8 border-b border-gray-200">
-            <h1 className="text-3xl lg:text-4xl font-light text-gray-900 mb-2 tracking-wide">
-              Checkout
+          <div className="text-center mb-8">
+            <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#8B7355] via-[#5D4E37] to-[#8B7355] bg-clip-text text-transparent mb-3">
+              Secure Checkout
             </h1>
-            <p className="text-gray-600 text-sm font-light">Complete your purchase securely</p>
+            <p className="text-gray-600">Complete your order in a few simple steps</p>
           </div>
 
-          {/* Order Summary */}
-          <div className="border border-gray-200 p-6 mb-6">
-            <h2 className="text-base font-light text-gray-900 mb-6 uppercase tracking-widest text-xs">Order Summary</h2>
-            <div className="space-y-3">
-              {items.map((item) => (
-                <div key={item.id} className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <div>
-                    <span className="font-light text-sm text-gray-900">{item.name}</span>
-                    <span className="text-gray-500 text-xs ml-2">×{item.quantity}</span>
-                  </div>
-                  <span className="font-light text-sm text-gray-900">₹{(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
-                </div>
-              ))}
-              <div className="flex justify-between text-sm text-gray-900 items-center py-2 font-light">
-                <span>Subtotal</span>
-                <span>₹{total.toFixed(2)}</span>
+          {/* Delivery Info Banner */}
+          <div className="bg-gradient-to-r from-[#D4A574]/10 to-[#C19A6B]/10 border-2 border-[#D4A574]/30 rounded-2xl p-4 mb-6">
+            <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-full shadow-lg">
+                <Truck className="w-6 h-6 text-white" />
               </div>
-
-              {appliedCoupon && (
-                <div className="flex justify-between text-sm text-gray-600 items-center py-2 font-light">
-                  <div className="flex items-center gap-2">
-                    <span>Coupon ({appliedCoupon})</span>
-                    <button
-                      onClick={handleRemoveCoupon}
-                      className="text-xs text-gray-500 hover:text-black underline"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                  <span>-₹{couponDiscount.toFixed(2)}</span>
-                </div>
-              )}
-
-              <div className="flex justify-between text-sm text-gray-900 items-center py-2 font-light">
-                <div>
-                  <span>Delivery</span>
-                  {total >= 500 && <span className="text-gray-600 text-xs ml-1">(Free above ₹500)</span>}
-                </div>
-                <span>{deliveryCharges === 0 ? 'Free' : `₹${deliveryCharges}`}</span>
-              </div>
-              <div className="flex justify-between items-center py-3 border-t border-gray-200">
-                <span className="text-sm text-gray-900 font-light uppercase tracking-widest">Total</span>
-                <span className="text-lg font-light text-gray-900">₹{finalTotal.toFixed(2)}</span>
+              <div>
+                <p className="text-sm font-bold text-[#5D4E37]">Fast Delivery</p>
+                <p className="text-xs text-gray-600">Delivered in 4-6 Business Days</p>
               </div>
             </div>
           </div>
 
-          {/* Coupon Section */}
-          <div className="border border-gray-200 p-6 mb-6">
-            <h2 className="text-base font-light text-gray-900 mb-4 uppercase tracking-widest text-xs">Coupon Code</h2>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="Enter coupon code"
-                  value={couponCode}
-                  onChange={(e) => {
-                    setCouponCode(e.target.value);
-                    setCouponError("");
-                  }}
-                  className="w-full p-3 border border-gray-300 focus:border-black focus:outline-none transition-colors text-sm font-light text-gray-900"
-                  disabled={!!appliedCoupon}
-                />
-                {couponError && (
-                  <p className="text-red-500 text-xs mt-1 font-light">{couponError}</p>
-                )}
-                {appliedCoupon && (
-                  <p className="text-gray-600 text-xs mt-1 font-light">
-                    Coupon {appliedCoupon} applied
-                  </p>
-                )}
-              </div>
-              <button
-                onClick={appliedCoupon ? handleRemoveCoupon : handleApplyCoupon}
-                disabled={isApplyingCoupon}
-                className={`px-6 py-3 text-xs font-light tracking-widest uppercase transition-colors ${
-                  appliedCoupon
-                    ? 'bg-gray-200 hover:bg-gray-300 text-gray-900'
-                    : 'bg-black hover:bg-gray-800 text-white'
-                } ${isApplyingCoupon ? 'opacity-60 cursor-not-allowed' : ''}`}
-              >
-                {isApplyingCoupon ? 'Applying...' : appliedCoupon ? 'Remove' : 'Apply'}
-              </button>
-            </div>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleCheckout} className="border border-gray-200 p-8">
-            <h2 className="text-base font-light text-gray-900 mb-8 uppercase tracking-widest text-xs">Delivery Information</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">Name *</label>
-                <input
-                  name="name"
-                  required
-                  className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none ${
-                    errors.name 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-300 focus:border-black'
-                  }`}
-                  placeholder="Full name"
-                  value={form.name}
-                  onChange={onChange}
-                />
-                {errors.name && <p className="text-red-500 text-xs mt-1 font-light">{errors.name}</p>}
+          <div className="grid lg:grid-cols-3 gap-8">
+            
+            {/* Left Column - Form */}
+            <div className="lg:col-span-2">
+              
+              {/* Order Summary Mobile */}
+              <div className="lg:hidden bg-white border-2 border-[#D4A574]/30 rounded-2xl p-6 mb-6 shadow-lg">
+                <h2 className="text-lg font-bold text-[#5D4E37] mb-4">Order Summary</h2>
+                <div className="space-y-3">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center py-2 border-b border-gray-100">
+                      <div>
+                        <span className="font-medium text-sm text-gray-900">{item.name}</span>
+                        <span className="text-gray-500 text-xs ml-2">×{item.quantity}</span>
+                      </div>
+                      <span className="font-semibold text-sm text-[#5D4E37]">₹{(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center pt-3 border-t-2 border-[#D4A574]/30">
+                    <span className="text-base font-bold text-[#5D4E37]">Total</span>
+                    <span className="text-lg font-bold text-[#5D4E37]">₹{finalTotal.toFixed(2)}</span>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">Email *</label>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none ${
-                    errors.email 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-300 focus:border-black'
-                  }`}
-                  placeholder="your@email.com"
-                  value={form.email}
-                  onChange={onChange}
-                />
-                {errors.email && <p className="text-red-500 text-xs mt-1 font-light">{errors.email}</p>}
-              </div>
-
-              <div>
-                <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">Phone *</label>
-                <input
-                  name="phone"
-                  type="tel"
-                  pattern="[0-9]{10}"
-                  required
-                  className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none ${
-                    errors.phone 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-300 focus:border-black'
-                  }`}
-                  placeholder="10-digit number"
-                  value={form.phone}
-                  onChange={onChange}
-                />
-                {errors.phone && <p className="text-red-500 text-xs mt-1 font-light">{errors.phone}</p>}
-              </div>
-
-              <div>
-                <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">
-                  WhatsApp * 
+              {/* Payment Method Selection */}
+              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-6 mb-6 shadow-lg">
+                <h2 className="text-lg font-bold text-[#5D4E37] mb-4">Payment Method</h2>
+                <div className="grid grid-cols-2 gap-4">
                   <button
                     type="button"
-                    onClick={copyPhoneToWhatsApp}
-                    className="ml-2 text-xs bg-black text-white px-2 py-1 hover:bg-gray-800 transition-colors font-light"
+                    onClick={() => setPaymentMethod("online")}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      paymentMethod === "online"
+                        ? "border-[#D4A574] bg-gradient-to-br from-[#D4A574]/10 to-[#C19A6B]/10 shadow-lg"
+                        : "border-gray-200 hover:border-[#D4A574]/50"
+                    }`}
                   >
-                    Same as phone
+                    <CreditCard className={`w-8 h-8 mx-auto mb-2 ${paymentMethod === "online" ? "text-[#D4A574]" : "text-gray-400"}`} />
+                    <p className={`text-sm font-semibold ${paymentMethod === "online" ? "text-[#5D4E37]" : "text-gray-600"}`}>
+                      Online Payment
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">UPI, Card, NetBanking</p>
                   </button>
-                </label>
-                <input
-                  name="whatsapp"
-                  type="tel"
-                  pattern="[0-9]{10}"
-                  required
-                  className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none ${
-                    errors.whatsapp 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-300 focus:border-black'
-                  }`}
-                  placeholder="WhatsApp number"
-                  value={form.whatsapp}
-                  onChange={onChange}
-                />
-                {errors.whatsapp && <p className="text-red-500 text-xs mt-1 font-light">{errors.whatsapp}</p>}
-              </div>
-            </div>
 
-            <div className="mb-6">
-              <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">Address *</label>
-              <textarea
-                name="address"
-                rows={3}
-                required
-                className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none resize-none ${
-                  errors.address 
-                    ? 'border-red-300 focus:border-red-500' 
-                    : 'border-gray-300 focus:border-black'
-                }`}
-                placeholder="Complete address"
-                value={form.address}
-                onChange={onChange}
-              />
-              {errors.address && <p className="text-red-500 text-xs mt-1 font-light">{errors.address}</p>}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div>
-                <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">Pincode *</label>
-                <input
-                  name="pincode"
-                  type="text"
-                  pattern="[0-9]{6}"
-                  required
-                  className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none ${
-                    errors.pincode 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-300 focus:border-black'
-                  }`}
-                  placeholder="6-digit"
-                  value={form.pincode}
-                  onChange={onChange}
-                />
-                {errors.pincode && <p className="text-red-500 text-xs mt-1 font-light">{errors.pincode}</p>}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("cod")}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      paymentMethod === "cod"
+                        ? "border-[#D4A574] bg-gradient-to-br from-[#D4A574]/10 to-[#C19A6B]/10 shadow-lg"
+                        : "border-gray-200 hover:border-[#D4A574]/50"
+                    }`}
+                  >
+                    <Banknote className={`w-8 h-8 mx-auto mb-2 ${paymentMethod === "cod" ? "text-[#D4A574]" : "text-gray-400"}`} />
+                    <p className={`text-sm font-semibold ${paymentMethod === "cod" ? "text-[#5D4E37]" : "text-gray-600"}`}>
+                      Cash on Delivery
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">Pay when you receive</p>
+                  </button>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">City *</label>
-                <input
-                  name="city"
-                  required
-                  className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none ${
-                    errors.city 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-300 focus:border-black'
-                  }`}
-                  placeholder="City"
-                  value={form.city}
-                  onChange={onChange}
-                />
-                {errors.city && <p className="text-red-500 text-xs mt-1 font-light">{errors.city}</p>}
+              {/* Coupon Section */}
+              <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-6 mb-6 shadow-lg">
+                <h2 className="text-lg font-bold text-[#5D4E37] mb-4">Have a Coupon?</h2>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      placeholder="Enter coupon code"
+                      value={couponCode}
+                      onChange={(e) => {
+                        setCouponCode(e.target.value);
+                        setCouponError("");
+                      }}
+                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-[#D4A574] focus:outline-none transition-colors text-sm"
+                      disabled={!!appliedCoupon}
+                    />
+                    {couponError && (
+                      <p className="text-red-500 text-xs mt-1">{couponError}</p>
+                    )}
+                    {appliedCoupon && (
+                      <p className="text-green-600 text-xs mt-1 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        Coupon {appliedCoupon} applied
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={appliedCoupon ? handleRemoveCoupon : handleApplyCoupon}
+                    disabled={isApplyingCoupon}
+                    className={`px-6 py-3 text-sm font-semibold rounded-lg transition-all ${
+                      appliedCoupon
+                        ? 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                        : 'bg-gradient-to-r from-[#D4A574] to-[#C19A6B] hover:from-[#C19A6B] hover:to-[#8B7355] text-white shadow-lg'
+                    } ${isApplyingCoupon ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  >
+                    {isApplyingCoupon ? 'Applying...' : appliedCoupon ? 'Remove' : 'Apply'}
+                  </button>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">State *</label>
-                <select
-                  name="state"
-                  required
-                  className={`w-full p-3 border text-sm font-light text-gray-900 transition-colors focus:outline-none ${
-                    errors.state 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-300 focus:border-black'
+              {/* Form */}
+              <form onSubmit={handleCheckout} className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-6 shadow-lg">
+                <h2 className="text-lg font-bold text-[#5D4E37] mb-6">Delivery Information</h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                    <input
+                      name="name"
+                      required
+                      className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none ${
+                        errors.name 
+                          ? 'border-red-300 focus:border-red-500' 
+                          : 'border-gray-200 focus:border-[#D4A574]'
+                      }`}
+                      placeholder="Enter your full name"
+                      value={form.name}
+                      onChange={onChange}
+                    />
+                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none ${
+                        errors.email 
+                          ? 'border-red-300 focus:border-red-500' 
+                          : 'border-gray-200 focus:border-[#D4A574]'
+                      }`}
+                      placeholder="your@email.com"
+                      value={form.email}
+                      onChange={onChange}
+                    />
+                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
+                    <input
+                      name="phone"
+                      type="tel"
+                      pattern="[0-9]{10}"
+                      required
+                      className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none ${
+                        errors.phone 
+                          ? 'border-red-300 focus:border-red-500' 
+                          : 'border-gray-200 focus:border-[#D4A574]'
+                      }`}
+                      placeholder="10-digit mobile number"
+                      value={form.phone}
+                      onChange={onChange}
+                    />
+                    {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      WhatsApp Number * 
+                      <button
+                        type="button"
+                        onClick={copyPhoneToWhatsApp}
+                        className="ml-2 text-xs bg-[#D4A574] text-white px-3 py-1 rounded-full hover:bg-[#C19A6B] transition-colors"
+                      >
+                        Same as phone
+                      </button>
+                    </label>
+                    <input
+                      name="whatsapp"
+                      type="tel"
+                      pattern="[0-9]{10}"
+                      required
+                      className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none ${
+                        errors.whatsapp 
+                          ? 'border-red-300 focus:border-red-500' 
+                          : 'border-gray-200 focus:border-[#D4A574]'
+                      }`}
+                      placeholder="WhatsApp number"
+                      value={form.whatsapp}
+                      onChange={onChange}
+                    />
+                    {errors.whatsapp && <p className="text-red-500 text-xs mt-1">{errors.whatsapp}</p>}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Complete Address *</label>
+                  <textarea
+                    name="address"
+                    rows={3}
+                    required
+                    className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none resize-none ${
+                      errors.address 
+                        ? 'border-red-300 focus:border-red-500' 
+                        : 'border-gray-200 focus:border-[#D4A574]'
+                    }`}
+                    placeholder="House/Flat No., Street, Area, Landmark"
+                    value={form.address}
+                    onChange={onChange}
+                  />
+                  {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Pincode *</label>
+                    <input
+                      name="pincode"
+                      type="text"
+                      pattern="[0-9]{6}"
+                      required
+                      className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none ${
+                        errors.pincode 
+                          ? 'border-red-300 focus:border-red-500' 
+                          : 'border-gray-200 focus:border-[#D4A574]'
+                      }`}
+                      placeholder="6-digit pincode"
+                      value={form.pincode}
+                      onChange={onChange}
+                    />
+                    {errors.pincode && <p className="text-red-500 text-xs mt-1">{errors.pincode}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">City *</label>
+                    <input
+                      name="city"
+                      required
+                      className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none ${
+                        errors.city 
+                          ? 'border-red-300 focus:border-red-500' 
+                          : 'border-gray-200 focus:border-[#D4A574]'
+                      }`}
+                      placeholder="City"
+                      value={form.city}
+                      onChange={onChange}
+                    />
+                    {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">State *</label>
+                    <select
+                      name="state"
+                      required
+                      className={`w-full p-3 border-2 rounded-lg text-sm transition-colors focus:outline-none ${
+                        errors.state 
+                          ? 'border-red-300 focus:border-red-500' 
+                          : 'border-gray-200 focus:border-[#D4A574]'
+                      }`}
+                      value={form.state}
+                      onChange={onChange}
+                    >
+                      <option value="">Select State</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="West Bengal">West Bengal</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Haryana">Haryana</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Assam">Assam</option>
+                      <option value="Jharkhand">Jharkhand</option>
+                      <option value="Chhattisgarh">Chhattisgarh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                      <option value="Goa">Goa</option>
+                    </select>
+                    {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Order Notes (Optional)</label>
+                  <textarea
+                    name="notes"
+                    rows={2}
+                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-[#D4A574] focus:outline-none transition-colors text-sm resize-none"
+                    placeholder="Any special instructions for your order"
+                    value={form.notes}
+                    onChange={onChange}
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className={`w-full bg-gradient-to-r from-[#D4A574] to-[#C19A6B] hover:from-[#C19A6B] hover:to-[#8B7355] text-white py-4 rounded-xl font-bold text-lg transition-all shadow-xl hover:shadow-2xl ${
+                    loading || step === "processing" || (paymentMethod === "online" && !razorpayLoaded)
+                      ? "opacity-60 pointer-events-none" 
+                      : ""
                   }`}
-                  value={form.state}
-                  onChange={onChange}
+                  disabled={loading || step === "processing" || (paymentMethod === "online" && !razorpayLoaded)}
                 >
-                  <option value="">Select State</option>
-                  <option value="Delhi">Delhi</option>
-                  <option value="Maharashtra">Maharashtra</option>
-                  <option value="Karnataka">Karnataka</option>
-                  <option value="Tamil Nadu">Tamil Nadu</option>
-                  <option value="Uttar Pradesh">Uttar Pradesh</option>
-                  <option value="West Bengal">West Bengal</option>
-                  <option value="Rajasthan">Rajasthan</option>
-                  <option value="Gujarat">Gujarat</option>
-                  <option value="Madhya Pradesh">Madhya Pradesh</option>
-                  <option value="Punjab">Punjab</option>
-                  <option value="Haryana">Haryana</option>
-                  <option value="Bihar">Bihar</option>
-                  <option value="Odisha">Odisha</option>
-                  <option value="Telangana">Telangana</option>
-                  <option value="Andhra Pradesh">Andhra Pradesh</option>
-                  <option value="Kerala">Kerala</option>
-                  <option value="Assam">Assam</option>
-                  <option value="Jharkhand">Jharkhand</option>
-                  <option value="Chhattisgarh">Chhattisgarh</option>
-                  <option value="Uttarakhand">Uttarakhand</option>
-                  <option value="Himachal Pradesh">Himachal Pradesh</option>
-                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                  <option value="Goa">Goa</option>
-                </select>
-                {errors.state && <p className="text-red-500 text-xs mt-1 font-light">{errors.state}</p>}
+                  {loading || step === "processing" ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Processing Order...
+                    </div>
+                  ) : paymentMethod === "online" && !razorpayLoaded ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Loading Payment...
+                    </div>
+                  ) : paymentMethod === "cod" ? (
+                    `Place Order - ₹${finalTotal.toFixed(2)} (Pay on Delivery)`
+                  ) : (
+                    `Pay ₹${finalTotal.toFixed(2)} Securely`
+                  )}
+                </button>
+
+                {step === "processing" && (
+                  <div className="text-center text-gray-600 text-sm mt-3">
+                    {paymentMethod === "cod" ? "Creating your order..." : "Processing payment..."}
+                  </div>
+                )}
+              </form>
+
+              {/* Trust Signals */}
+              <div className="mt-6 flex items-center justify-center gap-6 text-gray-600 text-xs">
+                <div className="flex items-center gap-1">
+                  <Shield className="w-4 h-4 text-[#D4A574]" />
+                  <span>100% Secure</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <CheckCircle2 className="w-4 h-4 text-[#D4A574]" />
+                  <span>Encrypted Payment</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Truck className="w-4 h-4 text-[#D4A574]" />
+                  <span>4-6 Days Delivery</span>
+                </div>
               </div>
             </div>
 
-            <div className="mb-8">
-              <label className="block text-xs font-light text-gray-600 mb-2 uppercase tracking-widest">Notes</label>
-              <textarea
-                name="notes"
-                rows={2}
-                className="w-full p-3 border border-gray-300 focus:border-black focus:outline-none transition-colors text-sm font-light text-gray-900 resize-none"
-                placeholder="Special instructions"
-                value={form.notes}
-                onChange={onChange}
-              />
-            </div>
+            {/* Right Column - Order Summary (Desktop) */}
+            <div className="hidden lg:block">
+              <div className="sticky top-24">
+                <div className="bg-white border-2 border-[#D4A574]/30 rounded-2xl p-6 shadow-xl">
+                  <h2 className="text-lg font-bold text-[#5D4E37] mb-4">Order Summary</h2>
+                  
+                  <div className="space-y-3 mb-4">
+                    {items.map((item) => (
+                      <div key={item.id} className="flex justify-between items-start py-2 border-b border-gray-100">
+                        <div className="flex-1">
+                          <p className="font-medium text-sm text-gray-900">{item.name}</p>
+                          <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                        </div>
+                        <span className="font-semibold text-sm text-[#5D4E37] ml-2">
+                          ₹{(parseFloat(item.price) * item.quantity).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
 
-            <div className="bg-gray-50 p-6 mb-8 border border-gray-200">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-900 font-light uppercase tracking-widest">Amount</span>
-                <div className="text-right">
-                  <span className="text-xl font-light text-gray-900">
-                    ₹{finalTotal.toFixed(2)}
-                  </span>
+                  <div className="space-y-2 pt-3 border-t-2 border-gray-100">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Subtotal</span>
+                      <span className="font-semibold text-gray-900">₹{total.toFixed(2)}</span>
+                    </div>
+
+                    {appliedCoupon && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>Discount ({appliedCoupon})</span>
+                        <span className="font-semibold">-₹{couponDiscount.toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Delivery Charges</span>
+                      <span className="font-semibold text-gray-900">
+                        {deliveryCharges === 0 ? (
+                          <span className="text-green-600">FREE</span>
+                        ) : (
+                          `₹${deliveryCharges}`
+                        )}
+                      </span>
+                    </div>
+
+                    {total >= 500 && deliveryCharges === 0 && (
+                      <p className="text-xs text-green-600 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        Free delivery unlocked!
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center pt-4 mt-4 border-t-2 border-[#D4A574]/30">
+                    <span className="text-base font-bold text-[#5D4E37]">Total Amount</span>
+                    <span className="text-2xl font-bold text-[#D4A574]">₹{finalTotal.toFixed(2)}</span>
+                  </div>
+
                   {appliedCoupon && (
-                    <p className="text-xs text-gray-600 mt-1 font-light">Saved ₹{couponDiscount}</p>
+                    <div className="mt-3 text-center">
+                      <p className="text-xs text-green-600 font-semibold">
+                        🎉 You saved ₹{couponDiscount}!
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Payment Button */}
-            <button
-              type="submit"
-              className={`w-full bg-black hover:bg-gray-800 text-white py-4 text-xs font-light tracking-widest uppercase transition-colors ${
-                loading || step === "processing" || !razorpayLoaded 
-                  ? "opacity-60 pointer-events-none" 
-                  : ""
-              }`}
-              disabled={loading || step === "processing" || !razorpayLoaded}
-            >
-              {loading || step === "processing" ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Processing...
-                </div>
-              ) : !razorpayLoaded ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Loading...
-                </div>
-              ) : (
-                `Pay ₹${finalTotal.toFixed(2)}`
-              )}
-            </button>
-
-            {step === "processing" && (
-              <div className="text-center text-gray-600 text-xs mt-3 font-light">
-                Creating order and processing payment...
-              </div>
-            )}
-          </form>
-
-          {/* Trust Signals */}
-          <div className="mt-8 text-center">
-            <div className="flex items-center justify-center space-x-6 text-gray-500 text-xs font-light">
-              <span>• SSL Secured</span>
-              <span>• Encrypted</span>
-              <span>• Fast Delivery</span>
-            </div>
           </div>
         </div>
       </div>
