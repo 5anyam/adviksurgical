@@ -5,6 +5,10 @@ import { Trash2, Minus, Plus, Package, Star } from "lucide-react";
 
 export default function CartPage() {
   const { items, increment, decrement, removeFromCart } = useCart();
+  
+  // Debug: Console mein items print karo
+  console.log('Cart Items:', items);
+  
   const total = items.reduce((sum, i) => sum + parseFloat(i.price) * i.quantity, 0);
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
 
@@ -70,17 +74,19 @@ export default function CartPage() {
                 </div>
                 <div className="divide-y divide-gray-200">
                   {items.map((item) => {
+                    // Use unique key - variation_id if exists, else id
+                    const itemKey = item.variation_id || item.id;
                     const itemRegularPrice = item.regular_price;
                     const hasDiscount = itemRegularPrice && parseFloat(itemRegularPrice) > parseFloat(item.price);
                     
                     return (
-                      <div key={item.id} className="p-6 hover:bg-gray-50 transition-colors">
+                      <div key={itemKey} className="p-6 hover:bg-gray-50 transition-colors">
                         <div className="flex gap-6">
                           {/* Image */}
                           <div className="flex-shrink-0">
                             <div className="w-24 h-24 bg-gray-50 border border-gray-200">
                               <img
-                                src={item.images?.[0]?.src}
+                                src={item.images?.[0]?.src || '/placeholder.png'}
                                 alt={item.name}
                                 className="w-full h-full object-contain p-2"
                               />
@@ -93,6 +99,18 @@ export default function CartPage() {
                               <h3 className="text-sm font-light text-gray-900 line-clamp-2">
                                 {item.name}
                               </h3>
+                              
+                              {/* Show variation attributes if exists */}
+                              {item.selectedAttributes && Object.keys(item.selectedAttributes).length > 0 && (
+                                <div className="mt-1">
+                                  {Object.entries(item.selectedAttributes).map(([key, value]) => (
+                                    <span key={key} className="text-xs text-gray-500 mr-2">
+                                      {key}: {value}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                              
                               <div className="flex items-center gap-1 mt-2">
                                 {[...Array(5)].map((_, i) => (
                                   <Star key={i} className="w-3 h-3 text-gray-900 fill-gray-900" />
@@ -120,17 +138,23 @@ export default function CartPage() {
                               <div className="flex items-center gap-4">
                                 <div className="flex items-center border border-gray-300">
                                   <button
-                                    onClick={() => decrement(item.id)}
+                                    onClick={() => {
+                                      console.log('Decrementing:', itemKey);
+                                      decrement(itemKey);
+                                    }}
                                     className="p-2 hover:bg-gray-50 transition-colors"
                                     disabled={item.quantity <= 1}
                                   >
                                     <Minus className="h-3 w-3 text-gray-600" />
                                   </button>
-                                  <span className="w-12 text-center font-light text-gray-900 text-sm">
+                                  <span className="w-12 text-center font-light !text-black text-sm">
                                     {item.quantity}
                                   </span>
                                   <button
-                                    onClick={() => increment(item.id)}
+                                    onClick={() => {
+                                      console.log('Incrementing:', itemKey);
+                                      increment(itemKey);
+                                    }}
                                     className="p-2 hover:bg-gray-50 transition-colors"
                                   >
                                     <Plus className="h-3 w-3 text-gray-600" />
@@ -138,7 +162,10 @@ export default function CartPage() {
                                 </div>
 
                                 <button
-                                  onClick={() => removeFromCart(item.id)}
+                                  onClick={() => {
+                                    console.log('Removing:', itemKey);
+                                    removeFromCart(itemKey);
+                                  }}
                                   className="p-2 text-gray-400 hover:text-black transition-colors"
                                   title="Remove"
                                 >
