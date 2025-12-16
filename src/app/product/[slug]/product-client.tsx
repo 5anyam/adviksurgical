@@ -19,13 +19,12 @@ export interface ImageData { src: string }
 export interface Attribute { 
   id: number
   name: string
-  option: string // For simple products (sometimes single string)
-  options?: string[] // For variable products
+  option: string
+  options?: string[]
   visible?: boolean
   variation?: boolean
 }
 
-// Interface for specific variation data
 export interface ProductVariation {
   id: number
   price: string
@@ -42,15 +41,15 @@ export interface Product {
   id: number
   name: string
   slug: string
-  type: 'simple' | 'variable' // Added type
+  type: 'simple' | 'variable'
   price: string
   regular_price: string
   description?: string
   short_description?: string
   images: ImageData[]
   attributes?: Attribute[]
-  variations?: number[] // IDs of variations
-  variationData?: ProductVariation[] // Enriched variation data (fetched or passed)
+  variations?: number[]
+  variationData?: ProductVariation[]
 }
 
 export default function ProductClient({
@@ -154,7 +153,6 @@ export default function ProductClient({
   }
 
   // --- Pricing Logic ---
-  // If variable, use variation price. If simple, use product price.
   const activePrice = currentVariation ? currentVariation.price : product.price
   const activeRegularPrice = currentVariation ? currentVariation.regular_price : (product.regular_price || product.price)
 
@@ -178,7 +176,6 @@ export default function ProductClient({
   }
 
   const handleAddToCart = async () => {
-    // Validation for variable products
     if (product.type === 'variable' && !currentVariation) {
       toast({ title: 'Select Options', description: 'Please select all options before adding to cart.', variant: 'destructive' })
       return
@@ -188,10 +185,9 @@ export default function ProductClient({
     try {
       const itemToAdd = {
         ...product,
-        // Override ID and Price if variation is selected
         id: currentVariation ? currentVariation.id : product.id, 
         variation_id: currentVariation ? currentVariation.id : undefined,
-        name: product.name, // Keep main name, cart usually handles displaying attributes
+        name: product.name,
         price: salePrice.toString(),
         images: (currentVariation?.image ? [currentVariation.image] : product.images) || [],
         selectedAttributes: currentVariation ? selectedAttributes : undefined
@@ -258,7 +254,6 @@ export default function ProductClient({
   }
 
   const handleEnquire = () => {
-    // Include selected attributes in enquiry if applicable
     let message = `Hi, I want to enquire about ${product.name}`;
     if (product.type === 'variable' && Object.keys(selectedAttributes).length > 0) {
       const attrs = Object.entries(selectedAttributes).map(([k, v]) => `${k}: ${v}`).join(', ')
@@ -288,7 +283,6 @@ export default function ProductClient({
         {/* Image Section */}
         <div className="lg:w-1/2">
           <div className="sticky top-8">
-            {/* Show variation image if available, otherwise default images */}
             <ImageGallery 
               images={currentVariation?.image ? [currentVariation.image, ...product.images] : (product.images || [])} 
             />
@@ -312,7 +306,7 @@ export default function ProductClient({
         {/* Details Section */}
         <div className="lg:w-1/2">
           <div className="space-y-6">
-            {/* Sale Badge - Only for non-fruit box */}
+            {/* Sale Badge */}
             {!isFruitBox && hasSale && (
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white px-4 py-2 rounded-full shadow-lg">
                 <Sparkles className="w-4 h-4" />
@@ -396,7 +390,7 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* Price Section - Hide for Fruit Box */}
+            {/* Price Section */}
             {!isFruitBox && (
               <div className="py-6 border-y-2 border-[#D4A574]/20 bg-gradient-to-br from-[#FFF8DC] to-white rounded-xl p-6">
                 <div className="flex items-baseline gap-3 mb-2">
@@ -427,14 +421,14 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* Quantity Selector - Hide for Fruit Box */}
+            {/* Quantity Selector - FIXED WITH BLACK TEXT */}
             {!isFruitBox && (
               <div>
                 <label className="block text-sm font-bold text-[#5D4E37] mb-3 uppercase tracking-wide">
                   Quantity
                 </label>
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center border-2 border-[#D4A574] rounded-lg overflow-hidden">
+                  <div className="flex items-center border-2 border-[#D4A574] rounded-lg overflow-hidden bg-white">
                     <button
                       onClick={() => handleQuantityChange(-1)}
                       className="p-4 hover:bg-[#FFF8DC] transition-colors"
@@ -442,7 +436,7 @@ export default function ProductClient({
                     >
                       <Minus className="w-5 h-5 text-[#5D4E37]" />
                     </button>
-                    <span className="px-8 py-4 font-bold text-[#5D4E37] text-lg border-x-2 border-[#D4A574]">
+                    <span className="px-8 py-4 font-bold !text-black text-xl border-x-2 border-[#D4A574]">
                       {quantity}
                     </span>
                     <button
@@ -462,19 +456,16 @@ export default function ProductClient({
             {/* Action Buttons */}
             <div className="hidden lg:flex flex-col gap-4 pt-6">
               {isFruitBox ? (
-                // Only Enquire Now button for Fruit Box
                 <button
                   className="w-full border-2 border-[#25D366] bg-[#25D366] text-white font-bold px-8 py-4 text-lg rounded-xl hover:bg-[#20BA5A] hover:border-[#20BA5A] transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2"
                   onClick={handleEnquire}
                 >
-                   {/* WhatsApp Icon */}
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                   </svg>
                   <span>Enquire Now on WhatsApp</span>
                 </button>
               ) : (
-                // Add to Cart and Buy Now for regular products
                 <>
                   <button
                     className={`w-full bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-8 py-4 text-base rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 ${isAddingToCart ? 'opacity-50' : ''}`}
@@ -504,10 +495,9 @@ export default function ProductClient({
               )}
             </div>
 
-            {/* Trust Badges - Conditional for Fruit Box */}
+            {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t-2 border-[#D4A574]/20">
               {[
-                // Conditionally show Free Shipping - skip for fruit box
                 ...(!isFruitBox ? [{
                   icon: <Truck className="w-5 h-5" />, 
                   label: 'Free Shipping', 
@@ -530,7 +520,7 @@ export default function ProductClient({
         </div>
       </div>
 
-      {/* Mobile Fixed Bottom */}
+      {/* Mobile Fixed Bottom - FIXED WITH BLACK TEXT */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#D4A574]/30 z-50 p-4 shadow-2xl">
         <div className="max-w-md mx-auto">
           {isFruitBox ? (
@@ -538,14 +528,12 @@ export default function ProductClient({
               className="w-full border-2 border-[#25D366] bg-[#25D366] text-white font-bold px-6 py-4 text-base rounded-xl hover:bg-[#20BA5A] transition-all shadow-lg flex items-center justify-center gap-2"
               onClick={handleEnquire}
             >
-              {/* WhatsApp Icon */}
                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
               </svg>
               <span>Enquire Now</span>
             </button>
           ) : (
-            // Regular products - show price, quantity and buttons
             <>
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex-1">
@@ -561,7 +549,7 @@ export default function ProductClient({
                     )}
                   </div>
                 </div>
-                <div className="flex items-center border-2 border-[#D4A574] rounded-lg">
+                <div className="flex items-center border-2 border-[#D4A574] rounded-lg bg-white">
                   <button
                     onClick={() => handleQuantityChange(-1)}
                     className="p-2 hover:bg-[#FFF8DC]"
@@ -569,7 +557,7 @@ export default function ProductClient({
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-4 py-2 text-base font-bold">{quantity}</span>
+                  <span className="px-4 py-2 text-lg font-bold !text-black">{quantity}</span>
                   <button
                     onClick={() => handleQuantityChange(1)}
                     className="p-2 hover:bg-[#FFF8DC]"
@@ -609,7 +597,7 @@ export default function ProductClient({
         </div>
       </div>
 
-      {/* Tabs Section - Conditional Content for Fruit Box */}
+      {/* Tabs Section */}
       <div className="max-w-7xl mx-auto mt-16 px-4">
         <div className="border-t-2 border-[#D4A574]/30">
           <Tab.Group>
@@ -638,7 +626,6 @@ export default function ProductClient({
                   </h3>
                   
                   {isFruitBox ? (
-                    // Fruit Box specific benefits
                     <div className="grid grid-cols-1 gap-6">
                       <div className="border-2 border-[#D4A574]/30 p-6 rounded-xl bg-gradient-to-br from-[#FFF8DC] to-white">
                         <h4 className="font-bold text-lg text-[#5D4E37] mb-4 flex items-center gap-2">
@@ -703,7 +690,6 @@ export default function ProductClient({
                       </div>
                     </div>
                   ) : (
-                    // Regular products - Health Benefits
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {[
                         { title: 'Rich in Nutrients', desc: 'Packed with essential vitamins and minerals for daily health' },
