@@ -3,11 +3,12 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "../../../lib/cart";
+import { useAuth } from "../../../lib/auth-context"; // ← ADDED
 import { toast } from "../../../hooks/use-toast";
 import { useFacebookPixel } from "../../../hooks/useFacebookPixel";
 import type { CartItem } from "../../../lib/facebook-pixel";
 import Script from "next/script";
-import { Truck, CreditCard, Banknote, Shield, CheckCircle2 } from "lucide-react";
+import { Truck, CreditCard, Banknote, Shield, CheckCircle2, User as UserIcon, LogIn } from "lucide-react"; // ← ADDED UserIcon, LogIn
 
 const WOOCOMMERCE_CONFIG = {
   BASE_URL: 'https://cms.vyadhiharfoods.com',
@@ -88,9 +89,26 @@ declare global {
   }
 }
 
-const createWooCommerceOrder = async (orderData: Record<string, unknown>): Promise<WooCommerceOrder> => {
+// ✅ UPDATED - Now links orders to logged-in users
+const createWooCommerceOrder = async (orderData: Record<string, unknown>, userEmail?: string): Promise<WooCommerceOrder> => {
   const apiUrl = `${WOOCOMMERCE_CONFIG.BASE_URL}/wp-json/wc/v3/orders`;
   const auth = btoa(`${WOOCOMMERCE_CONFIG.CONSUMER_KEY}:${WOOCOMMERCE_CONFIG.CONSUMER_SECRET}`);
+
+  // Link order to logged-in user
+  if (userEmail) {
+    try {
+      const customerResponse = await fetch(
+        `${WOOCOMMERCE_CONFIG.BASE_URL}/wp-json/wc/v3/customers?email=${userEmail}`,
+        { headers: { 'Authorization': `Basic ${auth}` } }
+      );
+      const customers = await customerResponse.json();
+      if (Array.isArray(customers) && customers.length > 0) {
+        orderData.customer_id = customers[0].id;
+      }
+    } catch (error) {
+      console.log('Customer linking skipped:', error);
+    }
+  }
 
   const response = await fetch(apiUrl, {
     method: 'POST',
@@ -164,6 +182,7 @@ export default function Checkout(): React.ReactElement {
   const { items, clear } = useCart();
   const router = useRouter();
   const { trackInitiateCheckout, trackAddPaymentInfo, trackPurchase } = useFacebookPixel();
+  const { user } = useAuth(); // ← ADDED
 
   const total = items.reduce((sum, i) => sum + parseFloat(i.price) * i.quantity, 0);
   const deliveryCharges = total >= 500 ? 0 : 50;
@@ -186,6 +205,22 @@ export default function Checkout(): React.ReactElement {
   const [step, setStep] = useState<"form" | "processing">("form");
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [razorpayLoaded, setRazorpayLoaded] = useState<boolean>(false);
+
+  // ✅ ADDED - Pre-fill form if user is logged in
+  useEffect(() => {
+    if (user) {
+      setForm(prev => ({
+        ...prev,
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        address: user.address || prev.address,
+        city: user.city || prev.city,
+        state: user.state || prev.state,
+        pincode: user.pincode || prev.pincode,
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (items.length > 0) {
@@ -477,7 +512,8 @@ export default function Checkout(): React.ReactElement {
         ],
       };
   
-      wooOrder = await createWooCommerceOrder(orderData);
+      // ✅ UPDATED - Pass user email to link order
+      wooOrder = await createWooCommerceOrder(orderData, user?.email);
   
       if (paymentMethod === "cod") {
         const orderItems: CartItem[] = items.map(item => ({
@@ -608,6 +644,49 @@ export default function Checkout(): React.ReactElement {
             <p className="text-gray-600">Complete your order in a few simple steps</p>
           </div>
 
+          {/* ✅ ADDED - User Status Banner */}
+          {user ? (
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-4 mb-6">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full shadow-lg">
+                    <UserIcon className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">Logged in as {user.name}</p>
+                    <p className="text-xs text-gray-600">{user.email}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => router.push('/my-account')}
+                  className="px-4 py-2 text-sm bg-white border-2 border-green-300 text-green-700 rounded-lg font-semibold hover:bg-green-50 transition-all"
+                >
+                  My Account
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 mb-6">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full shadow-lg">
+                    <LogIn className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">Login to track your orders</p>
+                    <p className="text-xs text-gray-600">Save time with saved addresses</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => router.push('/login')}
+                  className="px-4 py-2 text-sm bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white rounded-lg font-semibold hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg"
+                >
+                  Login
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Delivery Info Banner */}
           <div className="bg-gradient-to-r from-[#D4A574]/10 to-[#C19A6B]/10 border-2 border-[#D4A574]/30 rounded-2xl p-4 mb-6">
             <div className="flex items-center justify-center gap-3">
@@ -734,7 +813,7 @@ export default function Checkout(): React.ReactElement {
                     <input
                       name="name"
                       required
-                      className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium placeholder:text-gray-500 transition-colors focus:outline-none ${
+                      className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none ${
                         errors.name 
                           ? 'border-red-300 focus:border-red-500' 
                           : 'border-gray-200 focus:border-[#D4A574]'
@@ -752,7 +831,7 @@ export default function Checkout(): React.ReactElement {
                       name="email"
                       type="email"
                       required
-                      className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium placeholder:text-gray-500 transition-colors focus:outline-none ${
+                      className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none ${
                         errors.email 
                           ? 'border-red-300 focus:border-red-500' 
                           : 'border-gray-200 focus:border-[#D4A574]'
@@ -771,7 +850,7 @@ export default function Checkout(): React.ReactElement {
                       type="tel"
                       pattern="[0-9]{10}"
                       required
-                      className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium placeholder:text-gray-500 transition-colors focus:outline-none ${
+                      className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none ${
                         errors.phone 
                           ? 'border-red-300 focus:border-red-500' 
                           : 'border-gray-200 focus:border-[#D4A574]'
@@ -799,7 +878,7 @@ export default function Checkout(): React.ReactElement {
                       type="tel"
                       pattern="[0-9]{10}"
                       required
-                      className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium placeholder:text-gray-500 transition-colors focus:outline-none ${
+                      className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none ${
                         errors.whatsapp 
                           ? 'border-red-300 focus:border-red-500' 
                           : 'border-gray-200 focus:border-[#D4A574]'
@@ -818,7 +897,7 @@ export default function Checkout(): React.ReactElement {
                     name="address"
                     rows={3}
                     required
-                    className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium placeholder:text-gray-500 transition-colors focus:outline-none resize-none ${
+                    className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none resize-none ${
                       errors.address 
                         ? 'border-red-300 focus:border-red-500' 
                         : 'border-gray-200 focus:border-[#D4A574]'
@@ -838,7 +917,7 @@ export default function Checkout(): React.ReactElement {
                       type="text"
                       pattern="[0-9]{6}"
                       required
-                      className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium placeholder:text-gray-500 transition-colors focus:outline-none ${
+                      className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none ${
                         errors.pincode 
                           ? 'border-red-300 focus:border-red-500' 
                           : 'border-gray-200 focus:border-[#D4A574]'
@@ -855,7 +934,7 @@ export default function Checkout(): React.ReactElement {
                     <input
                       name="city"
                       required
-                      className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium placeholder:text-gray-500 transition-colors focus:outline-none ${
+                      className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:outline-none ${
                         errors.city 
                           ? 'border-red-300 focus:border-red-500' 
                           : 'border-gray-200 focus:border-[#D4A574]'
@@ -872,7 +951,7 @@ export default function Checkout(): React.ReactElement {
                     <select
                       name="state"
                       required
-                      className={`w-full p-3 border-2 rounded-lg text-sm !text-black font-medium transition-colors focus:outline-none ${
+                      className={`w-full p-3 border-2 rounded-lg text-sm text-gray-900 transition-colors focus:outline-none ${
                         errors.state 
                           ? 'border-red-300 focus:border-red-500' 
                           : 'border-gray-200 focus:border-[#D4A574]'
@@ -880,30 +959,30 @@ export default function Checkout(): React.ReactElement {
                       value={form.state}
                       onChange={onChange}
                     >
-                      <option value="" className="!text-gray-500">Select State</option>
-                      <option value="Delhi" className="!text-black">Delhi</option>
-                      <option value="Maharashtra" className="!text-black">Maharashtra</option>
-                      <option value="Karnataka" className="!text-black">Karnataka</option>
-                      <option value="Tamil Nadu" className="!text-black">Tamil Nadu</option>
-                      <option value="Uttar Pradesh" className="!text-black">Uttar Pradesh</option>
-                      <option value="West Bengal" className="!text-black">West Bengal</option>
-                      <option value="Rajasthan" className="!text-black">Rajasthan</option>
-                      <option value="Gujarat" className="!text-black">Gujarat</option>
-                      <option value="Madhya Pradesh" className="!text-black">Madhya Pradesh</option>
-                      <option value="Punjab" className="!text-black">Punjab</option>
-                      <option value="Haryana" className="!text-black">Haryana</option>
-                      <option value="Bihar" className="!text-black">Bihar</option>
-                      <option value="Odisha" className="!text-black">Odisha</option>
-                      <option value="Telangana" className="!text-black">Telangana</option>
-                      <option value="Andhra Pradesh" className="!text-black">Andhra Pradesh</option>
-                      <option value="Kerala" className="!text-black">Kerala</option>
-                      <option value="Assam" className="!text-black">Assam</option>
-                      <option value="Jharkhand" className="!text-black">Jharkhand</option>
-                      <option value="Chhattisgarh" className="!text-black">Chhattisgarh</option>
-                      <option value="Uttarakhand" className="!text-black">Uttarakhand</option>
-                      <option value="Himachal Pradesh" className="!text-black">Himachal Pradesh</option>
-                      <option value="Jammu and Kashmir" className="!text-black">Jammu and Kashmir</option>
-                      <option value="Goa" className="!text-black">Goa</option>
+                      <option value="" className="text-gray-400">Select State</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="West Bengal">West Bengal</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Haryana">Haryana</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Assam">Assam</option>
+                      <option value="Jharkhand">Jharkhand</option>
+                      <option value="Chhattisgarh">Chhattisgarh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                      <option value="Goa">Goa</option>
                     </select>
                     {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
                   </div>
@@ -914,7 +993,7 @@ export default function Checkout(): React.ReactElement {
                   <textarea
                     name="notes"
                     rows={2}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-[#D4A574] focus:outline-none transition-colors text-sm !text-black font-medium placeholder:text-gray-500 resize-none"
+                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-[#D4A574] focus:outline-none transition-colors text-sm text-gray-900 placeholder:text-gray-400 resize-none"
                     placeholder="Any special instructions for your order"
                     value={form.notes}
                     onChange={onChange}
@@ -980,10 +1059,10 @@ export default function Checkout(): React.ReactElement {
                   
                   <div className="space-y-3 mb-4">
                     {items.map((item) => (
-                      <div key={item.id} className="flex justify-between items-start py-2 border-b border-gray-100">
+                      <div key={item.id} className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
                         <div className="flex-1">
-                          <p className="font-medium text-sm text-gray-900">{item.name}</p>
-                          <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                          <p className="font-medium text-sm text-gray-900 leading-tight mb-1">{item.name}</p>
+                          <p className="text-xs text-gray-500">Qty: {item.quantity} × ₹{parseFloat(item.price).toFixed(2)}</p>
                         </div>
                         <span className="font-semibold text-sm text-[#5D4E37] ml-2">
                           ₹{(parseFloat(item.price) * item.quantity).toFixed(2)}
@@ -992,54 +1071,54 @@ export default function Checkout(): React.ReactElement {
                     ))}
                   </div>
 
-                  <div className="space-y-2 pt-3 border-t-2 border-gray-100">
+                  <div className="space-y-2 py-3 border-t border-gray-200">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Subtotal</span>
-                      <span className="font-semibold text-gray-900">₹{total.toFixed(2)}</span>
+                      <span className="font-medium text-gray-900">₹{total.toFixed(2)}</span>
                     </div>
 
                     {appliedCoupon && (
-                      <div className="flex justify-between text-sm text-green-600">
-                        <span>Discount ({appliedCoupon})</span>
-                        <span className="font-semibold">-₹{couponDiscount.toFixed(2)}</span>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-green-600">Coupon Discount</span>
+                        <span className="font-medium text-green-600">-₹{couponDiscount.toFixed(2)}</span>
                       </div>
                     )}
 
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Delivery Charges</span>
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-medium text-gray-900">
                         {deliveryCharges === 0 ? (
                           <span className="text-green-600">FREE</span>
                         ) : (
-                          `₹${deliveryCharges}`
+                          `₹${deliveryCharges.toFixed(2)}`
                         )}
                       </span>
                     </div>
-
-                    {total >= 500 && deliveryCharges === 0 && (
-                      <p className="text-xs text-green-600 flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3" />
-                        Free delivery unlocked!
-                      </p>
-                    )}
                   </div>
 
-                  <div className="flex justify-between items-center pt-4 mt-4 border-t-2 border-[#D4A574]/30">
+                  <div className="flex justify-between items-center pt-4 border-t-2 border-[#D4A574]/30">
                     <span className="text-base font-bold text-[#5D4E37]">Total Amount</span>
                     <span className="text-2xl font-bold text-[#D4A574]">₹{finalTotal.toFixed(2)}</span>
                   </div>
 
-                  {appliedCoupon && (
-                    <div className="mt-3 text-center">
-                      <p className="text-xs text-green-600 font-semibold">
-                        🎉 You saved ₹{couponDiscount}!
+                  {deliveryCharges === 0 && (
+                    <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
+                      <p className="text-xs text-green-700 text-center font-medium">
+                        🎉 You have got FREE delivery!
+                      </p>
+                    </div>
+                  )}
+
+                  {deliveryCharges > 0 && (
+                    <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <p className="text-xs text-blue-700 text-center">
+                        Add ₹{(500 - total).toFixed(2)} more for FREE delivery
                       </p>
                     </div>
                   )}
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

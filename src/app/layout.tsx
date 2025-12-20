@@ -9,7 +9,8 @@ import Script from 'next/script';
 import AnnouncementBar from '../../components/anouncement';
 import { Suspense } from 'react';
 import Whatsapp from '../../components/Whatsapp';
-import Loading from './loading'; // Import the loading component created above
+import Loading from './loading';
+import { AuthProvider } from "../../lib/auth-context";// Import the loading component created above
 
 export const metadata = {
   title: 'Vyadhihar Foods - Premium Dry Fruits & Natural Snacks',
@@ -281,6 +282,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <ReactQueryProvider>
           <CartProvider>
+            <AuthProvider>
             <div className="flex flex-col min-h-screen">
               <AnnouncementBar />
               <Header />
@@ -304,6 +306,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Suspense fallback={null}>
               <FacebookPixel pixelId={1648859765778662} />
             </Suspense>
+            </AuthProvider>
           </CartProvider>
         </ReactQueryProvider>
 
