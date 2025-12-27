@@ -195,7 +195,7 @@ export default function Checkout(): React.ReactElement {
     return count + (isSuperfood ? item.quantity : 0);
   }, 0);
   const hasMakhanaOffer = superfoodCount >= 2;
-  const makhanaPrice = 149;
+  const makhanaPrice = 175;
 
   const [couponCode, setCouponCode] = useState<string>("");
   const [appliedCoupon, setAppliedCoupon] = useState<string>("");

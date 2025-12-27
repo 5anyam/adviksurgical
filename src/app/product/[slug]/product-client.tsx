@@ -190,7 +190,7 @@ export default function ProductClient({
   }
 
   // Makhana offer message
-  const makhanaOfferPrice = 149 // Approximate makhana price
+  const makhanaOfferPrice = 175 // Approximate makhana price
   const makhanaOfferSaving = showMakhanaOffer ? makhanaOfferPrice : 0
 
   const handleQuantityChange = (delta: number) => {

@@ -44,7 +44,7 @@ export default function CartPage() {
   }, 0);
   
   const hasMakhanaOffer = superfoodCount >= 2;
-  const makhanaPrice = 149;
+  const makhanaPrice = 175;
   
   console.log('Cart Items:', items);
   
