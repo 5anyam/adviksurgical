@@ -91,24 +91,34 @@ export default function ProductClient({
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({})
   const [currentVariation, setCurrentVariation] = useState<ProductVariation | null>(null)
 
-  // Initialize default attributes if variable product
+  // ✅ Initialize default attributes if variable product
   useEffect(() => {
-    if (product?.type === 'variable' && product.attributes) {
+    if (product?.type === 'variable' && product.attributes && product.variationData) {
       const defaults: Record<string, string> = {}
       product.attributes.forEach(attr => {
         if (attr.variation && attr.options && attr.options.length > 0) {
           defaults[attr.name] = attr.options[0]
         }
       })
+      console.log('🎯 Setting default attributes:', defaults)
       setSelectedAttributes(defaults)
+    } else if (product?.type === 'simple') {
+      // For simple products, clear variation state
+      setSelectedAttributes({})
+      setCurrentVariation(null)
     }
   }, [product])
 
-  // Find matching variation when attributes change
+  // ✅ Find matching variation when attributes change
   useEffect(() => {
-    if (product?.type === 'variable' && product.variationData) {
+    if (product?.type === 'variable' && product.variationData && Object.keys(selectedAttributes).length > 0) {
       const match = product.variationData.find(v => {
         return v.attributes.every(vAttr => selectedAttributes[vAttr.name] === vAttr.option)
+      })
+      console.log('🔍 Variation Match:', {
+        selectedAttributes,
+        foundVariation: match,
+        allVariations: product.variationData
       })
       setCurrentVariation(match || null)
     }
@@ -167,6 +177,17 @@ export default function ProductClient({
     )
   }
 
+  // ✅ CHECK IF BUTTONS SHOULD BE ENABLED
+  // For simple products: always enabled
+  // For variable products: only enabled when variation is selected
+  const canAddToCart = product.type === 'simple' || (product.type === 'variable' && currentVariation !== null)
+  
+  console.log('✅ Can Add to Cart:', {
+    productType: product.type,
+    currentVariation,
+    canAddToCart
+  })
+
   // --- Pricing Logic with Offers ---
   const activePrice = currentVariation ? currentVariation.price : product.price
   const activeRegularPrice = currentVariation ? currentVariation.regular_price : (product.regular_price || product.price)
@@ -190,7 +211,7 @@ export default function ProductClient({
   }
 
   // Makhana offer message
-  const makhanaOfferPrice = 175 // Approximate makhana price
+  const makhanaOfferPrice = 175
   const makhanaOfferSaving = showMakhanaOffer ? makhanaOfferPrice : 0
 
   const handleQuantityChange = (delta: number) => {
@@ -205,14 +226,19 @@ export default function ProductClient({
   }
 
   const handleAddToCart = async () => {
-    console.log('🛒 Add to Cart clicked!');
-    console.log('Product:', product);
-    console.log('Current Variation:', currentVariation);
-    console.log('Quantity:', quantity);
+    console.log('🛒 Add to Cart clicked!')
+    console.log('Product Type:', product.type)
+    console.log('Current Variation:', currentVariation)
+    console.log('Can Add to Cart:', canAddToCart)
     
+    // ✅ STRICT CHECK: For variable products, variation must be selected
     if (product.type === 'variable' && !currentVariation) {
-      console.log('❌ Variation not selected');
-      toast({ title: 'Select Options', description: 'Please select all options before adding to cart.', variant: 'destructive' })
+      console.log('❌ Variation not selected')
+      toast({ 
+        title: 'Please Select Options', 
+        description: 'Choose all product options before adding to cart.',
+        variant: 'destructive' 
+      })
       return
     }
   
@@ -224,7 +250,7 @@ export default function ProductClient({
         variation_id: currentVariation ? currentVariation.id : undefined,
         name: product.name,
         price: salePrice.toString(),
-        regular_price: product.regular_price,
+        regular_price: activeRegularPrice.toString(),
         images: (currentVariation?.image ? [currentVariation.image] : product.images) || [],
         selectedAttributes: currentVariation ? selectedAttributes : undefined,
         quantity: 1,
@@ -235,20 +261,11 @@ export default function ProductClient({
         }
       }
   
-      console.log('📦 Item to add:', itemToAdd);
+      console.log('📦 Item to add:', itemToAdd)
   
       for (let i = 0; i < quantity; i++) {
-        console.log(`Adding item ${i + 1} of ${quantity}`);
+        console.log(`Adding item ${i + 1} of ${quantity}`)
         addToCart(itemToAdd)
-      }
-      
-      // Add free makhana if offer applies
-      if (showMakhanaOffer && isSuperfood) {
-        // Find makhana product and add it
-        toast({
-          title: '🎁 Free Makhana Added!',
-          description: `${selectedMakhanaFlavour} Makhana added to your cart for FREE!`,
-        })
       }
       
       trackAddToCart({ 
@@ -257,18 +274,22 @@ export default function ProductClient({
         price: salePrice 
       }, quantity)
   
-      console.log('✅ Successfully added to cart');
+      console.log('✅ Successfully added to cart')
   
       let offerMessage = `${quantity} x ${product.name} added to your cart.`
+      if (currentVariation && Object.keys(selectedAttributes).length > 0) {
+        const attrs = Object.values(selectedAttributes).join(', ')
+        offerMessage = `${quantity} x ${product.name} (${attrs}) added to your cart.`
+      }
       if (applyFirstOrderDiscount && totalPrice >= 500) {
-        offerMessage += ` 🎉 5% first order discount applied!`
+        offerMessage += ` 🎉 5% discount applied!`
       }
       if (showMakhanaOffer) {
         offerMessage += ` 🎁 Free Makhana included!`
       }
 
       toast({
-        title: 'Added to Cart',
+        title: '✅ Added to Cart',
         description: offerMessage,
       })
     } catch (error) {
@@ -276,20 +297,26 @@ export default function ProductClient({
       toast({ title: 'Error', description: 'Failed to add item to cart', variant: 'destructive' })
     } finally {
       setTimeout(() => {
-        console.log('🔄 Resetting button state');
+        console.log('🔄 Resetting button state')
         setIsAddingToCart(false)
       }, 1000)
     }
   }
   
   const handleBuyNow = async () => {
-    console.log('💳 Buy Now clicked!');
-    console.log('Product:', product);
-    console.log('Current Variation:', currentVariation);
+    console.log('💳 Buy Now clicked!')
+    console.log('Product Type:', product.type)
+    console.log('Current Variation:', currentVariation)
+    console.log('Can Buy Now:', canAddToCart)
     
+    // ✅ STRICT CHECK: For variable products, variation must be selected
     if (product.type === 'variable' && !currentVariation) {
-      console.log('❌ Variation not selected for Buy Now');
-      toast({ title: 'Select Options', description: 'Please select all options.', variant: 'destructive' })
+      console.log('❌ Variation not selected for Buy Now')
+      toast({ 
+        title: 'Please Select Options', 
+        description: 'Choose all product options before proceeding.',
+        variant: 'destructive' 
+      })
       return
     }
   
@@ -301,7 +328,7 @@ export default function ProductClient({
         variation_id: currentVariation ? currentVariation.id : undefined,
         name: product.name,
         price: salePrice.toString(),
-        regular_price: product.regular_price,
+        regular_price: activeRegularPrice.toString(),
         images: (currentVariation?.image ? [currentVariation.image] : product.images) || [],
         selectedAttributes: currentVariation ? selectedAttributes : undefined,
         quantity: 1,
@@ -312,19 +339,19 @@ export default function ProductClient({
         }
       }
   
-      console.log('📦 Item for Buy Now:', itemToAdd);
+      console.log('📦 Item for Buy Now:', itemToAdd)
   
       for (let i = 0; i < quantity; i++) {
-        console.log(`Adding item ${i + 1} of ${quantity} for checkout`);
+        console.log(`Adding item ${i + 1} of ${quantity} for checkout`)
         addToCart(itemToAdd)
       }
   
       trackAddToCart({ id: itemToAdd.id, name: itemToAdd.name, price: salePrice }, quantity)
       const cartItems = [{ id: itemToAdd.id, name: itemToAdd.name, price: salePrice, quantity }]
-      const total = totalPrice // Use calculated total with discounts
+      const total = totalPrice
       trackInitiateCheckout(cartItems, total)
       
-      console.log('✅ Redirecting to checkout...');
+      console.log('✅ Redirecting to checkout...')
       
       setTimeout(() => {
         router.push('/checkout')
@@ -457,14 +484,14 @@ export default function ProductClient({
               />
             )}
 
-            {/* Variation Selector */}
+            {/* ✅ VARIATION SELECTOR */}
             {product.type === 'variable' && product.attributes && (
               <div className="space-y-4 py-4">
                 {product.attributes.map((attr) => (
                   attr.variation && attr.options && attr.options.length > 0 ? (
                     <div key={attr.id} className="space-y-2">
                       <span className="text-sm font-bold text-[#5D4E37] uppercase tracking-wide">
-                        Select {attr.name}: <span className="text-[#D4A574]">{selectedAttributes[attr.name]}</span>
+                        Select {attr.name}: <span className="text-[#D4A574]">{selectedAttributes[attr.name] || 'Choose'}</span>
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {attr.options.map((option) => (
@@ -473,8 +500,8 @@ export default function ProductClient({
                             onClick={() => handleAttributeSelect(attr.name, option)}
                             className={`px-4 py-2 rounded-lg text-sm font-bold border-2 transition-all ${
                               selectedAttributes[attr.name] === option
-                                ? 'border-[#D4A574] bg-[#D4A574] text-white shadow-md'
-                                : 'border-[#D4A574]/30 text-[#5D4E37] hover:border-[#D4A574]'
+                                ? 'border-[#D4A574] bg-[#D4A574] text-white shadow-md scale-105'
+                                : 'border-[#D4A574]/30 text-[#5D4E37] hover:border-[#D4A574] hover:bg-[#FFF8DC]'
                             }`}
                           >
                             {option}
@@ -484,6 +511,16 @@ export default function ProductClient({
                     </div>
                   ) : null
                 ))}
+                
+                {/* ✅ SHOW SELECTED VARIATION */}
+                {currentVariation && (
+                  <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3 flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <span className="text-sm font-semibold text-green-800">
+                      ✅ Selected: {Object.values(selectedAttributes).join(' - ')}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -495,7 +532,7 @@ export default function ProductClient({
                   <h3 className="text-lg font-bold text-[#5D4E37]">Available Offers</h3>
                 </div>
 
-                {/* Free Makhana Offer - Shows when 2+ superfoods */}
+                {/* Free Makhana Offer */}
                 {isSuperfood && showMakhanaOffer && (
                   <div className="bg-gradient-to-r from-[#FFE5E5] to-[#FFF0E5] border-2 border-[#FF6B6B] rounded-xl p-4 animate-pulse">
                     <div className="flex items-start gap-3">
@@ -571,11 +608,9 @@ export default function ProductClient({
                     ₹{Math.round(totalPrice).toLocaleString()}
                   </span>
                   {(hasSale || firstOrderDiscount > 0) && (
-                    <>
-                      <span className="line-through text-gray-400 font-medium text-xl">
-                        ₹{totalRegularPrice.toLocaleString()}
-                      </span>
-                    </>
+                    <span className="line-through text-gray-400 font-medium text-xl">
+                      ₹{totalRegularPrice.toLocaleString()}
+                    </span>
                   )}
                 </div>
                 {(totalSaving > 0 || makhanaOfferSaving > 0) && (
@@ -636,7 +671,7 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* Action Buttons */}
+            {/* ✅ ACTION BUTTONS WITH PROPER DISABLED STATES */}
             <div className="hidden lg:flex flex-col gap-4 pt-6">
               {isFruitBox ? (
                 <button
@@ -651,9 +686,13 @@ export default function ProductClient({
               ) : (
                 <>
                   <button
-                    className={`w-full bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-8 py-4 text-base rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 ${isAddingToCart ? 'opacity-50' : ''}`}
+                    className={`w-full bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-8 py-4 text-base rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 ${
+                      (!canAddToCart || isAddingToCart) 
+                        ? 'opacity-50 cursor-not-allowed' 
+                        : 'hover:from-[#C19A6B] hover:to-[#8B7355] hover:shadow-xl hover:scale-105'
+                    }`}
                     onClick={handleAddToCart}
-                    disabled={isAddingToCart}
+                    disabled={!canAddToCart || isAddingToCart}
                   >
                     {isAddingToCart ? (
                       <>
@@ -668,9 +707,13 @@ export default function ProductClient({
                     )}
                   </button>
                   <button
-                    className={`w-full border-2 border-[#D4A574] text-[#5D4E37] font-bold px-8 py-4 text-base rounded-xl hover:bg-[#FFF8DC] transition-all shadow-md hover:shadow-lg ${isBuyingNow ? 'opacity-50' : ''}`}
+                    className={`w-full border-2 border-[#D4A574] text-[#5D4E37] font-bold px-8 py-4 text-base rounded-xl transition-all shadow-md ${
+                      (!canAddToCart || isBuyingNow) 
+                        ? 'opacity-50 cursor-not-allowed' 
+                        : 'hover:bg-[#FFF8DC] hover:shadow-lg'
+                    }`}
                     onClick={handleBuyNow}
-                    disabled={isBuyingNow}
+                    disabled={!canAddToCart || isBuyingNow}
                   >
                     {isBuyingNow ? 'Processing...' : 'Buy Now'}
                   </button>
@@ -684,7 +727,7 @@ export default function ProductClient({
                 ...(!isFruitBox ? [{
                   icon: <Truck className="w-5 h-5" />, 
                   label: 'Free Shipping', 
-                  subtitle: 'Orders above ₹999' 
+                  subtitle: 'On all orders' 
                 }] : []),
                 { icon: <Shield className="w-5 h-5" />, label: 'Quality Assured', subtitle: 'Lab tested' },
                 { icon: <Award className="w-5 h-5" />, label: 'Premium Quality', subtitle: '100% natural' },
@@ -703,7 +746,7 @@ export default function ProductClient({
         </div>
       </div>
 
-      {/* Mobile Fixed Bottom */}
+      {/* ✅ MOBILE FIXED BOTTOM WITH PROPER DISABLED STATES */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#D4A574]/30 z-50 p-4 shadow-2xl">
         <div className="max-w-md mx-auto">
           {isFruitBox ? (
@@ -757,9 +800,11 @@ export default function ProductClient({
               </div>
               <div className="flex gap-3">
                 <button
-                  className="flex-1 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-4 py-3.5 text-sm rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all shadow-lg flex items-center justify-center gap-2"
+                  className={`flex-1 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white font-bold px-4 py-3.5 text-sm rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 ${
+                    (!canAddToCart || isAddingToCart) ? 'opacity-50 cursor-not-allowed' : 'hover:from-[#C19A6B] hover:to-[#8B7355]'
+                  }`}
                   onClick={handleAddToCart}
-                  disabled={isAddingToCart}
+                  disabled={!canAddToCart || isAddingToCart}
                 >
                   {isAddingToCart ? (
                     <>
@@ -769,14 +814,16 @@ export default function ProductClient({
                   ) : (
                     <>
                       <ShoppingCart className="w-4 h-4" />
-                      <span>Add to Cart</span>
+                      <span>Add</span>
                     </>
                   )}
                 </button>
                 <button
-                  className="flex-1 border-2 border-[#D4A574] text-[#5D4E37] font-bold px-4 py-3.5 text-sm rounded-xl hover:bg-[#FFF8DC] transition-all"
+                  className={`flex-1 border-2 border-[#D4A574] text-[#5D4E37] font-bold px-4 py-3.5 text-sm rounded-xl transition-all ${
+                    (!canAddToCart || isBuyingNow) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#FFF8DC]'
+                  }`}
                   onClick={handleBuyNow}
-                  disabled={isBuyingNow}
+                  disabled={!canAddToCart || isBuyingNow}
                 >
                   {isBuyingNow ? 'Processing' : 'Buy Now'}
                 </button>
@@ -814,71 +861,7 @@ export default function ProductClient({
                     {isFruitBox ? 'Freshness & Consumption' : 'Health Benefits'}
                   </h3>
                   
-                  {isFruitBox ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      <div className="border-2 border-[#D4A574]/30 p-6 rounded-xl bg-gradient-to-br from-[#FFF8DC] to-white">
-                        <h4 className="font-bold text-lg text-[#5D4E37] mb-4 flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-[#D4A574]" />
-                          Freshness Guidelines
-                        </h4>
-                        <ul className="space-y-3 text-[#5D4E37] text-base">
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>Fresh fruits cut daily and delivered same day</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span><strong>Best consumed within 2 days of delivery</strong></span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>Store in refrigerator immediately after delivery</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>Keep PET jar sealed until consumption</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>No preservatives - 100% fresh and natural</span>
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <div className="border-2 border-[#25D366]/30 p-6 rounded-xl bg-gradient-to-br from-[#25D366]/5 to-white">
-                        <h4 className="font-bold text-lg text-[#5D4E37] mb-4 flex items-center gap-2">
-                          <Leaf className="w-5 h-5 text-[#25D366]" />
-                          Why Choose Our Fruit Boxes?
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="flex items-start gap-3">
-                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
-                            <p className="text-[#5D4E37] text-sm">Freshly cut every morning</p>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
-                            <p className="text-[#5D4E37] text-sm">Hygienic PET jar packaging</p>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
-                            <p className="text-[#5D4E37] text-sm">Ready to eat immediately</p>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="w-6 h-6 bg-[#25D366] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
-                            <p className="text-[#5D4E37] text-sm">Perfect for office snacking</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
+                  {!isFruitBox && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {[
                         { title: 'Rich in Nutrients', desc: 'Packed with essential vitamins and minerals for daily health' },
