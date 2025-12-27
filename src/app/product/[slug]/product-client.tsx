@@ -52,6 +52,7 @@ export interface Product {
   variationData?: ProductVariation[]
 }
 
+
 export default function ProductClient({
   initialProduct,
   allProductsInitial,
@@ -82,62 +83,67 @@ export default function ProductClient({
   const [isBuyingNow, setIsBuyingNow] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
 
-  // --- Offer States ---
   const [applyFirstOrderDiscount, setApplyFirstOrderDiscount] = useState(false)
   const [selectedMakhanaFlavour, setSelectedMakhanaFlavour] = useState<string>('Peri Peri')
   const [showMakhanaOffer, setShowMakhanaOffer] = useState(false)
 
-  // --- Variation State ---
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({})
   const [currentVariation, setCurrentVariation] = useState<ProductVariation | null>(null)
 
-  // ✅ Initialize default attributes if variable product
+  // ✅ Initialize default attributes
   useEffect(() => {
     if (product?.type === 'variable' && product.attributes && product.variationData) {
       const defaults: Record<string, string> = {}
-      let hasVariationAttrs = false
       
       product.attributes.forEach(attr => {
         if (attr.variation && attr.options && attr.options.length > 0) {
           defaults[attr.name] = attr.options[0]
-          hasVariationAttrs = true
         }
       })
       
-      if (hasVariationAttrs) {
+      if (Object.keys(defaults).length > 0) {
         console.log('🎯 Setting default attributes:', defaults)
         setSelectedAttributes(defaults)
       }
-    } else if (product?.type === 'simple') {
-      setSelectedAttributes({})
-      setCurrentVariation(null)
     }
   }, [product])
 
-  // ✅ Find matching variation when attributes change
+  // ✅ IMPROVED: Find matching variation with better logging
   useEffect(() => {
     if (product?.type === 'variable' && product.variationData && Object.keys(selectedAttributes).length > 0) {
-      console.log('🔍 Looking for variation match...')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('🔍 SEARCHING FOR VARIATION MATCH')
       console.log('Selected Attributes:', selectedAttributes)
       console.log('Available Variations:', product.variationData)
       
-      const match = product.variationData.find(v => {
-        const isMatch = v.attributes.every(vAttr => {
-          const selected = selectedAttributes[vAttr.name]
-          console.log(`Checking ${vAttr.name}: ${selected} === ${vAttr.option}?`, selected === vAttr.option)
-          return selected === vAttr.option
+      const match = product.variationData.find(variation => {
+        console.log('\n📋 Checking variation:', variation.id)
+        console.log('Variation attributes:', variation.attributes)
+        
+        // Check if all variation attributes match selected attributes
+        const allMatch = variation.attributes.every(vAttr => {
+          const selectedValue = selectedAttributes[vAttr.name]
+          const isMatch = selectedValue === vAttr.option
+          
+          console.log(`  ➤ ${vAttr.name}:`)
+          console.log(`    Selected: "${selectedValue}"`)
+          console.log(`    Required: "${vAttr.option}"`)
+          console.log(`    Match: ${isMatch ? '✅' : '❌'}`)
+          
+          return isMatch
         })
-        return isMatch
+        
+        console.log(`  Result: ${allMatch ? '✅ MATCHED' : '❌ NOT MATCHED'}`)
+        return allMatch
       })
       
-      console.log('✅ Found Variation:', match)
+      console.log('\n🎯 FINAL RESULT:', match ? `✅ Found variation ID: ${match.id}` : '❌ No match found')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+      
       setCurrentVariation(match || null)
-    } else if (product?.type === 'simple') {
-      setCurrentVariation(null)
     }
   }, [selectedAttributes, product])
 
-  // Facebook Pixel
   useEffect(() => {
     if (product) {
       trackViewContent({
@@ -148,11 +154,9 @@ export default function ProductClient({
     }
   }, [product, currentVariation, trackViewContent])
 
-  // Check if product is fruit box or superfood
   const isFruitBox = product?.slug === 'fruit-box' || product?.slug?.includes('fruit-box')
   const isSuperfood = product?.name?.toLowerCase().includes('superfood') || product?.slug?.includes('superfood')
 
-  // Show makhana offer when quantity >= 2 for superfoods
   useEffect(() => {
     if (isSuperfood && quantity >= 2) {
       setShowMakhanaOffer(true)
@@ -161,7 +165,6 @@ export default function ProductClient({
     }
   }, [quantity, isSuperfood])
 
-  // --- Loading / Error States ---
   if (isLoading && !product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FFF8DC] to-white">
@@ -190,19 +193,19 @@ export default function ProductClient({
     )
   }
 
-  // ✅ CRITICAL: Check if buttons should be enabled
   const isVariableProduct = product.type === 'variable'
   const canProceed = isVariableProduct ? (currentVariation !== null) : true
   
-  console.log('🎯 Button State:', {
+  console.log('🎯 BUTTON STATE CHECK:', {
     productType: product.type,
     isVariableProduct,
-    currentVariation,
-    canProceed,
-    selectedAttributes
+    hasVariationData: !!product.variationData,
+    variationCount: product.variationData?.length || 0,
+    selectedAttributes,
+    currentVariation: currentVariation?.id || null,
+    canProceed
   })
 
-  // --- Pricing Logic with Offers ---
   const activePrice = currentVariation ? currentVariation.price : product.price
   const activeRegularPrice = currentVariation ? currentVariation.regular_price : (product.regular_price || product.price)
 
@@ -211,12 +214,10 @@ export default function ProductClient({
   const hasSale = salePrice < regularPrice
   const discountPercent = hasSale ? Math.round(((regularPrice - salePrice) / regularPrice) * 100) : 0
   
-  // Base calculation
   let totalPrice = salePrice * quantity
   const totalRegularPrice = regularPrice * quantity
   let totalSaving = hasSale ? totalRegularPrice - totalPrice : 0
   
-  // Apply first order discount (5% off on orders above ₹500)
   let firstOrderDiscount = 0
   if (applyFirstOrderDiscount && totalPrice >= 500) {
     firstOrderDiscount = totalPrice * 0.05
@@ -224,7 +225,6 @@ export default function ProductClient({
     totalSaving += firstOrderDiscount
   }
 
-  // Makhana offer message
   const makhanaOfferPrice = 175
   const makhanaOfferSaving = showMakhanaOffer ? makhanaOfferPrice : 0
 
@@ -233,16 +233,22 @@ export default function ProductClient({
   }
 
   const handleAttributeSelect = (attributeName: string, option: string) => {
-    console.log(`🔄 Selecting: ${attributeName} = ${option}`)
-    setSelectedAttributes(prev => ({
-      ...prev,
-      [attributeName]: option
-    }))
+    console.log(`\n🔄 USER SELECTED:`)
+    console.log(`   Attribute: "${attributeName}"`)
+    console.log(`   Option: "${option}"`)
+    
+    setSelectedAttributes(prev => {
+      const updated = {
+        ...prev,
+        [attributeName]: option
+      }
+      console.log(`   Updated State:`, updated)
+      return updated
+    })
   }
 
   const handleAddToCart = async () => {
     console.log('🛒 Add to Cart clicked!')
-    console.log('Can Proceed:', canProceed)
     
     if (isVariableProduct && !currentVariation) {
       console.log('❌ Variation not selected')
@@ -273,8 +279,6 @@ export default function ProductClient({
         }
       }
   
-      console.log('📦 Item to add:', itemToAdd)
-  
       for (let i = 0; i < quantity; i++) {
         addToCart(itemToAdd)
       }
@@ -293,7 +297,7 @@ export default function ProductClient({
       offerMessage += ' added to cart! ✅'
       
       if (applyFirstOrderDiscount && totalPrice >= 500) {
-        offerMessage += ` 🎉 5% discount applied!`
+        offerMessage += ` 🎉 5% discount!`
       }
       if (showMakhanaOffer) {
         offerMessage += ` 🎁 Free Makhana!`
@@ -315,10 +319,9 @@ export default function ProductClient({
   
   const handleBuyNow = async () => {
     console.log('💳 Buy Now clicked!')
-    console.log('Can Proceed:', canProceed)
     
     if (isVariableProduct && !currentVariation) {
-      console.log('❌ Variation not selected for Buy Now')
+      console.log('❌ Variation not selected')
       toast({ 
         title: 'Select Product Options', 
         description: 'Please choose all required options to proceed.',
@@ -346,8 +349,6 @@ export default function ProductClient({
         }
       }
   
-      console.log('📦 Item for Buy Now:', itemToAdd)
-  
       for (let i = 0; i < quantity; i++) {
         addToCart(itemToAdd)
       }
@@ -355,8 +356,6 @@ export default function ProductClient({
       trackAddToCart({ id: itemToAdd.id, name: itemToAdd.name, price: salePrice }, quantity)
       const cartItems = [{ id: itemToAdd.id, name: itemToAdd.name, price: salePrice, quantity }]
       trackInitiateCheckout(cartItems, totalPrice)
-      
-      console.log('✅ Redirecting to checkout...')
       
       setTimeout(() => {
         router.push('/checkout')
@@ -375,7 +374,6 @@ export default function ProductClient({
       const attrs = Object.entries(selectedAttributes).map(([k, v]) => `${k}: ${v}`).join(', ')
       message += ` (${attrs})`
     }
-    
     const whatsappUrl = `https://wa.me/917428408825?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   }
@@ -395,7 +393,6 @@ export default function ProductClient({
         </div>
       </div>
 
-      {/* Special Offer Banner */}
       {isSuperfood && (
         <div className="bg-gradient-to-r from-[#FF6B6B] via-[#FF8E53] to-[#FFA500] py-3">
           <div className="max-w-7xl mx-auto px-4">
@@ -409,14 +406,12 @@ export default function ProductClient({
       )}
 
       <div className="max-w-7xl mx-auto mt-8 px-4 flex flex-col lg:flex-row gap-12">
-        {/* Image Section */}
         <div className="lg:w-1/2">
           <div className="sticky top-8">
             <ImageGallery 
               images={currentVariation?.image ? [currentVariation.image, ...product.images] : (product.images || [])} 
             />
             
-            {/* Trust Indicators Below Images */}
             <div className="mt-6 grid grid-cols-3 gap-4">
               {[
                 { icon: <Leaf className="w-5 h-5" />, text: '100% Natural' },
@@ -432,10 +427,8 @@ export default function ProductClient({
           </div>
         </div>
 
-        {/* Details Section */}
         <div className="lg:w-1/2">
           <div className="space-y-6">
-            {/* Sale Badge */}
             {!isFruitBox && hasSale && (
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white px-4 py-2 rounded-full shadow-lg">
                 <Sparkles className="w-4 h-4" />
@@ -443,18 +436,15 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* Ready to Eat Badge */}
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#25D366] to-[#20BA5A] text-white px-4 py-2 rounded-full shadow-lg ml-2">
               <Utensils className="w-4 h-4" />
               <span className="text-sm font-bold">READY TO EAT</span>
             </div>
 
-            {/* Product Name */}
             <h1 className="text-3xl lg:text-5xl font-bold text-[#5D4E37] tracking-wide leading-tight">
               {product.name}
             </h1>
 
-            {/* Rating & Wishlist */}
             <div className="flex items-center gap-4 pb-6 border-b-2 border-[#D4A574]/20">
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
@@ -470,7 +460,6 @@ export default function ProductClient({
               </button>
             </div>
 
-            {/* Ready to Eat Highlight */}
             <div className="bg-gradient-to-r from-[#25D366]/10 to-[#20BA5A]/10 border-2 border-[#25D366]/30 rounded-xl p-4">
               <div className="flex items-center gap-3">
                 <Utensils className="w-8 h-8 text-[#25D366]" />
@@ -481,7 +470,6 @@ export default function ProductClient({
               </div>
             </div>
 
-            {/* Short Description */}
             {product.short_description && (
               <div
                 className="prose prose-base max-w-none text-[#5D4E37] leading-relaxed"
@@ -489,13 +477,22 @@ export default function ProductClient({
               />
             )}
 
-            {/* ✅ VARIATION SELECTOR WITH BETTER FEEDBACK */}
+            {/* ✅ IMPROVED VARIATION SELECTOR */}
             {isVariableProduct && product.attributes && (
               <div className="space-y-4 py-4 border-2 border-[#D4A574]/30 rounded-xl p-4 bg-gradient-to-br from-[#FFF8DC] to-white">
                 <div className="flex items-center gap-2 mb-2">
                   <Tag className="w-5 h-5 text-[#D4A574]" />
                   <h3 className="text-base font-bold text-[#5D4E37]">Choose Your Options</h3>
                 </div>
+                
+                {/* ✅ DEBUG INFO - Remove after testing */}
+                {process.env.NODE_ENV === 'development' && (
+                  <div className="text-xs bg-gray-100 p-2 rounded mb-3 font-mono">
+                    <div>Selected: {JSON.stringify(selectedAttributes)}</div>
+                    <div>Variation: {currentVariation ? `ID ${currentVariation.id}` : 'None'}</div>
+                    <div>Variations available: {product.variationData?.length || 0}</div>
+                  </div>
+                )}
                 
                 {product.attributes.map((attr) => (
                   attr.variation && attr.options && attr.options.length > 0 ? (
@@ -525,7 +522,6 @@ export default function ProductClient({
                   ) : null
                 ))}
                 
-                {/* ✅ CURRENT VARIATION STATUS */}
                 {currentVariation ? (
                   <div className="bg-green-50 border-2 border-green-300 rounded-lg p-3 flex items-center gap-3 mt-4">
                     <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" />
@@ -533,7 +529,7 @@ export default function ProductClient({
                       <p className="text-sm font-bold text-green-800">
                         ✅ {Object.values(selectedAttributes).join(' - ')}
                       </p>
-                      <p className="text-xs text-green-700">Ready to add to cart</p>
+                      <p className="text-xs text-green-700">Ready to add to cart (ID: {currentVariation.id})</p>
                     </div>
                   </div>
                 ) : (
@@ -550,7 +546,6 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* OFFERS SECTION */}
             {!isFruitBox && (
               <div className="space-y-4 py-4 border-y-2 border-[#D4A574]/20">
                 <div className="flex items-center gap-2 mb-3">
@@ -558,7 +553,6 @@ export default function ProductClient({
                   <h3 className="text-lg font-bold text-[#5D4E37]">Available Offers</h3>
                 </div>
 
-                {/* Free Makhana Offer - Shows when 2+ superfoods */}
                 {isSuperfood && showMakhanaOffer && (
                   <div className="bg-gradient-to-r from-[#FFE5E5] to-[#FFF0E5] border-2 border-[#FF6B6B] rounded-xl p-4 animate-pulse">
                     <div className="flex items-start gap-3">
@@ -589,7 +583,6 @@ export default function ProductClient({
                   </div>
                 )}
 
-                {/* First Order 5% Discount */}
                 <div className={`border-2 rounded-xl p-4 transition-all ${
                   applyFirstOrderDiscount 
                     ? 'border-[#25D366] bg-gradient-to-r from-[#25D366]/10 to-[#20BA5A]/10' 
@@ -626,7 +619,6 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* Price Section */}
             {!isFruitBox && (
               <div className="py-6 border-y-2 border-[#D4A574]/20 bg-gradient-to-br from-[#FFF8DC] to-white rounded-xl p-6">
                 <div className="flex items-baseline gap-3 mb-2">
@@ -634,11 +626,9 @@ export default function ProductClient({
                     ₹{Math.round(totalPrice).toLocaleString()}
                   </span>
                   {(hasSale || firstOrderDiscount > 0) && (
-                    <>
-                      <span className="line-through text-gray-400 font-medium text-xl">
-                        ₹{totalRegularPrice.toLocaleString()}
-                      </span>
-                    </>
+                    <span className="line-through text-gray-400 font-medium text-xl">
+                      ₹{totalRegularPrice.toLocaleString()}
+                    </span>
                   )}
                 </div>
                 {(totalSaving > 0 || makhanaOfferSaving > 0) && (
@@ -667,7 +657,6 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* Quantity Selector */}
             {!isFruitBox && (
               <div>
                 <label className="block text-sm font-bold text-[#5D4E37] mb-3 uppercase tracking-wide">
@@ -699,7 +688,6 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* ✅ ACTION BUTTONS WITH PROPER DISABLED LOGIC */}
             <div className="hidden lg:flex flex-col gap-4 pt-6">
               {isFruitBox ? (
                 <button
@@ -749,7 +737,6 @@ export default function ProductClient({
               )}
             </div>
 
-            {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t-2 border-[#D4A574]/20">
               {[
                 ...(!isFruitBox ? [{
@@ -774,7 +761,7 @@ export default function ProductClient({
         </div>
       </div>
 
-      {/* ✅ MOBILE FIXED BOTTOM WITH PROPER DISABLED STATES */}
+      {/* Mobile - Same structure with proper states */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#D4A574]/30 z-50 p-4 shadow-2xl">
         <div className="max-w-md mx-auto">
           {isFruitBox ? (
@@ -789,7 +776,6 @@ export default function ProductClient({
             </button>
           ) : (
             <>
-              {/* Warning if variation not selected */}
               {!canProceed && (
                 <div className="bg-orange-100 border border-orange-300 rounded-lg p-2 mb-3 text-center">
                   <p className="text-xs font-bold text-orange-800">⚠️ Select options above to continue</p>
@@ -872,7 +858,7 @@ export default function ProductClient({
         </div>
       </div>
 
-      {/* Tabs Section */}
+      {/* Tabs Section - Same as before */}
       <div className="max-w-7xl mx-auto mt-16 px-4">
         <div className="border-t-2 border-[#D4A574]/30">
           <Tab.Group>
@@ -900,64 +886,10 @@ export default function ProductClient({
                     {isFruitBox ? 'Freshness & Consumption' : 'Health Benefits'}
                   </h3>
                   
-                  {isFruitBox ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      <div className="border-2 border-[#D4A574]/30 p-6 rounded-xl bg-gradient-to-br from-[#FFF8DC] to-white">
-                        <h4 className="font-bold text-lg text-[#5D4E37] mb-4 flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-[#D4A574]" />
-                          Freshness Guidelines
-                        </h4>
-                        <ul className="space-y-3 text-[#5D4E37] text-base">
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>Fresh fruits cut daily and delivered same day</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span><strong>Best consumed within 2 days of delivery</strong></span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>Store in refrigerator immediately after delivery</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>Keep PET jar sealed until consumption</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <CheckCircle className="w-5 h-5 text-[#D4A574] flex-shrink-0 mt-0.5" />
-                            <span>No preservatives - 100% fresh and natural</span>
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <div className="border-2 border-[#25D366]/30 p-6 rounded-xl bg-gradient-to-br from-[#25D366]/5 to-white">
-                        <h4 className="font-bold text-lg text-[#5D4E37] mb-4 flex items-center gap-2">
-                          <Leaf className="w-5 h-5 text-[#25D366]" />
-                          Why Choose Our Fruit Boxes?
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {[
-                            { title: 'Premium Selection', desc: 'Handpicked fresh seasonal fruits' },
-                            { title: 'Same Day Fresh', desc: 'Cut and packed on delivery day' },
-                            { title: 'No Preservatives', desc: '100% natural with no additives' },
-                            { title: 'Quality Guarantee', desc: 'Fresh or full refund promise' },
-                          ].map((item, idx) => (
-                            <div key={idx} className="flex items-start gap-3">
-                              <CheckCircle className="w-5 h-5 text-[#25D366] flex-shrink-0 mt-0.5" />
-                              <div>
-                                <p className="font-bold text-sm text-[#5D4E37]">{item.title}</p>
-                                <p className="text-xs text-gray-600">{item.desc}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
+                  {!isFruitBox && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {[
-                        { title: 'Rich in Nutrients', desc: 'Packed with essential vitamins and minerals for daily health' },
+                        { title: 'Rich in Nutrients', desc: 'Packed with essential vitamins and minerals' },
                         { title: 'Energy Boost', desc: 'Natural source of energy for active lifestyle' },
                         { title: 'Heart Healthy', desc: 'Supports cardiovascular health with good fats' },
                         { title: 'Immunity Support', desc: 'Strengthens immune system naturally' },
