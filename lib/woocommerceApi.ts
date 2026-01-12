@@ -1,6 +1,6 @@
-const API_BASE = "https://cms.vyadhiharfoods.com/wp-json/wc/v3";
-const CONSUMER_KEY = process.env.CONSUMER_KEY || "ck_88a2cfa5c504df33b4c4448fae557a339f26d3d4";
-const CONSUMER_SECRET = process.env.CONSUMER_SECRET || "cs_0cb1dbdb63e2e75eb8053a72822470d8341f82ba";
+const API_BASE = "https://cms.adviksurgical.com/wp-json/wc/v3";
+const CONSUMER_KEY = process.env.CONSUMER_KEY || "ck_54a5b0d65124ccd98240635e55a4c04dee1e084b";
+const CONSUMER_SECRET = process.env.CONSUMER_SECRET || "cs_785a635da4b4660b87d6ed820a5facba583a1a72";
 
 
 export interface WCImage {

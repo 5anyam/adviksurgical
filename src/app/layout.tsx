@@ -1,4 +1,3 @@
-
 import './styles/globals.css';
 import ReactQueryProvider from '../../components/ReactQueryProvider';
 import { CartProvider } from '../../lib/cart';
@@ -10,23 +9,23 @@ import AnnouncementBar from '../../components/anouncement';
 import { Suspense } from 'react';
 import Whatsapp from '../../components/Whatsapp';
 import Loading from './loading';
-import { AuthProvider } from "../../lib/auth-context";// Import the loading component created above
+import { AuthProvider } from "../../lib/auth-context";
 
 export const metadata = {
-  title: 'Vyadhihar Foods - Premium Dry Fruits & Natural Snacks',
-  description: 'Discover premium quality dry fruits, makhana snacks, and mixed fresh fruits. 100% natural, lab-tested, and delivered fresh. Trusted by 10,000+ customers across India.',
-  keywords: 'dry fruits online, premium almonds, cashews, walnuts, makhana snacks, dried fruits, natural snacks, healthy food, dry fruit delivery, corporate gifting',
+  title: 'Advik Surgical - Hospital Furniture & Medical Equipment',
+  description: 'Leading manufacturer and supplier of premium hospital furniture, ICU beds, OT equipment, medical trolleys, and oxygen systems. ISO certified products trusted by hospitals across India.',
+  keywords: 'hospital furniture, ICU beds, medical equipment, hospital beds, OT equipment, medical trolleys, oxygen manifold, patient monitor, hospital setup, medical furniture, surgical equipment, healthcare furniture',
   openGraph: {
-    title: 'Vyadhihar Foods - Premium Quality Dry Fruits',
-    description: '100% Natural, Lab-Tested Dry Fruits & Healthy Snacks. Fast delivery across India.',
-    url: 'https://vyadhiharfoods.com',
-    siteName: 'Vyadhihar Foods',
+    title: 'Advik Surgical - Premium Hospital Furniture & Medical Equipment',
+    description: 'ISO Certified Hospital Furniture & Medical Equipment. Trusted by hospitals across India. Complete healthcare solutions.',
+    url: 'https://adviksurgical.com',
+    siteName: 'Advik Surgical',
     images: [
       {
         url: '/logo.PNG',
         width: 1200,
         height: 630,
-        alt: 'Vyadhihar Foods - Premium Dry Fruits',
+        alt: 'Advik Surgical - Hospital Furniture & Medical Equipment',
       },
     ],
     locale: 'en_IN',
@@ -34,10 +33,10 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vyadhihar Foods - Premium Dry Fruits & Snacks',
-    description: '100% Natural, Lab-Tested Products. Nationwide Delivery.',
+    title: 'Advik Surgical - Hospital Furniture & Medical Equipment',
+    description: 'ISO Certified Medical Equipment. Complete Hospital Setup Solutions.',
     images: ['/logo.PNG'],
-    creator: '@vyadhiharfoods',
+    creator: '@adviksurgical',
   },
   robots: {
     index: true,
@@ -54,13 +53,13 @@ export const metadata = {
     google: 'your-google-verification-code',
   },
   alternates: {
-    canonical: 'https://vyadhiharfoods.com',
+    canonical: 'https://adviksurgical.com',
   },
-  category: 'Food & Beverages',
-  classification: 'Health & Wellness',
-  authors: [{ name: 'Vyadhihar Foods Team' }],
-  creator: 'Vyadhihar Foods',
-  publisher: 'Vyadhihar Foods',
+  category: 'Medical Equipment & Healthcare',
+  classification: 'Hospital Furniture & Medical Supplies',
+  authors: [{ name: 'Advik Surgical Team' }],
+  creator: 'Advik Surgical',
+  publisher: 'Advik Surgical',
   formatDetection: {
     email: false,
     address: false,
@@ -68,11 +67,9 @@ export const metadata = {
   },
 };
 
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const fbPixelId = 'YOUR_FB_PIXEL_ID'; // Replace with actual Vyadhihar FB Pixel ID
-  const gtagId = 'YOUR_GTAG_ID'; // Replace with actual Vyadhihar Google Ads ID
-
+  const fbPixelId = 'YOUR_FB_PIXEL_ID'; // Replace with actual Advik FB Pixel ID
+  const gtagId = 'YOUR_GTAG_ID'; // Replace with actual Advik Google Ads ID
 
   return (
     <html lang="en">
@@ -83,8 +80,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#6B8E23" />
-        <meta name="msapplication-TileColor" content="#6B8E23" />
+        <meta name="theme-color" content="#0077BE" />
+        <meta name="msapplication-TileColor" content="#0077BE" />
         
         {/* Preload Critical Assets */}
         <link rel="preload" href="/logo.PNG" as="image" type="image/png" />
@@ -94,63 +91,131 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="revisit-after" content="7 days" />
         <meta name="distribution" content="global" />
         <meta name="rating" content="general" />
-        <meta name="geo.region" content="IN" />
+        <meta name="geo.region" content="IN-UP" />
+        <meta name="geo.placename" content="Lucknow" />
         <meta name="geo.country" content="India" />
         <meta name="target" content="all" />
-        <meta name="audience" content="Health Conscious Consumers" />
+        <meta name="audience" content="Hospitals, Healthcare Facilities, Medical Professionals" />
         <meta name="coverage" content="India" />
         
-        {/* Structured Data for Food/Ecommerce Brand */}
+        {/* Structured Data for Medical Equipment Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Vyadhihar Foods",
-              "description": "Premium quality dry fruits, makhana snacks, and mixed fresh fruits. 100% natural, lab-tested products.",
-              "url": "https://vyadhiharfoods.com",
-              "logo": "https://vyadhiharfoods.com/logo.PNG",
-              "foundingDate": "2020",
-              "founders": [
-                {
-                  "@type": "Person",
-                  "name": "Vyadhihar Foods Founder"
-                }
-              ],
+              "@type": "MedicalBusiness",
+              "name": "Advik Surgical",
+              "alternateName": "Advik Healthcare Furniture",
+              "description": "Leading manufacturer and supplier of premium hospital furniture, ICU beds, OT equipment, medical trolleys, and oxygen systems. ISO certified products.",
+              "url": "https://adviksurgical.com",
+              "logo": "https://adviksurgical.com/logo.PNG",
+              "image": "https://adviksurgical.com/logo.PNG",
+              "foundingDate": "2019",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "123 Health Street",
-                "addressLocality": "Organic Market",
-                "addressRegion": "New Delhi",
-                "postalCode": "110001",
+                "streetAddress": "Natkur Near Bharat Petrol Pump",
+                "addressLocality": "Lucknow",
+                "addressRegion": "Uttar Pradesh",
+                "postalCode": "226002",
                 "addressCountry": "IN"
               },
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+91-98765-43210",
-                "contactType": "customer service",
-                "email": "care@vyadhiharfoods.com"
-              },
-              "sameAs": [
-                "https://www.facebook.com/vyadhiharfoods",
-                "https://www.instagram.com/vyadhiharfoods",
-                "https://www.youtube.com/@vyadhiharfoods",
-                "https://wa.me/919876543210"
+              "contactPoint": [
+                {
+                  "@type": "ContactPoint",
+                  "telephone": "+91-7052500888",
+                  "contactType": "customer service",
+                  "email": "adviksurgical2019@gmail.com",
+                  "areaServed": "IN",
+                  "availableLanguage": ["English", "Hindi"]
+                },
+                {
+                  "@type": "ContactPoint",
+                  "telephone": "+91-8840215794",
+                  "contactType": "sales",
+                  "email": "salesadviksurgical@gmail.com",
+                  "areaServed": "IN",
+                  "availableLanguage": ["English", "Hindi"]
+                }
               ],
-              "brand": {
-                "@type": "Brand",
-                "name": "Vyadhihar Foods",
-                "description": "Premium Quality Dry Fruits"
-              },
-              "potentialAction": {
-                "@type": "BuyAction",
-                "target": "https://vyadhiharfoods.com/shop"
+              "sameAs": [
+                "https://www.facebook.com/adviksurgical",
+                "https://www.instagram.com/adviksurgical",
+                "https://wa.me/917052500888"
+              ],
+              "priceRange": "₹₹₹",
+              "paymentAccepted": ["Cash", "Credit Card", "Bank Transfer", "UPI"],
+              "openingHours": "Mo-Sa 09:00-18:00",
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Hospital Furniture & Medical Equipment",
+                "itemListElement": [
+                  {
+                    "@type": "OfferCatalog",
+                    "name": "ICU & Hospital Beds",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Product",
+                          "name": "Five Function ICU Bed"
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Product",
+                          "name": "Electric ICU Bed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    "name": "OT Equipment",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Product",
+                          "name": "OT Table Hydraulic"
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Product",
+                          "name": "OT Light Double Dome"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "@type": "OfferCatalog",
+                    "name": "Medical Trolleys & Equipment",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Product",
+                          "name": "Emergency & Recovery Trolley"
+                        }
+                      },
+                      {
+                        "@type": "Offer",
+                        "itemOffered": {
+                          "@type": "Product",
+                          "name": "Patient Monitor"
+                        }
+                      }
+                    ]
+                  }
+                ]
               },
               "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "4.8",
-                "ratingCount": "1000",
+                "ratingValue": "4.7",
+                "ratingCount": "500",
                 "bestRating": "5",
                 "worstRating": "1"
               }
@@ -158,38 +223,81 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
-
-        {/* Product Schema */}
+        {/* Product Schema for Medical Equipment */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Product",
-              "name": "Premium Dry Fruits & Makhana Snacks",
+              "name": "Hospital Furniture & Medical Equipment",
               "brand": {
                 "@type": "Brand",
-                "name": "Vyadhihar Foods"
+                "name": "Advik Surgical"
               },
-              "description": "100% Natural, Lab-Tested Dry Fruits and Healthy Snacks",
-              "category": "Food & Beverages",
+              "description": "ISO Certified Hospital Furniture, ICU Beds, OT Equipment, Medical Trolleys, and Healthcare Solutions",
+              "category": "Medical Equipment & Healthcare Furniture",
               "offers": {
                 "@type": "AggregateOffer",
                 "priceCurrency": "INR",
-                "lowPrice": "299",
-                "highPrice": "2999",
-                "offerCount": "50+",
-                "availability": "https://schema.org/InStock"
+                "lowPrice": "5000",
+                "highPrice": "500000",
+                "offerCount": "100+",
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@type": "Organization",
+                  "name": "Advik Surgical"
+                }
               },
               "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "4.8",
-                "ratingCount": "1000"
+                "ratingValue": "4.7",
+                "ratingCount": "500"
+              },
+              "manufacturer": {
+                "@type": "Organization",
+                "name": "Advik Surgical",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Lucknow",
+                  "addressRegion": "Uttar Pradesh",
+                  "addressCountry": "IN"
+                }
               }
             })
           }}
         />
 
+        {/* Breadcrumb Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://adviksurgical.com"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Products",
+                  "item": "https://adviksurgical.com/shop"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Hospital Furniture",
+                  "item": "https://adviksurgical.com/shop/hospital-furniture"
+                }
+              ]
+            })
+          }}
+        />
 
         {/* Facebook Pixel Script */}
         <Script id="facebook-pixel" strategy="afterInteractive">
@@ -205,15 +313,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             fbq('init', '${fbPixelId}');
             fbq('track', 'PageView');
             
-            // Track food/ecommerce specific events
-            fbq('trackCustom', 'ViewFoodBrand', {
-              brand: 'Vyadhihar Foods',
-              category: 'Premium Dry Fruits',
-              product_type: 'Natural Snacks'
+            // Track medical equipment specific events
+            fbq('trackCustom', 'ViewMedicalBrand', {
+              brand: 'Advik Surgical',
+              category: 'Hospital Furniture',
+              product_type: 'Medical Equipment',
+              business_type: 'B2B Healthcare'
             });
           `}
         </Script>
-
 
         {/* Google Analytics */}
         <Script 
@@ -226,24 +334,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${gtagId}', {
-              page_title: 'Vyadhihar Foods',
+              page_title: 'Advik Surgical',
               page_location: window.location.href,
-              content_group1: 'Premium Dry Fruits',
-              content_group2: 'Health & Wellness',
+              content_group1: 'Hospital Furniture',
+              content_group2: 'Medical Equipment',
               custom_map: {
-                'dimension1': 'food_ecommerce',
-                'dimension2': 'dry_fruits_category'
+                'dimension1': 'medical_b2b',
+                'dimension2': 'hospital_furniture_category',
+                'dimension3': 'healthcare_equipment'
               }
             });
             
-            // Enhanced ecommerce tracking
+            // Enhanced ecommerce tracking for B2B
             gtag('config', '${gtagId}', {
               'custom_map': {'custom_parameter': 'dimension1'},
-              'enhanced_ecommerce': true
+              'enhanced_ecommerce': true,
+              'send_page_view': true
             });
           `}
         </Script>
-
 
         {/* Google Tag Manager (Optional) */}
         <Script id="google-tag-manager" strategy="afterInteractive">
@@ -255,7 +364,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             })(window,document,'script','dataLayer','GTM-XXXXXXX');
           `}
         </Script>
-
 
         {/* Facebook Pixel noscript fallback */}
         <noscript>
@@ -279,7 +387,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ></iframe>
         </noscript>
 
-
         <ReactQueryProvider>
           <CartProvider>
             <AuthProvider>
@@ -288,11 +395,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Header />
               
               <main role="main" className="flex-grow">
-                {/* 
-                  Wrapping children in Suspense ensures that when navigating,
-                  only this main area shows the fallback Loading component.
-                  Header and Footer remain visible.
-                */}
                 <Suspense fallback={<Loading />}>
                   {children}
                 </Suspense>
@@ -310,13 +412,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </CartProvider>
         </ReactQueryProvider>
 
-
-        {/* Customer Chat Plugin (Optional) */}
+        {/* Customer Chat Plugin (Optional for B2B) */}
         <Script id="facebook-chat" strategy="lazyOnload">
           {`
             var chatbox = document.getElementById('fb-customer-chat');
             chatbox.setAttribute("page_id", "YOUR_PAGE_ID");
             chatbox.setAttribute("attribution", "biz_inbox");
+            chatbox.setAttribute("greeting_dialog_display", "hide");
             
             window.fbAsyncInit = function() {
               FB.init({
