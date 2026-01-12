@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { Leaf, Truck, AlertCircle, RotateCcw, Zap, Sparkles } from 'lucide-react';
+import { Award, Truck, Shield, Wrench, Sparkles, BedDouble } from 'lucide-react';
 
 interface FAQ {
   question: string;
@@ -16,37 +16,37 @@ const HomeFAQ: React.FC = () => {
 
   const faqs: FAQ[] = [
     {
-      question: "Are your dry fruits 100% natural?",
-      answer: "Yes, absolutely! All our dry fruits are 100% natural with no preservatives, additives, or artificial flavoring. We source from trusted suppliers and conduct regular lab tests to ensure purity and quality.",
-      icon: <Leaf className="w-5 h-5 text-[#D4A574]" />
+      question: "Are your products ISO certified?",
+      answer: "Yes, absolutely! All our hospital furniture and medical equipment are ISO certified and meet international quality standards. We maintain strict quality control throughout the manufacturing process to ensure hospital-grade reliability.",
+      icon: <Award className="w-5 h-5 text-[#0077BE]" />
     },
     {
-      question: "How are the products packaged for freshness?",
-      answer: "We use air-tight, moisture-resistant packaging to maintain freshness and prevent contamination. Our packaging is hygienic and designed to preserve the natural taste and nutritional value of the products.",
-      icon: <Zap className="w-5 h-5 text-[#D4A574]" />
+      question: "Do you provide installation and training services?",
+      answer: "Yes, we provide comprehensive installation services along with staff training for all major equipment. Our technical team ensures proper setup and guides your staff on correct usage and maintenance procedures.",
+      icon: <Wrench className="w-5 h-5 text-[#0077BE]" />
     },
     {
-      question: "Do you offer delivery across India?",
-      answer: "Yes! We deliver across India with fast, secure packaging. Most orders arrive within 3-5 working days. We offer free shipping on orders above ₹999 and discounted rates for bulk corporate orders.",
-      icon: <Truck className="w-5 h-5 text-[#D4A574]" />
+      question: "What is the warranty period for your products?",
+      answer: "We offer a 1-2 year warranty on most products depending on the category. ICU beds and major equipment come with extended warranty options. We also provide after-sales support and spare parts availability.",
+      icon: <Shield className="w-5 h-5 text-[#0077BE]" />
     },
     {
-      question: "What if I'm not satisfied with my purchase?",
-      answer: "Your satisfaction is our priority. We offer a 30-day money-back guarantee on all products. If you're not satisfied for any reason, simply contact us with proof of purchase for a full refund or replacement.",
-      icon: <RotateCcw className="w-5 h-5 text-[#D4A574]" />
+      question: "Do you deliver across India?",
+      answer: "Yes! We deliver hospital furniture and medical equipment pan-India with secure packaging. Delivery typically takes 7-15 days depending on the location and product quantity. We offer free installation for bulk orders.",
+      icon: <Truck className="w-5 h-5 text-[#0077BE]" />
     },
     {
-      question: "Are these products suitable for dietary restrictions?",
-      answer: "Our dry fruits are naturally vegan, gluten-free, and suitable for most dietary requirements. However, always check individual product labels for specific allergen information, especially for those with nut allergies.",
-      icon: <AlertCircle className="w-5 h-5 text-[#D4A574]" />
+      question: "Can I get customized equipment for my hospital?",
+      answer: "Absolutely! We offer customization options for bulk orders including specific color schemes, dimensions, and features. Our design team works closely with hospital administrators to meet exact requirements.",
+      icon: <BedDouble className="w-5 h-5 text-[#0077BE]" />
     },
     {
-      question: "How should I store dry fruits for maximum freshness?",
-      answer: "Store in a cool, dry place away from direct sunlight and moisture. Transfer to airtight containers after opening to maintain freshness. Most dry fruits have a shelf life of 6-12 months when stored properly.",
+      question: "What payment terms do you offer for bulk orders?",
+      answer: "For bulk orders, we offer flexible payment terms including advance payment plans, credit facilities for established hospitals, and milestone-based payments for large projects. Contact our sales team for customized payment solutions.",
     },
     {
-      question: "What makes Vyadhihar different from other brands?",
-      answer: "We are committed to providing 100% natural, lab-tested products without any compromise on quality. Our handpicked selection, transparent sourcing, fast delivery, and exceptional customer service set us apart in the market.",
+      question: "What makes Advik Surgical different from other suppliers?",
+      answer: "We combine ISO certified quality with competitive pricing and exceptional after-sales service. Our 7+ years of experience, pan-India delivery, comprehensive warranty, and dedicated technical support make us a trusted partner for healthcare facilities.",
     }
   ];
 
@@ -55,33 +55,33 @@ const HomeFAQ: React.FC = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-white via-[#FFF8DC] to-white relative overflow-hidden">
+    <section className="py-20 px-4 bg-gradient-to-b from-white via-[#F0F8FF] to-white relative overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A574]/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#C19A6B]/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#0077BE]/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#00A3E0]/5 rounded-full blur-3xl"></div>
       
       <div className="max-w-4xl mx-auto relative z-10">
-        <div className="bg-white border-2 border-[#D4A574]/30 rounded-3xl overflow-hidden shadow-2xl">
+        <div className="bg-white border-2 border-[#0077BE]/30 rounded-3xl overflow-hidden shadow-2xl">
           {/* Header */}
-          <div className="px-6 sm:px-8 py-12 sm:py-16 text-center border-b-2 border-[#D4A574]/30 bg-gradient-to-b from-[#FFF8DC] to-white">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white px-6 py-2 rounded-full mb-6 shadow-lg">
+          <div className="px-6 sm:px-8 py-12 sm:py-16 text-center border-b-2 border-[#0077BE]/30 bg-gradient-to-b from-[#F0F8FF] to-white">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0077BE] to-[#00A3E0] text-white px-6 py-2 rounded-full mb-6 shadow-lg">
               <Sparkles className="w-4 h-4" />
               <span className="text-sm font-semibold tracking-wide">Got Questions?</span>
             </div>
             
-            <h2 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#8B7355] via-[#5D4E37] to-[#8B7355] bg-clip-text text-transparent mb-4 tracking-wide">
+            <h2 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#0077BE] via-[#003D5C] to-[#0077BE] bg-clip-text text-transparent mb-4 tracking-wide">
               Frequently Asked Questions
             </h2>
-            <div className="w-24 h-1.5 bg-gradient-to-r from-[#D4A574] via-[#C19A6B] to-[#D4A574] mx-auto mb-4 rounded-full shadow-sm"></div>
-            <p className="text-[#5D4E37] text-base font-light">
-              Everything you need to know about our premium dry fruits and products
+            <div className="w-24 h-1.5 bg-gradient-to-r from-[#0077BE] via-[#00A3E0] to-[#0077BE] mx-auto mb-4 rounded-full shadow-sm"></div>
+            <p className="text-[#003D5C] text-base font-light">
+              Everything you need to know about our hospital furniture and medical equipment
             </p>
           </div>
 
           {/* FAQ Items */}
-          <div className="divide-y divide-[#D4A574]/10">
+          <div className="divide-y divide-[#0077BE]/10">
             {faqs.map((faq, index) => (
-              <div key={index} className="hover:bg-gradient-to-r hover:from-[#FFF8DC] hover:to-white transition-colors">
+              <div key={index} className="hover:bg-gradient-to-r hover:from-[#F0F8FF] hover:to-white transition-colors">
                 <button
                   className="w-full px-6 sm:px-8 py-6 text-left transition-colors focus:outline-none group"
                   onClick={() => toggleFAQ(index)}
@@ -93,13 +93,13 @@ const HomeFAQ: React.FC = () => {
                           {faq.icon}
                         </div>
                       )}
-                      <h3 className="font-bold text-[#5D4E37] text-sm sm:text-base pr-4 text-left group-hover:text-[#D4A574] transition-colors">
+                      <h3 className="font-bold text-[#003D5C] text-sm sm:text-base pr-4 text-left group-hover:text-[#0077BE] transition-colors">
                         {faq.question}
                       </h3>
                     </div>
                     <div className="flex-shrink-0">
                       <ChevronDownIcon 
-                        className={`h-5 w-5 text-[#D4A574] transition-transform duration-300 ${
+                        className={`h-5 w-5 text-[#0077BE] transition-transform duration-300 ${
                           openIndex === index ? 'rotate-180' : ''
                         }`}
                       />
@@ -114,8 +114,8 @@ const HomeFAQ: React.FC = () => {
                     : 'max-h-0 opacity-0'
                 }`}>
                   <div className="px-6 sm:px-8 pb-6">
-                    <div className="bg-gradient-to-br from-[#FFF8DC] to-[#F5DEB3]/30 p-6 border-l-4 border-[#D4A574] rounded-xl shadow-sm">
-                      <p className="text-[#5D4E37] text-sm sm:text-base leading-relaxed font-light">
+                    <div className="bg-gradient-to-br from-[#F0F8FF] to-[#E6F3FF]/30 p-6 border-l-4 border-[#0077BE] rounded-xl shadow-sm">
+                      <p className="text-[#003D5C] text-sm sm:text-base leading-relaxed font-light">
                         {faq.answer}
                       </p>
                     </div>
@@ -126,17 +126,17 @@ const HomeFAQ: React.FC = () => {
           </div>
 
           {/* Footer */}
-          <div className="px-6 sm:px-8 py-8 sm:py-12 text-center border-t-2 border-[#D4A574]/30 bg-gradient-to-b from-white to-[#FFF8DC]">
-            <h3 className="text-lg sm:text-xl font-bold text-[#5D4E37] mb-3 tracking-wide">
+          <div className="px-6 sm:px-8 py-8 sm:py-12 text-center border-t-2 border-[#0077BE]/30 bg-gradient-to-b from-white to-[#F0F8FF]">
+            <h3 className="text-lg sm:text-xl font-bold text-[#003D5C] mb-3 tracking-wide">
               Still Have Questions?
             </h3>
-            <p className="text-[#5D4E37] text-sm sm:text-base mb-8 font-light">
-              Our customer service team is here to help
+            <p className="text-[#003D5C] text-sm sm:text-base mb-8 font-light">
+              Our sales team is here to help with quotes and technical specifications
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://wa.me/919876543210?text=Hi,%20I%20have%20a%20question%20about%20Vyadhihar%20Foods"
+                href="https://wa.me/917052500888?text=Hi,%20I%20have%20a%20question%20about%20Advik%20Surgical%20products"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-bold text-white bg-[#25D366] hover:bg-[#20BA5A] transition-all duration-300 rounded-full shadow-lg hover:shadow-xl hover:scale-105"
@@ -146,11 +146,20 @@ const HomeFAQ: React.FC = () => {
                 </svg>
                 WhatsApp Us
               </a>
+              <a
+                href="tel:+917052500888"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 rounded-full shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                Call Now
+              </a>
               <Link 
                 href="/shop"
-                className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-white bg-gradient-to-r from-[#D4A574] to-[#C19A6B] hover:from-[#C19A6B] hover:to-[#8B7355] transition-all duration-300 rounded-full shadow-lg hover:shadow-xl hover:scale-105"
+                className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-white bg-gradient-to-r from-[#0077BE] to-[#00A3E0] hover:from-[#00A3E0] hover:to-[#005A8C] transition-all duration-300 rounded-full shadow-lg hover:shadow-xl hover:scale-105"
               >
-                Explore Products
+                Browse Products
               </Link>
             </div>
           </div>
@@ -158,20 +167,20 @@ const HomeFAQ: React.FC = () => {
 
         {/* Trust Badge */}
         <div className="mt-12 text-center">
-          <div className="inline-flex items-center gap-6 bg-white border-2 border-[#D4A574]/30 rounded-full px-8 py-4 shadow-lg">
+          <div className="inline-flex flex-wrap items-center justify-center gap-4 sm:gap-6 bg-white border-2 border-[#0077BE]/30 rounded-full px-6 sm:px-8 py-4 shadow-lg">
             <div className="flex items-center gap-2">
-              <Leaf className="w-5 h-5 text-[#D4A574]" />
-              <span className="text-sm font-semibold text-[#5D4E37]">100% Natural</span>
+              <Award className="w-5 h-5 text-[#0077BE]" />
+              <span className="text-sm font-semibold text-[#003D5C]">ISO Certified</span>
             </div>
-            <span className="text-[#D4A574]">•</span>
+            <span className="text-[#0077BE] hidden sm:inline">•</span>
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-[#D4A574]" />
-              <span className="text-sm font-semibold text-[#5D4E37]">Lab Tested</span>
+              <Shield className="w-5 h-5 text-[#0077BE]" />
+              <span className="text-sm font-semibold text-[#003D5C]">Hospital Grade</span>
             </div>
-            <span className="text-[#D4A574]">•</span>
+            <span className="text-[#0077BE] hidden sm:inline">•</span>
             <div className="flex items-center gap-2">
-              <Truck className="w-5 h-5 text-[#D4A574]" />
-              <span className="text-sm font-semibold text-[#5D4E37]">Fast Delivery</span>
+              <Truck className="w-5 h-5 text-[#0077BE]" />
+              <span className="text-sm font-semibold text-[#003D5C]">Pan-India Delivery</span>
             </div>
           </div>
         </div>
