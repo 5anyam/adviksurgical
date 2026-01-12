@@ -4,12 +4,20 @@ import { useRouter } from 'next/navigation';
 
 const IMAGES = [
   {
-    src: 'http://cms.vyadhiharfoods.com/wp-content/uploads/2025/11/fruit-banner-scaled.jpg',
-    alt: 'Premium Dry Fruits Collection',
+    src: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=600&fit=crop&q=80',
+    alt: 'Premium ICU Beds and Hospital Furniture',
   },
   {
-    src: 'http://cms.vyadhiharfoods.com/wp-content/uploads/2025/11/superfood-scaled.jpg',
-    alt: 'Makhana Snacks',
+    src: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1600&h=600&fit=crop&q=80',
+    alt: 'Operation Theatre Equipment',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&h=600&fit=crop&q=80',
+    alt: 'Medical Trolleys and Hospital Equipment',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1600&h=600&fit=crop&q=80',
+    alt: 'Oxygen Systems and Medical Gas Panels',
   }
 ];
 
@@ -24,7 +32,7 @@ export default function HeroCarousel() {
     
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % IMAGES.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
@@ -49,7 +57,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="w-full relative bg-gradient-to-b from-[#FFF8DC] to-white overflow-hidden">
+    <div className="w-full relative bg-gradient-to-b from-[#F0F8FF] to-white overflow-hidden">
       {/* Main carousel container - Banner aspect ratio */}
       <div className="w-full relative overflow-hidden cursor-pointer" style={{ aspectRatio: '16/6' }}>
         
@@ -71,21 +79,33 @@ export default function HeroCarousel() {
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
               
-              {/* Subtle hover overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#5D4E37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              {/* Subtle hover overlay with medical blue gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#003D5C]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              
+              {/* Text overlay with product category */}
+              <div className="absolute bottom-6 sm:bottom-8 left-4 sm:left-8 right-4 sm:right-8 z-10 pointer-events-none">
+                <div className="bg-white/95 backdrop-blur-sm border-2 border-[#0077BE]/30 rounded-2xl p-4 sm:p-6 max-w-2xl shadow-2xl">
+                  <h2 className="text-xl sm:text-2xl md:text-4xl font-bold text-[#003D5C] mb-2">
+                    {img.alt}
+                  </h2>
+                  <p className="text-xs sm:text-sm md:text-base text-[#0077BE] font-semibold">
+                    ISO Certified • Hospital Grade • Pan-India Delivery
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Navigation buttons - Golden themed */}
+        {/* Navigation buttons - Medical Blue themed */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             goToPrevious();
           }}
           className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-40 
-            bg-white/90 hover:bg-gradient-to-r hover:from-[#D4A574] hover:to-[#C19A6B] hover:text-white 
-            border-2 border-[#D4A574]/30 text-[#5D4E37]
+            bg-white/90 hover:bg-gradient-to-r hover:from-[#0077BE] hover:to-[#00A3E0] hover:text-white 
+            border-2 border-[#0077BE]/30 text-[#003D5C]
             w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all duration-300 hover:scale-110
             flex items-center justify-center shadow-lg hover:shadow-xl backdrop-blur-sm"
           aria-label="Previous image"
@@ -99,8 +119,8 @@ export default function HeroCarousel() {
             goToNext();
           }}
           className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-40 
-            bg-white/90 hover:bg-gradient-to-r hover:from-[#D4A574] hover:to-[#C19A6B] hover:text-white 
-            border-2 border-[#D4A574]/30 text-[#5D4E37]
+            bg-white/90 hover:bg-gradient-to-r hover:from-[#0077BE] hover:to-[#00A3E0] hover:text-white 
+            border-2 border-[#0077BE]/30 text-[#003D5C]
             w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all duration-300 hover:scale-110
             flex items-center justify-center shadow-lg hover:shadow-xl backdrop-blur-sm"
           aria-label="Next image"
@@ -108,17 +128,17 @@ export default function HeroCarousel() {
           <ChevronRight size={20} className="sm:w-6 sm:h-6" />
         </button>
 
-        {/* Slide indicators - Golden themed */}
+        {/* Slide indicators - Medical Blue themed */}
         <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-30 
-          flex gap-2 sm:gap-3 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2.5 shadow-lg border-2 border-[#D4A574]/30">
+          flex gap-2 sm:gap-3 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2.5 shadow-lg border-2 border-[#0077BE]/30">
           {IMAGES.map((_, index) => (
             <button
               key={index}
               className={`rounded-full cursor-pointer transition-all duration-300 
-                hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#D4A574]/50 
+                hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#0077BE]/50 
                 ${index === current
-                  ? 'bg-gradient-to-r from-[#D4A574] to-[#C19A6B] w-8 sm:w-10 h-2.5 sm:h-3 shadow-md' 
-                  : 'bg-gray-300 hover:bg-[#D4A574]/50 w-2.5 sm:w-3 h-2.5 sm:h-3'
+                  ? 'bg-gradient-to-r from-[#0077BE] to-[#00A3E0] w-8 sm:w-10 h-2.5 sm:h-3 shadow-md' 
+                  : 'bg-gray-300 hover:bg-[#0077BE]/50 w-2.5 sm:w-3 h-2.5 sm:h-3'
                 }`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -129,10 +149,10 @@ export default function HeroCarousel() {
           ))}
         </div>
 
-        {/* Progress bar for current slide - Golden themed */}
+        {/* Progress bar for current slide - Medical Blue themed */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200/50 z-20">
           <div 
-            className="h-full bg-gradient-to-r from-[#D4A574] to-[#C19A6B] transition-all duration-300 shadow-sm"
+            className="h-full bg-gradient-to-r from-[#0077BE] to-[#00A3E0] transition-all duration-300 shadow-sm"
             style={{ width: `${((current + 1) / IMAGES.length) * 100}%` }}
           />
         </div>

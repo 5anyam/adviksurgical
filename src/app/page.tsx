@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchProducts } from "../../lib/woocommerceApi";
 import ProductCard from "../../components/ProductCard";
 import HeroCarousel from "../../components/HeroCarousel";
-import MarqueeBanner from "../../components/MarqueeBanner";
 import AboutUsSection from "../../components/AboutUs";
 import HomeFAQ from "../../components/HomeFaq";
 import Link from "next/link";
@@ -71,7 +70,6 @@ export default function Homepage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-[#F0F8FF] to-white pb-16 overflow-x-hidden">
       <HeroCarousel />
-      <MarqueeBanner />
 
       {/* Trust Badges Section */}
       <section className="py-16 bg-gradient-to-b from-[#F0F8FF] via-[#E6F3FF]/20 to-white relative overflow-hidden">

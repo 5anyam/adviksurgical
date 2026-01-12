@@ -5,7 +5,6 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import FacebookPixel from '../../components/FacebookPixel';
 import Script from 'next/script';
-import AnnouncementBar from '../../components/anouncement';
 import { Suspense } from 'react';
 import Whatsapp from '../../components/Whatsapp';
 import Loading from './loading';
@@ -391,7 +390,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartProvider>
             <AuthProvider>
             <div className="flex flex-col min-h-screen">
-              <AnnouncementBar />
               <Header />
               
               <main role="main" className="flex-grow">

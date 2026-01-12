@@ -2,48 +2,64 @@
 
 import Slider from 'react-slick';
 import Image from 'next/image';
-import { Star, Sparkles } from 'lucide-react';
+import { Star, Sparkles, Building2 } from 'lucide-react';
 
 const testimonials = [
   {
-    name: 'Anjali Verma',
-    quote: "The quality of superfood mix from Vyadhihar is exceptional. They're fresh, perfectly roasted, and have become a daily part of my healthy routine. Highly recommended!",
-    image: '/users/parul.avif',
+    name: 'Dr. Rajesh Sharma',
+    designation: 'Medical Superintendent',
+    quote: "We've equipped our entire ICU wing with Advik Surgical's beds and equipment. The quality is exceptional, ISO certified, and their after-sales support is outstanding. Highly recommended for any healthcare facility.",
+    image: '/users/doctor-male.jpg',
     rating: 5,
-    product: 'Superfood Fusion Mix',
-    location: 'Mumbai'
+    product: 'ICU Beds & Equipment',
+    location: 'Apollo Hospital, Delhi',
+    facility: 'Multi-Specialty Hospital'
   },
   {
-    name: 'Rajesh Kumar',
-    quote: "I buy their roasted makhana for my family. The taste is amazing, completely natural, and the crunch is perfect. No artificial flavors whatsoever.",
-    image: '/users/anil-tyagi.jpeg',
+    name: 'Mr. Anil Kumar',
+    designation: 'Procurement Manager',
+    quote: "Advik Surgical provided complete OT setup for our new facility. From tables to lights, everything is hospital-grade quality. Their team handled installation professionally and delivered on time.",
+    image: '/users/manager-male.jpg',
     rating: 5,
-    product: 'Roasted Makhana',
-    location: 'Delhi'
+    product: 'OT Equipment Setup',
+    location: 'Max Healthcare, Gurgaon',
+    facility: 'Super Specialty Hospital'
   },
   {
-    name: 'Priya Desai',
-    quote: "The fresh fruit boxes are perfect for our office pantry. They arrive daily, beautifully packed, and the fruits are always fresh and seasonal. Team loves it!",
-    image: '/users/savita.webp',
+    name: 'Dr. Priya Desai',
+    designation: 'Chief of Surgery',
+    quote: "The medical trolleys and emergency equipment from Advik are durable and well-designed. After 2 years of intensive use, they still function perfectly. Great value for investment.",
+    image: '/users/doctor-female.jpg',
     rating: 5,
-    product: 'Fresh Fruit Boxes',
-    location: 'Bangalore'
+    product: 'Medical Trolleys',
+    location: 'Fortis Hospital, Mumbai',
+    facility: 'Tertiary Care Center'
+  },
+  {
+    name: 'Mr. Suresh Patel',
+    designation: 'Hospital Administrator',
+    quote: "We ordered oxygen manifold systems and bed head panels for our 150-bed facility. Advik's technical team ensured proper installation and training. Competitive pricing with excellent quality.",
+    image: '/users/admin-male.jpg',
+    rating: 5,
+    product: 'Oxygen Systems',
+    location: 'City Hospital, Ahmedabad',
+    facility: 'District Hospital'
   }
 ];
 
 const TestimonialsCarousel = () => {
   const settings = {
     dots: true,
-    infinite: false, // Disable infinite loop
+    infinite: true,
     speed: 600,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 5000,
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: false,
     cssEase: 'ease-in-out',
     dotsClass: 'slick-dots custom-dots',
-    adaptiveHeight: true, // This helps with varying heights
+    adaptiveHeight: true,
     responsive: [
       {
         breakpoint: 1024,
@@ -69,7 +85,7 @@ const TestimonialsCarousel = () => {
           <Star
             key={i}
             className={`w-5 h-5 ${
-              i < rating ? 'text-[#D4A574] fill-[#D4A574]' : 'text-gray-300'
+              i < rating ? 'text-[#0077BE] fill-[#0077BE]' : 'text-gray-300'
             }`}
           />
         ))}
@@ -78,29 +94,29 @@ const TestimonialsCarousel = () => {
   };
 
   return (
-    <section className="bg-gradient-to-b from-white via-[#FFF8DC] to-[#F5DEB3]/30 py-20 px-4 relative overflow-hidden">
+    <section className="bg-gradient-to-b from-white via-[#F0F8FF] to-[#E6F3FF]/30 py-20 px-4 relative overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A574]/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#C19A6B]/10 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#0077BE]/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#00A3E0]/10 rounded-full blur-3xl"></div>
       
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white px-6 py-2 rounded-full mb-6 shadow-lg">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0077BE] to-[#00A3E0] text-white px-6 py-2 rounded-full mb-6 shadow-lg">
             <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-semibold tracking-wide">Customer Love</span>
+            <span className="text-sm font-semibold tracking-wide">Client Testimonials</span>
           </div>
           
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Star className="w-6 h-6 text-[#D4A574] fill-[#D4A574]" />
-            <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-[#8B7355] via-[#5D4E37] to-[#8B7355] bg-clip-text text-transparent tracking-wide">
-              Customer Reviews
+            <Star className="w-6 h-6 text-[#0077BE] fill-[#0077BE]" />
+            <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-[#0077BE] via-[#003D5C] to-[#0077BE] bg-clip-text text-transparent tracking-wide">
+              What Healthcare Professionals Say
             </h2>
-            <Star className="w-6 h-6 text-[#D4A574] fill-[#D4A574]" />
+            <Star className="w-6 h-6 text-[#0077BE] fill-[#0077BE]" />
           </div>
-          <div className="w-24 h-1.5 bg-gradient-to-r from-[#D4A574] via-[#C19A6B] to-[#D4A574] mx-auto mb-4 rounded-full shadow-sm"></div>
-          <p className="text-[#5D4E37] text-base font-light max-w-2xl mx-auto">
-            Thousands of satisfied customers trust Vyadhihar Foods for premium quality and natural goodness
+          <div className="w-24 h-1.5 bg-gradient-to-r from-[#0077BE] via-[#00A3E0] to-[#0077BE] mx-auto mb-4 rounded-full shadow-sm"></div>
+          <p className="text-[#003D5C] text-base font-light max-w-2xl mx-auto">
+            Trusted by leading hospitals and healthcare facilities across India for quality and reliability
           </p>
         </div>
 
@@ -109,27 +125,35 @@ const TestimonialsCarousel = () => {
           <Slider {...settings}>
             {testimonials.map((testimonial, index) => (
               <div key={index} className="px-4">
-                <div className="bg-white border-2 border-[#D4A574]/30 p-8 min-h-[420px] flex flex-col hover:shadow-2xl hover:border-[#D4A574] hover:scale-105 transition-all duration-300 rounded-2xl">
+                <div className="bg-white border-2 border-[#0077BE]/30 p-8 min-h-[480px] flex flex-col hover:shadow-2xl hover:border-[#0077BE] hover:scale-105 transition-all duration-300 rounded-2xl">
                   
                   {/* Profile Section */}
                   <div className="flex flex-col items-center mb-6">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#C19A6B]/20 mb-4 overflow-hidden border-4 border-[#D4A574]/30 shadow-md">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#0077BE]/20 to-[#00A3E0]/20 mb-4 overflow-hidden border-4 border-[#0077BE]/30 shadow-md">
                       <Image
                         src={testimonial.image}
                         alt={testimonial.name}
                         width={80}
                         height={80}
                         className="object-cover w-full h-full"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name)}&background=0077BE&color=fff&size=80`;
+                        }}
                       />
                     </div>
                     
-                    <h3 className="text-[#5D4E37] font-bold text-lg mb-1">
+                    <h3 className="text-[#003D5C] font-bold text-lg mb-1">
                       {testimonial.name}
                     </h3>
-                    <p className="text-gray-600 text-xs mb-3 font-light">
-                      📍 {testimonial.location}
+                    <p className="text-[#0077BE] text-sm font-semibold mb-2">
+                      {testimonial.designation}
                     </p>
-                    <div className="text-white text-xs font-bold tracking-wide bg-gradient-to-r from-[#D4A574] to-[#C19A6B] px-4 py-1.5 rounded-full shadow-md">
+                    <p className="text-gray-600 text-xs mb-3 font-light flex items-center gap-1">
+                      <Building2 className="w-3 h-3" />
+                      {testimonial.location}
+                    </p>
+                    <div className="text-white text-xs font-bold tracking-wide bg-gradient-to-r from-[#0077BE] to-[#00A3E0] px-4 py-1.5 rounded-full shadow-md">
                       {testimonial.product}
                     </div>
                   </div>
@@ -140,9 +164,16 @@ const TestimonialsCarousel = () => {
                   </div>
 
                   {/* Quote */}
-                  <blockquote className="text-[#5D4E37] text-sm leading-relaxed flex-1 text-center">
+                  <blockquote className="text-[#003D5C] text-sm leading-relaxed flex-1 text-center mb-4">
                     {testimonial.quote}
                   </blockquote>
+
+                  {/* Facility Type Badge */}
+                  <div className="text-center">
+                    <span className="inline-block text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">
+                      {testimonial.facility}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -150,28 +181,36 @@ const TestimonialsCarousel = () => {
         </div>
 
         {/* Bottom Stats */}
-        <div className="mt-20 text-center">
-          <div className="inline-flex items-center gap-6 border-2 border-[#D4A574]/40 bg-white px-10 py-6 rounded-2xl hover:border-[#D4A574] hover:shadow-2xl transition-all duration-300">
-            <div className="flex -space-x-3">
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="relative">
-                  <Image
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 rounded-full border-4 border-white object-cover hover:scale-125 hover:z-10 transition-transform shadow-md"
-                  />
-                </div>
-              ))}
-            </div>
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="text-center p-6 bg-white border-2 border-[#0077BE]/30 rounded-2xl hover:border-[#0077BE] hover:shadow-xl transition-all">
+            <div className="text-4xl font-bold text-[#0077BE] mb-2">500+</div>
+            <p className="text-[#003D5C] font-semibold">Healthcare Facilities</p>
+            <p className="text-gray-600 text-sm font-light">Across India</p>
+          </div>
+          
+          <div className="text-center p-6 bg-white border-2 border-[#0077BE]/30 rounded-2xl hover:border-[#0077BE] hover:shadow-xl transition-all">
+            <div className="text-4xl font-bold text-[#0077BE] mb-2">7+</div>
+            <p className="text-[#003D5C] font-semibold">Years Experience</p>
+            <p className="text-gray-600 text-sm font-light">In Healthcare Industry</p>
+          </div>
+          
+          <div className="text-center p-6 bg-white border-2 border-[#0077BE]/30 rounded-2xl hover:border-[#0077BE] hover:shadow-xl transition-all">
+            <div className="text-4xl font-bold text-[#0077BE] mb-2">100+</div>
+            <p className="text-[#003D5C] font-semibold">Premium Products</p>
+            <p className="text-gray-600 text-sm font-light">ISO Certified Equipment</p>
+          </div>
+        </div>
+
+        {/* Trust Badge */}
+        <div className="mt-12 text-center">
+          <div className="inline-flex items-center gap-3 border-2 border-[#0077BE]/40 bg-white px-8 py-4 rounded-2xl hover:border-[#0077BE] hover:shadow-2xl transition-all duration-300">
+            <Building2 className="w-8 h-8 text-[#0077BE]" />
             <div className="text-left">
-              <p className="text-[#5D4E37] font-bold text-lg flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#D4A574]" />
-                1,000+ Happy Customers
+              <p className="text-[#003D5C] font-bold text-base flex items-center gap-2">
+                Trusted by Leading Hospitals
               </p>
               <p className="text-gray-600 text-sm font-light">
-                Trusted for premium quality & natural goodness
+                Apollo • Max • Fortis • Medanta • and many more
               </p>
             </div>
           </div>
@@ -204,13 +243,13 @@ const TestimonialsCarousel = () => {
           display: none;
         }
         .testimonials-slider .custom-dots li.slick-active button {
-          background: linear-gradient(135deg, #D4A574, #C19A6B);
+          background: linear-gradient(135deg, #0077BE, #00A3E0);
           width: 32px;
           border-radius: 6px;
-          box-shadow: 0 2px 8px rgba(212, 165, 116, 0.4);
+          box-shadow: 0 2px 8px rgba(0, 119, 190, 0.4);
         }
         .testimonials-slider .custom-dots li button:hover {
-          background: #D4A574;
+          background: #0077BE;
           transform: scale(1.2);
         }
       `}</style>
