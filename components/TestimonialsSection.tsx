@@ -9,41 +9,31 @@ const testimonials = [
     name: 'Dr. Rajesh Sharma',
     designation: 'Medical Superintendent',
     quote: "We've equipped our entire ICU wing with Advik Surgical's beds and equipment. The quality is exceptional, ISO certified, and their after-sales support is outstanding. Highly recommended for any healthcare facility.",
-    image: '/users/doctor-male.jpg',
+    image: '/users/anil-tyagi.jpeg',
     rating: 5,
     product: 'ICU Beds & Equipment',
     location: 'Apollo Hospital, Delhi',
     facility: 'Multi-Specialty Hospital'
   },
   {
-    name: 'Mr. Anil Kumar',
-    designation: 'Procurement Manager',
-    quote: "Advik Surgical provided complete OT setup for our new facility. From tables to lights, everything is hospital-grade quality. Their team handled installation professionally and delivered on time.",
-    image: '/users/manager-male.jpg',
-    rating: 5,
-    product: 'OT Equipment Setup',
-    location: 'Max Healthcare, Gurgaon',
-    facility: 'Super Specialty Hospital'
-  },
-  {
     name: 'Dr. Priya Desai',
     designation: 'Chief of Surgery',
     quote: "The medical trolleys and emergency equipment from Advik are durable and well-designed. After 2 years of intensive use, they still function perfectly. Great value for investment.",
-    image: '/users/doctor-female.jpg',
+    image: '/users/savita.webp',
     rating: 5,
     product: 'Medical Trolleys',
     location: 'Fortis Hospital, Mumbai',
     facility: 'Tertiary Care Center'
   },
   {
-    name: 'Mr. Suresh Patel',
-    designation: 'Hospital Administrator',
-    quote: "We ordered oxygen manifold systems and bed head panels for our 150-bed facility. Advik's technical team ensured proper installation and training. Competitive pricing with excellent quality.",
-    image: '/users/admin-male.jpg',
+    name: 'Mr. Anil Kumar',
+    designation: 'Procurement Manager',
+    quote: "Advik Surgical provided complete OT setup for our new facility. From tables to lights, everything is hospital-grade quality. Their team handled installation professionally and delivered on time.",
+    image: '/users/parul.avif',
     rating: 5,
-    product: 'Oxygen Systems',
-    location: 'City Hospital, Ahmedabad',
-    facility: 'District Hospital'
+    product: 'OT Equipment Setup',
+    location: 'Max Healthcare, Gurgaon',
+    facility: 'Super Specialty Hospital'
   }
 ];
 

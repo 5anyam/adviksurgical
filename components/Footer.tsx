@@ -1,55 +1,48 @@
 import Link from "next/link";
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
-import { Mail, Phone, MapPin, Sparkles } from "lucide-react";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
+import { Mail, Phone, MapPin, Building2, Award } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-white via-[#FFF8DC] to-[#F5DEB3]/30 text-gray-900 border-t-2 border-[#D4A574]/30">
+    <footer className="bg-gradient-to-b from-white via-[#F0F8FF] to-[#E6F3FF]/30 text-gray-900 border-t-2 border-[#0077BE]/30">
       <div className="max-w-7xl mx-auto px-4 py-16">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand Section */}
           <div className="md:col-span-1">
             <div className="mb-6">
-              <img className="h-24 drop-shadow-lg" src="/vyadhihar-logo.png" alt="Vyadhihar Foods" />
+              <img className="h-24 drop-shadow-lg" src="/advik-logo.png" alt="Advik Surgical" />
             </div>
-            <p className="text-sm leading-relaxed text-[#5D4E37] font-light mb-6">
-              Premium quality superfood mixtures, roasted makhana snacks, and fresh fruit boxes delivered daily. 100% natural and healthy.
+            <p className="text-sm leading-relaxed text-[#003D5C] font-light mb-6">
+              Leading manufacturer and supplier of premium hospital furniture and medical equipment. ISO certified, hospital-grade quality across India.
             </p>
             
-            {/* Social Media Icons - Golden Theme */}
+            {/* Social Media Icons - Medical Blue Theme */}
             <div className="flex gap-3">
               <Link 
                 target="_blank"
-                href="https://www.facebook.com/vyadhiharfoods" 
-                className="p-3 bg-gradient-to-br from-[#D4A574]/10 to-[#C19A6B]/10 border-2 border-[#D4A574]/30 hover:bg-gradient-to-br hover:from-[#D4A574] hover:to-[#C19A6B] hover:text-white hover:border-[#D4A574] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
+                href="https://www.facebook.com/adviksurgical" 
+                className="p-3 bg-gradient-to-br from-[#0077BE]/10 to-[#00A3E0]/10 border-2 border-[#0077BE]/30 hover:bg-gradient-to-br hover:from-[#0077BE] hover:to-[#00A3E0] hover:text-white hover:border-[#0077BE] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
               >
                 <FaFacebookF className="text-sm" />
               </Link>
               <Link 
                 target="_blank"
-                href="https://x.com/vyadhiharfoods" 
-                className="p-3 bg-gradient-to-br from-[#D4A574]/10 to-[#C19A6B]/10 border-2 border-[#D4A574]/30 hover:bg-gradient-to-br hover:from-[#D4A574] hover:to-[#C19A6B] hover:text-white hover:border-[#D4A574] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
-              >
-                <FaTwitter className="text-sm" />
-              </Link>
-              <Link 
-                target="_blank"
-                href="https://www.instagram.com/vyadhiharfoods" 
-                className="p-3 bg-gradient-to-br from-[#D4A574]/10 to-[#C19A6B]/10 border-2 border-[#D4A574]/30 hover:bg-gradient-to-br hover:from-[#D4A574] hover:to-[#C19A6B] hover:text-white hover:border-[#D4A574] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
+                href="https://www.instagram.com/adviksurgical" 
+                className="p-3 bg-gradient-to-br from-[#0077BE]/10 to-[#00A3E0]/10 border-2 border-[#0077BE]/30 hover:bg-gradient-to-br hover:from-[#0077BE] hover:to-[#00A3E0] hover:text-white hover:border-[#0077BE] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
               >
                 <FaInstagram className="text-sm" />
               </Link>
               <Link 
                 target="_blank"
-                href="https://www.linkedin.com/company/vyadhiharfoods" 
-                className="p-3 bg-gradient-to-br from-[#D4A574]/10 to-[#C19A6B]/10 border-2 border-[#D4A574]/30 hover:bg-gradient-to-br hover:from-[#D4A574] hover:to-[#C19A6B] hover:text-white hover:border-[#D4A574] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
+                href="https://www.linkedin.com/company/adviksurgical" 
+                className="p-3 bg-gradient-to-br from-[#0077BE]/10 to-[#00A3E0]/10 border-2 border-[#0077BE]/30 hover:bg-gradient-to-br hover:from-[#0077BE] hover:to-[#00A3E0] hover:text-white hover:border-[#0077BE] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
               >
                 <FaLinkedinIn className="text-sm" />
               </Link>
               <Link 
                 target="_blank"
-                href="https://wa.me/919217207717" 
+                href="https://wa.me/917052500888" 
                 className="p-3 bg-[#25D366]/10 border-2 border-[#25D366]/30 hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-300 rounded-lg shadow-sm hover:shadow-md hover:scale-110"
               >
                 <FaWhatsapp className="text-sm" />
@@ -57,46 +50,51 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Product Categories */}
           <div className="md:col-span-1">
-            <h4 className="text-sm font-bold text-[#5D4E37] mb-6 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-1 h-4 bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full"></span>
+            <h4 className="text-sm font-bold text-[#003D5C] mb-6 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-1 h-4 bg-gradient-to-b from-[#0077BE] to-[#00A3E0] rounded-full"></span>
               Our Products
             </h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Home
+                <Link href="/" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Home
                 </Link>
               </li>
               <li>
-                <Link href="/shop" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> All Products
+                <Link href="/shop" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> All Products
                 </Link>
               </li>
               <li>
-                <Link href="https://www.vyadhiharfoods.com/product/vyadhihar-foods-superfood-fusion-himalayan-salt-pepper-gluten-free-roasted-mix" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Superfood Fusion Mix
+                <Link href="/shop?category=icu-beds" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> ICU & Hospital Beds
                 </Link>
               </li>
               <li>
-                <Link href="https://www.vyadhiharfoods.com/product/vyadhihar-foods-foxnut-wholesome-crunch-naturally-yours-roasted-gluten-free-snack-75g" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Roasted Makhana
+                <Link href="/shop?category=ot-equipment" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> OT Equipment
                 </Link>
               </li>
               <li>
-                <Link href="https://www.vyadhiharfoods.com/product/the-fruit-box-for-corporate" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#25D366] group-hover:translate-x-1 transition-transform">›</span> Fresh Fruit Boxes
+                <Link href="/shop?category=medical-trolleys" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Medical Trolleys
                 </Link>
               </li>
               <li>
-                <Link href="/founder-story" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Founder Story
+                <Link href="/shop?category=oxygen-systems" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Oxygen Systems
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Contact Us
+                <Link href="/about" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Contact Us
                 </Link>
               </li>
             </ul>
@@ -104,39 +102,39 @@ export default function Footer() {
 
           {/* Customer Service */}
           <div className="md:col-span-1">
-            <h4 className="text-sm font-bold text-[#5D4E37] mb-6 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-1 h-4 bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full"></span>
-              Customer Service
+            <h4 className="text-sm font-bold text-[#003D5C] mb-6 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-1 h-4 bg-gradient-to-b from-[#0077BE] to-[#00A3E0] rounded-full"></span>
+              Information
             </h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/faq" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> FAQ
+                <Link href="/bulk-orders" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Bulk Orders
                 </Link>
               </li>
               <li>
-                <Link href="/shipping-policy" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Shipping Policy
+                <Link href="/installation-support" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Installation & Support
                 </Link>
               </li>
               <li>
-                <Link href="/returns-and-refunds-policy" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Returns & Refunds
+                <Link href="/warranty" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Warranty Information
                 </Link>
               </li>
               <li>
-                <Link href="/privacy-policy" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Privacy Policy
+                <Link href="/privacy-policy" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms-and-conditions" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Terms & Conditions
+                <Link href="/terms-and-conditions" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link href="/disclaimer" className="text-sm text-[#5D4E37] hover:text-[#D4A574] transition-colors font-medium flex items-center gap-2 group">
-                  <span className="text-[#D4A574] group-hover:translate-x-1 transition-transform">›</span> Disclaimer
+                <Link href="/disclaimer" className="text-sm text-[#003D5C] hover:text-[#0077BE] transition-colors font-medium flex items-center gap-2 group">
+                  <span className="text-[#0077BE] group-hover:translate-x-1 transition-transform">›</span> Disclaimer
                 </Link>
               </li>
             </ul>
@@ -144,110 +142,139 @@ export default function Footer() {
 
           {/* Contact Section */}
           <div className="md:col-span-1">
-            <h4 className="text-sm font-bold text-[#5D4E37] mb-6 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-1 h-4 bg-gradient-to-b from-[#D4A574] to-[#C19A6B] rounded-full"></span>
+            <h4 className="text-sm font-bold text-[#003D5C] mb-6 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-1 h-4 bg-gradient-to-b from-[#0077BE] to-[#00A3E0] rounded-full"></span>
               Get In Touch
             </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 group">
-                <Mail className="w-5 h-5 text-[#D4A574] mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <a 
-                  href="mailto:support@vyadhiharfoods.com" 
-                  className="text-sm text-[#5D4E37] hover:text-[#D4A574] font-medium transition-colors break-all"
-                >
-                  support@vyadhiharfoods.com
-                </a>
+                <Mail className="w-5 h-5 text-[#0077BE] mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                <div className="flex flex-col gap-1">
+                  <a 
+                    href="mailto:adviksurgical2019@gmail.com" 
+                    className="text-sm text-[#003D5C] hover:text-[#0077BE] font-medium transition-colors break-all"
+                  >
+                    adviksurgical2019@gmail.com
+                  </a>
+                  <a 
+                    href="mailto:salesadviksurgical@gmail.com" 
+                    className="text-xs text-gray-600 hover:text-[#0077BE] transition-colors break-all"
+                  >
+                    salesadviksurgical@gmail.com
+                  </a>
+                </div>
               </li>
               <li className="flex items-start gap-3 group">
-                <Phone className="w-5 h-5 text-[#D4A574] mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <a 
-                  href="tel:+919217207717" 
-                  className="text-sm text-[#5D4E37] hover:text-[#D4A574] font-medium transition-colors"
-                >
-                  +91 92172 07717
-                </a>
+                <Phone className="w-5 h-5 text-[#0077BE] mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                <div className="flex flex-col gap-1">
+                  <a 
+                    href="tel:+917052500888" 
+                    className="text-sm text-[#003D5C] hover:text-[#0077BE] font-medium transition-colors"
+                  >
+                    +91 70525 00888
+                  </a>
+                  <a 
+                    href="tel:+918840215794" 
+                    className="text-sm text-[#003D5C] hover:text-[#0077BE] font-medium transition-colors"
+                  >
+                    +91 88402 15794
+                  </a>
+                </div>
               </li>
               <li className="flex items-start gap-3 group">
                 <FaWhatsapp className="w-5 h-5 text-[#25D366] mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
                 <a 
-                  href="https://wa.me/919217207717?text=Hi,%20I%20want%20to%20enquire%20about%20your%20products" 
+                  href="https://wa.me/917052500888?text=Hi,%20I%20want%20to%20enquire%20about%20hospital%20furniture%20and%20medical%20equipment" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[#5D4E37] hover:text-[#D4A574] font-medium transition-colors"
+                  className="text-sm text-[#003D5C] hover:text-[#0077BE] font-medium transition-colors"
                 >
                   WhatsApp for Enquiries
                 </a>
               </li>
               <li className="flex items-start gap-3 group">
-                <MapPin className="w-5 h-5 text-[#D4A574] mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-[#5D4E37] font-light leading-relaxed">
-                  Delhi NCR, India
+                <MapPin className="w-5 h-5 text-[#0077BE] mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                <span className="text-sm text-[#003D5C] font-light leading-relaxed">
+                  Natkur, Near Bharat Petrol Pump<br />
+                  Lucknow, Uttar Pradesh - 226002
                 </span>
               </li>
             </ul>
 
-            {/* Trust Badges */}
-            <div className="mt-6 pt-6 border-t-2 border-[#D4A574]/20">
-              <p className="text-xs text-[#5D4E37] mb-3 font-bold uppercase tracking-wide">We Accept:</p>
-              <div className="flex items-center gap-2">
-                <img className="h-8 opacity-90 hover:opacity-100 transition-opacity" src="/badges.png" alt="Payment methods" />
+            {/* Certifications Badge */}
+            <div className="mt-6 pt-6 border-t-2 border-[#0077BE]/20">
+              <p className="text-xs text-[#003D5C] mb-3 font-bold uppercase tracking-wide flex items-center gap-2">
+                <Award className="w-4 h-4 text-[#0077BE]" />
+                Certifications:
+              </p>
+              <div className="flex flex-col gap-2">
+                <span className="text-xs text-[#003D5C] font-semibold bg-gradient-to-r from-[#0077BE]/10 to-[#00A3E0]/10 px-3 py-2 rounded-lg border border-[#0077BE]/20">
+                  ✓ ISO Certified
+                </span>
+                <span className="text-xs text-[#003D5C] font-semibold bg-gradient-to-r from-[#0077BE]/10 to-[#00A3E0]/10 px-3 py-2 rounded-lg border border-[#0077BE]/20">
+                  ✓ Hospital Grade Quality
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Newsletter Section - Golden Gradient */}
-      <div className="bg-gradient-to-r from-[#D4A574]/10 via-[#FFF8DC] to-[#D4A574]/10 border-t-2 border-[#D4A574]/30">
+      {/* CTA Section - Medical Blue Gradient */}
+      <div className="bg-gradient-to-r from-[#0077BE]/10 via-[#F0F8FF] to-[#0077BE]/10 border-t-2 border-[#0077BE]/30">
         <div className="max-w-7xl mx-auto px-4 py-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
-              <h3 className="text-lg font-bold text-[#5D4E37] mb-2 flex items-center justify-center md:justify-start gap-2">
-                <Sparkles className="w-5 h-5 text-[#D4A574]" />
-                Stay Healthy with Us
+              <h3 className="text-lg font-bold text-[#003D5C] mb-2 flex items-center justify-center md:justify-start gap-2">
+                <Building2 className="w-5 h-5 text-[#0077BE]" />
+                Partner With Us for Healthcare Excellence
               </h3>
-              <p className="text-sm text-[#5D4E37] font-light">
-                Subscribe to get special offers, free giveaways, and health tips.
+              <p className="text-sm text-[#003D5C] font-light">
+                Get bulk order quotes, product catalogs, and technical specifications.
               </p>
             </div>
-            <form className="flex gap-2 w-full md:w-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="px-4 py-3 text-sm border-2 border-[#D4A574]/40 rounded-xl focus:border-[#D4A574] focus:outline-none bg-white min-w-[250px] shadow-sm focus:shadow-md transition-all"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-[#D4A574] to-[#C19A6B] text-white text-sm font-bold rounded-xl hover:from-[#C19A6B] hover:to-[#8B7355] transition-all duration-300 whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105"
+            <div className="flex gap-3">
+              <Link
+                href="/contact"
+                className="px-6 py-3 bg-gradient-to-r from-[#0077BE] to-[#00A3E0] text-white text-sm font-bold rounded-xl hover:from-[#00A3E0] hover:to-[#005A8C] transition-all duration-300 whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105"
               >
-                Subscribe
-              </button>
-            </form>
+                Request Quote
+              </Link>
+              <a
+                href="https://wa.me/917052500888?text=Hi,%20I%20want%20to%20enquire%20about%20hospital%20furniture%20and%20medical%20equipment"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 bg-[#25D366] text-white text-sm font-bold rounded-xl hover:bg-[#20BA5A] transition-all duration-300 whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-2"
+              >
+                <FaWhatsapp className="text-base" />
+                WhatsApp
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Footer Bottom - Premium Design */}
-      <div className="border-t-2 border-[#D4A574]/30 bg-gradient-to-r from-white via-[#FFF8DC] to-white">
+      <div className="border-t-2 border-[#0077BE]/30 bg-gradient-to-r from-white via-[#F0F8FF] to-white">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-[#5D4E37] font-medium">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-[#003D5C] font-medium">
             <div className="text-center sm:text-left">
-              © {new Date().getFullYear()} Vyadhihar Foods. All rights reserved. | Developed by{" "}
-              <Link href="https://www.proshala.com" className="text-[#D4A574] hover:text-[#C19A6B] font-bold transition-colors">
+              © {new Date().getFullYear()} Advik Surgical. All rights reserved. | Developed by{" "}
+              <Link href="https://www.proshala.com" className="text-[#0077BE] hover:text-[#00A3E0] font-bold transition-colors">
                 Proshala Tech
               </Link>
             </div>
             <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1 text-[#5D4E37] font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-[#D4A574]" /> 100% Natural
+              <span className="flex items-center gap-1 text-[#003D5C] font-semibold">
+                <Award className="w-3.5 h-3.5 text-[#0077BE]" /> ISO Certified
               </span>
-              <span className="text-[#D4A574]">- </span>
-              <span className="flex items-center gap-1 text-[#5D4E37] font-semibold">
-                ✓ Premium Quality
+              <span className="text-[#0077BE]">•</span>
+              <span className="flex items-center gap-1 text-[#003D5C] font-semibold">
+                ✓ Hospital Grade
               </span>
-              <span className="text-[#D4A574]">- </span>
-              <span className="flex items-center gap-1 text-[#5D4E37] font-semibold">
-                🚚 Fast Delivery
+              <span className="text-[#0077BE]">•</span>
+              <span className="flex items-center gap-1 text-[#003D5C] font-semibold">
+                🚚 Pan-India Delivery
               </span>
             </div>
           </div>
