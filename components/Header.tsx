@@ -1,12 +1,11 @@
 'use client';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from "next/link";
-import { useAuth } from "../lib/auth-context";
 import { useState, useEffect } from "react";
 import { FiShoppingBag } from "react-icons/fi";
 import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
 import { IoLogoWhatsapp } from "react-icons/io";
-import { Sparkles, User, LogIn, LogOut, Package, Phone } from "lucide-react";
+import { Sparkles, Phone } from "lucide-react";
 
 const navItems = [
   { name: "Home", to: "/" },
@@ -19,8 +18,6 @@ const navItems = [
 
 export default function Header() {
   const location = usePathname();
-  const router = useRouter();
-  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -68,11 +65,6 @@ export default function Header() {
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const handleLogout = () => {
-    logout();
-    setUserMenuOpen(false);
-    router.push('/');
-  };
 
   return (
     <>
@@ -117,7 +109,7 @@ export default function Header() {
             <div className="flex items-center flex-shrink-0">
               <Link href="/" className="group">
                 <img 
-                  className="h-10 sm:h-12 md:h-14 lg:h-16 transition-all duration-300 group-hover:scale-110 drop-shadow-md" 
+                  className="h-8 sm:h-10 md:h-12 lg:h-14 transition-all duration-300 group-hover:scale-110 drop-shadow-md" 
                   src="/adviklogo.jpg" 
                   alt='Advik Surgical' 
                 />
@@ -152,55 +144,6 @@ export default function Header() {
                 <span>Products</span>
               </Link>
 
-              {/* User Menu (Desktop) */}
-              <div className="hidden lg:block relative user-menu-container">
-                {user ? (
-                  <>
-                    <button
-                      onClick={() => setUserMenuOpen(!userMenuOpen)}
-                      className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2.5 rounded-full hover:from-green-600 hover:to-emerald-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-                    >
-                      <User className="w-4 h-4" />
-                      <span className="max-w-[100px] truncate">{user.name}</span>
-                    </button>
-
-                    {/* User Dropdown Menu */}
-                    {userMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border-2 border-[#0077BE]/30 py-2 z-50">
-                        <div className="px-4 py-3 border-b border-gray-200">
-                          <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
-                          <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                        </div>
-                        
-                        <Link
-                          href="/my-account"
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-[#F0F8FF] transition-colors"
-                        >
-                          <Package className="w-4 h-4 text-[#0077BE]" />
-                          <span className="font-medium">My Orders</span>
-                        </Link>
-                        
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          <span className="font-medium">Logout</span>
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href="/login"
-                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2.5 rounded-full hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>Login</span>
-                  </Link>
-                )}
-              </div>
 
               {/* Cart Icon - Hidden for enquiry-only site */}
               {/* <div className="flex items-center">
@@ -254,52 +197,7 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile User Section */}
-        {user ? (
-          <div className="px-5 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b-2 border-green-200">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
-                <User className="w-6 h-6 text-white" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
-                <p className="text-xs text-gray-600 truncate">{user.email}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Link
-                href="/my-account"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 bg-white border-2 border-green-300 text-green-700 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-all font-semibold text-sm"
-              >
-                <Package className="w-4 h-4" />
-                <span>Orders</span>
-              </Link>
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center justify-center gap-2 bg-red-500 text-white px-3 py-2.5 rounded-lg hover:bg-red-600 transition-all font-semibold text-sm"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Logout</span>
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-blue-200">
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-3.5 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-bold shadow-lg hover:shadow-xl w-full"
-            >
-              <LogIn className="w-5 h-5" />
-              <span>Login to Account</span>
-            </Link>
-          </div>
-        )}
-
+       
         {/* Mobile Quick Contact Section */}
         <div className="px-5 py-4 space-y-3 bg-gradient-to-b from-[#F0F8FF] to-white border-b-2 border-[#0077BE]/20">
           <Link
