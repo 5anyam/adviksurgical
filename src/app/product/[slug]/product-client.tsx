@@ -10,7 +10,7 @@ import { Tab } from '@headlessui/react'
 import ProductFAQ from '../../../../components/ProductFaq'
 import RelatedProducts from '../../../../components/RelatedProducts'
 import ProductReviews from '../../../../components/ProductReviews'
-import { Heart, Star, Shield, Truck, Award, Plus, Minus, Sparkles, CheckCircle, Tag, Phone, MessageCircle } from 'lucide-react'
+import { Heart, Star, Shield, Truck, Award, CheckCircle, Tag, Phone, MessageCircle } from 'lucide-react'
 
 // --- Types ---
 export interface ImageData { src: string }
@@ -74,9 +74,7 @@ export default function ProductClient({
     initialProduct ??
     products?.find((p) => p.slug === slug || p.id.toString() === slug)
 
-  const [quantity, setQuantity] = useState(1)
   const [isWishlisted, setIsWishlisted] = useState(false)
-
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({})
   const [currentVariation, setCurrentVariation] = useState<ProductVariation | null>(null)
 
@@ -150,18 +148,6 @@ export default function ProductClient({
   }
 
   const isVariableProduct = product.type === 'variable'
-  
-  const activePrice = currentVariation ? currentVariation.price : product.price
-  const activeRegularPrice = currentVariation ? currentVariation.regular_price : (product.regular_price || product.price)
-
-  const salePrice = parseFloat(activePrice || '0')
-  const regularPrice = parseFloat(activeRegularPrice || '0')
-  const hasSale = salePrice < regularPrice
-  const discountPercent = hasSale ? Math.round(((regularPrice - salePrice) / regularPrice) * 100) : 0
-
-  const handleQuantityChange = (delta: number) => {
-    setQuantity(Math.max(1, quantity + delta))
-  }
 
   const handleAttributeSelect = (attributeName: string, option: string) => {
     setSelectedAttributes(prev => ({
@@ -178,13 +164,10 @@ export default function ProductClient({
       const attrs = Object.entries(selectedAttributes)
         .map(([k, v]) => `${k}: ${v}`)
         .join(', ')
-      message += ` (${attrs})`
+      message += `\n\nConfiguration: ${attrs}`
     }
     
-    if (quantity > 1) {
-      message += `\n\nQuantity: ${quantity} units`
-    }
-    
+    message += `\n\nI would like to know:\n- Price and quotation\n- Technical specifications\n- Delivery timeline\n- Installation support\n- Warranty details`
     message += `\n\nProduct Link: ${window.location.href}`
     
     const whatsappUrl = `https://wa.me/917052500888?text=${encodeURIComponent(message)}`
@@ -193,7 +176,7 @@ export default function ProductClient({
 
   // Phone Call Handler
   const handlePhoneCall = () => {
-    window.location.href = 'tel:+918840215794'
+    window.location.href = 'tel:+917052500888'
   }
 
   return (
@@ -214,15 +197,15 @@ export default function ProductClient({
       {/* Contact Info Banner */}
       <div className="bg-gradient-to-r from-[#0077BE] via-[#00A3E0] to-[#0077BE] py-3">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-center gap-6 text-white">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-white text-center">
             <a href="tel:+917052500888" className="flex items-center gap-2 hover:scale-105 transition-transform">
-              <Phone className="w-5 h-5" />
-              <span className="font-semibold text-sm">+91-7052500888</span>
+              <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="font-semibold text-xs sm:text-sm">+91-7052500888</span>
             </a>
-            <span className="text-white/50">|</span>
+            <span className="text-white/50 hidden sm:inline">|</span>
             <a href="tel:+918840215794" className="flex items-center gap-2 hover:scale-105 transition-transform">
-              <Phone className="w-5 h-5" />
-              <span className="font-semibold text-sm">+91-8840215794</span>
+              <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="font-semibold text-xs sm:text-sm">+91-8840215794</span>
             </a>
           </div>
         </div>
@@ -239,7 +222,7 @@ export default function ProductClient({
             <div className="mt-6 grid grid-cols-3 gap-4">
               {[
                 { icon: <Shield className="w-5 h-5" />, text: 'ISO Certified' },
-                { icon: <Award className="w-5 h-5" />, text: 'Premium Quality' },
+                { icon: <Award className="w-5 h-5" />, text: 'Hospital Grade' },
                 { icon: <Truck className="w-5 h-5" />, text: 'Pan India Delivery' },
               ].map((item, idx) => (
                 <div key={idx} className="flex flex-col items-center text-center p-4 bg-white border-2 border-[#0077BE]/20 rounded-lg hover:border-[#0077BE] transition-all">
@@ -254,12 +237,10 @@ export default function ProductClient({
         {/* Product Details */}
         <div className="lg:w-1/2">
           <div className="space-y-6">
-            {hasSale && (
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0077BE] to-[#00A3E0] text-white px-4 py-2 rounded-full shadow-lg">
-                <Sparkles className="w-4 h-4" />
-                <span className="text-sm font-bold">SAVE {discountPercent}%</span>
-              </div>
-            )}
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0077BE] to-[#00A3E0] text-white px-4 py-2 rounded-full shadow-lg">
+              <Award className="w-4 h-4" />
+              <span className="text-sm font-bold">ISO CERTIFIED</span>
+            </div>
 
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#25D366] to-[#20BA5A] text-white px-4 py-2 rounded-full shadow-lg ml-2">
               <CheckCircle className="w-4 h-4" />
@@ -276,7 +257,7 @@ export default function ProductClient({
                   <Star key={i} className="w-5 h-5 text-[#0077BE] fill-[#0077BE]" />
                 ))}
               </div>
-              <span className="text-sm text-gray-600 font-semibold">4.7 (180 reviews)</span>
+              <span className="text-sm text-gray-600 font-semibold">4.8 (250+ hospitals)</span>
               <button
                 onClick={() => setIsWishlisted(!isWishlisted)}
                 className="ml-auto p-2 rounded-full border-2 border-[#0077BE]/30 hover:border-[#0077BE] hover:bg-[#F0F8FF] transition-all"
@@ -285,13 +266,29 @@ export default function ProductClient({
               </button>
             </div>
 
-            {/* Quick Contact Card */}
-            <div className="bg-gradient-to-r from-[#25D366]/10 to-[#20BA5A]/10 border-2 border-[#25D366]/30 rounded-xl p-4">
-              <div className="flex items-center gap-3">
-                <MessageCircle className="w-8 h-8 text-[#25D366]" />
-                <div>
-                  <p className="font-bold text-[#003D5C] text-base">Need Expert Consultation?</p>
-                  <p className="text-sm text-gray-600">Our team is ready to help you choose the right equipment.</p>
+            {/* Contact for Price Card */}
+            <div className="bg-gradient-to-br from-[#0077BE]/10 to-[#00A3E0]/10 border-2 border-[#0077BE]/30 rounded-xl p-6">
+              <div className="flex items-start gap-4">
+                <MessageCircle className="w-10 h-10 text-[#0077BE] flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-bold text-[#003D5C] text-lg mb-2">Get Best Quote</h3>
+                  <p className="text-sm text-gray-700 mb-3">
+                    Contact us for competitive pricing, bulk discounts, and customized solutions for your healthcare facility.
+                  </p>
+                  <ul className="space-y-1 text-xs text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-3.5 h-3.5 text-[#0077BE]" />
+                      <span>Volume-based pricing available</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-3.5 h-3.5 text-[#0077BE]" />
+                      <span>Flexible payment terms</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-3.5 h-3.5 text-[#0077BE]" />
+                      <span>Free installation for bulk orders</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -317,7 +314,7 @@ export default function ProductClient({
                       <label className="text-sm font-bold text-[#003D5C] uppercase tracking-wide flex items-center gap-2">
                         {attr.name}: 
                         <span className="text-[#0077BE]">
-                          {selectedAttributes[attr.name] || '(Not Selected)'}
+                          {selectedAttributes[attr.name] || '(Select Option)'}
                         </span>
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -353,56 +350,6 @@ export default function ProductClient({
               </div>
             )}
 
-            {/* Price Display */}
-            <div className="py-6 border-y-2 border-[#0077BE]/20 bg-gradient-to-br from-[#F0F8FF] to-white rounded-xl p-6">
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="text-4xl font-bold text-[#003D5C]">
-                  ₹{salePrice.toLocaleString()}
-                </span>
-                {hasSale && (
-                  <span className="line-through text-gray-400 font-medium text-xl">
-                    ₹{regularPrice.toLocaleString()}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-gray-600">
-                *Price may vary based on specifications and bulk orders
-              </p>
-            </div>
-
-            {/* Quantity Selector */}
-            <div>
-              <label className="block text-sm font-bold text-[#003D5C] mb-3 uppercase tracking-wide">
-                Quantity (for bulk orders)
-              </label>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border-2 border-[#0077BE] rounded-lg overflow-hidden bg-white">
-                  <button
-                    onClick={() => handleQuantityChange(-1)}
-                    className="p-4 hover:bg-[#F0F8FF] transition-colors"
-                    disabled={quantity <= 1}
-                  >
-                    <Minus className="w-5 h-5 text-[#003D5C]" />
-                  </button>
-                  <span className="px-8 py-4 font-bold text-black text-xl border-x-2 border-[#0077BE]">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => handleQuantityChange(1)}
-                    className="p-4 hover:bg-[#F0F8FF] transition-colors"
-                  >
-                    <Plus className="w-5 h-5 text-[#003D5C]" />
-                  </button>
-                </div>
-                <span className="text-sm text-gray-600 font-medium">
-                  {quantity > 1 ? `${quantity} units` : '1 unit'}
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                *Special pricing available for bulk orders
-              </p>
-            </div>
-
             {/* CTA Buttons - Desktop */}
             <div className="hidden lg:flex flex-col gap-4 pt-6">
               <button
@@ -412,7 +359,7 @@ export default function ProductClient({
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
-                <span>Enquire Now on WhatsApp</span>
+                <span>Get Quote on WhatsApp</span>
               </button>
 
               <button
@@ -420,7 +367,7 @@ export default function ProductClient({
                 onClick={handlePhoneCall}
               >
                 <Phone className="w-6 h-6" />
-                <span>Call Us: +91-8840215794</span>
+                <span>Call: +91-7052500888</span>
               </button>
             </div>
 
@@ -448,27 +395,9 @@ export default function ProductClient({
       {/* Mobile Fixed Bottom CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#0077BE]/30 z-50 p-4 shadow-2xl">
         <div className="max-w-md mx-auto space-y-3">
-          <div className="flex items-center justify-between mb-2">
-            <div>
-              <p className="text-xs text-gray-600">Starting from</p>
-              <p className="text-2xl font-bold text-[#003D5C]">₹{salePrice.toLocaleString()}</p>
-            </div>
-            <div className="flex items-center border-2 border-[#0077BE] rounded-lg bg-white">
-              <button
-                onClick={() => handleQuantityChange(-1)}
-                className="p-2 hover:bg-[#F0F8FF]"
-                disabled={quantity <= 1}
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="px-4 py-2 text-lg font-bold text-black">{quantity}</span>
-              <button
-                onClick={() => handleQuantityChange(1)}
-                className="p-2 hover:bg-[#F0F8FF]"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            </div>
+          <div className="text-center mb-3">
+            <p className="text-sm font-bold text-[#003D5C] mb-1">Contact for Best Quote</p>
+            <p className="text-xs text-gray-600">Bulk discounts & flexible payment available</p>
           </div>
           
           <div className="flex gap-3">
