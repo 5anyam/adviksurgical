@@ -118,7 +118,7 @@ export default function Header() {
               <Link href="/" className="group">
                 <img 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 transition-all duration-300 group-hover:scale-110 drop-shadow-md" 
-                  src="/advik-logo.png" 
+                  src="/adviklogo.jpg" 
                   alt='Advik Surgical' 
                 />
               </Link>
@@ -245,7 +245,7 @@ export default function Header() {
         
         {/* Mobile Menu Header - Medical Blue Gradient */}
         <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-[#0077BE] via-[#00A3E0] to-[#005A8C]">
-          <img className="h-14 drop-shadow-lg" src="/advik-logo.png" alt='Advik Surgical' />
+          <img className="h-14 drop-shadow-lg" src="/adviklogo.jpg" alt='Advik Surgical' />
           <button
             onClick={() => setMobileMenuOpen(false)}
             className="text-white hover:text-[#E6F3FF] p-1 transition-colors"

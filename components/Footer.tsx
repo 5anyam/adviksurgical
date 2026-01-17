@@ -11,7 +11,7 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="md:col-span-1">
             <div className="mb-6">
-              <img className="h-24 drop-shadow-lg" src="/advik-logo.png" alt="Advik Surgical" />
+              <img className="h-24 drop-shadow-lg" src="/adviklogo.jpg" alt="Advik Surgical" />
             </div>
             <p className="text-sm leading-relaxed text-[#003D5C] font-light mb-6">
               Leading manufacturer and supplier of premium hospital furniture and medical equipment. ISO certified, hospital-grade quality across India.
