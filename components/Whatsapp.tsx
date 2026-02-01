@@ -16,7 +16,7 @@ function buildWaLink(baseMsg: string) {
 
 export default function Whatsapp() {
   const href = useMemo(
-    () => buildWaLink(encodeURIComponent("Hello Vyadhihar Foods – I’d like to know more about: ")),
+    () => buildWaLink(encodeURIComponent("Hello Adivk Surgicals – I’d like to know more about: ")),
     []
   );
 
